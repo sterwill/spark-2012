@@ -1,0 +1,62 @@
+body {
+	font-size: 100%;
+	background: white;
+	color: black;
+	margin: 12pt;
+	font-family: serif;
+}
+
+a:visited {
+	color: #7a1c51;
+}
+
+h1 {
+	color: #7a1c51;
+	font-size: 150%;
+	font-weight: normal;
+	margin-top: 18pt;
+	margin-bottom: 8pt;
+	font-family: "Ubuntu Mono", "Monospace", "Consolas", "Lucida Console",
+		"Andale Mono", "Courier";
+}
+
+h2 {
+	color: #7a1c51;
+	font-size: 100%;
+	font-weight: normal;
+	margin-top: 18pt;
+	margin-bottom: 9pt;
+	font-family: "Ubuntu Mono", "Monospace", "Consolas", "Lucida Console",
+		"Andale Mono", "Courier";
+}
+
+h3 {
+	color: #7a1c51;
+	font-size: 80%;
+	font-weight: normal;
+	margin-top: 12pt;
+	margin-bottom: 6pt;
+	font-family: "Ubuntu Mono", "Monospace", "Consolas", "Lucida Console",
+		"Andale Mono", "Courier";
+}
+
+p {
+	margin-top: 6pt;
+	margin-bottom: 6pt;
+}
+
+p.title {
+	color: #7a1c51;
+	font-size: 200%;
+	font-weight: normal;
+	margin-top: 18pt;
+	margin-bottom: 9pt;
+}
+
+div.logo {
+	margin-left: 10px;
+}
+
+div.main {
+	margin-left: 100px;
+}
