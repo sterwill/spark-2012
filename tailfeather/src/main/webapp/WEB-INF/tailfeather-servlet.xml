@@ -26,6 +26,14 @@
 	<!-- Static resources -->
 	<mvc:resources mapping="/static/**" location="/static/" />
 
+	<!-- Ensures that dispatcher servlet can be mapped to '/' and static resources 
+		are still served by the containers default servlet. Requires Spring Framework 
+		3.0 or higher. -->
+	<mvc:default-servlet-handler />
+
+	<!-- JPA: Package to scan for repositories -->
+	<jpa:repositories base-package="org.tailfeather.repository" />
+
 	<!-- Controllers -->
 	<bean name="/user" class="org.tailfeather.controller.UserController" />
 
@@ -43,12 +51,8 @@
 		<property name="testOnBorrow" value="true" />
 	</bean>
 
-	<!-- JPA: Package to scan for repositories -->
-	<jpa:repositories base-package="org.tailfeather.repository" />
-
 	<!-- Spring, JPA, and Hibernate -->
-	<bean class="org.springframework.orm.jpa.JpaTransactionManager"
-		id="transactionManager">
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 		<property name="jpaDialect">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
@@ -57,6 +61,8 @@
 	<bean id="entityManagerFactory"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource" />
+		<!-- packagesToScan replaces persistence.xml -->
+		<property name="packagesToScan" value="org.tailfeather.entity" />
 		<property name="persistenceUnitName" value="tailfeather" />
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">

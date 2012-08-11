@@ -1,14 +1,19 @@
 package org.tailfeather.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.tailfeather.db.User;
-import org.tailfeather.repository.UserRepository;
+import org.tailfeather.dao.UserDao;
+import org.tailfeather.entity.User;
+import org.tailfeather.exceptions.UserNotFoundException;
 
-public class UserService {
-	@Autowired
-	UserRepository userRepository;
+public interface UserService {
+	public User create(UserDao newObject);
 
-	public User createUser() {
-		return null;
-	}
+	public User delete(Long id) throws UserNotFoundException;
+
+	public Iterable<User> findAll();
+
+	public User findById(Long id);
+	
+	public User findByEmail(String email);
+
+	public User update(UserDao updated) throws UserNotFoundException;
 }

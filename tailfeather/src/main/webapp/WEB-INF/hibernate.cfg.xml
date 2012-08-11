@@ -9,6 +9,7 @@
 		<property name="hibernate.connection.password">${database.pass}</property>
 		<property name="hibernate.connection.pool_size">10</property>
 		<property name="show_sql">${hibernate.show-sql}</property>
+		<property name="format_sql">${hibernate.format-sql}</property>
 		<property name="dialect">${hibernate.dialect}</property>
 		<property name="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</property>
 	</session-factory>
