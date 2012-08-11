@@ -23,4 +23,6 @@ public class User {
 	
 	@NotNull
 	private Boolean admin;
+	
+	
 }
