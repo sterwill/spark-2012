@@ -14,6 +14,8 @@
     	http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
    	">
 
+	<context:annotation-config />
+
 	<!-- Properties -->
 	<context:property-placeholder
 		ignore-resource-not-found="false" location="classpath:tailfeather.properties" />
@@ -26,16 +28,14 @@
 	<!-- Static resources -->
 	<mvc:resources mapping="/static/**" location="/static/" />
 
-	<!-- Ensures that dispatcher servlet can be mapped to '/' and static resources 
-		are still served by the containers default servlet. Requires Spring Framework 
-		3.0 or higher. -->
-	<mvc:default-servlet-handler />
-
 	<!-- JPA: Package to scan for repositories -->
 	<jpa:repositories base-package="org.tailfeather.repository" />
 
 	<!-- Controllers -->
 	<bean name="/user" class="org.tailfeather.controller.UserController" />
+
+	<!-- Services -->
+	<bean id="repositoryUserService" class="org.tailfeather.service.RepositoryUserService" />
 
 	<!-- Data source -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
