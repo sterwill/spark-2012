@@ -21,7 +21,7 @@ import org.tailfeather.validator.UserValidator;
 public class UserController {
 
 	@Autowired
-	private UserDao userService;
+	private UserDao userDao;
 
 	@Autowired
 	private UserValidator userValidator;
@@ -30,7 +30,7 @@ public class UserController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(Model model) {
-		Iterable<User> userList = userService.findAll();
+		Iterable<User> userList = userDao.findAll();
 		model.addAttribute("userList", userList);
 		return "/user/list.jsp";
 	}
@@ -45,14 +45,14 @@ public class UserController {
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public String read(@PathVariable Long id, Model model) {
-		User user = userService.findById(id);
+		User user = userDao.findById(id);
 		model.addAttribute("user", user);
 		return "/user/edit.jsp";
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public String update(@PathVariable Long id, Model model) {
-		User user = userService.findById(id);
+		User user = userDao.findById(id);
 		user.update(user);
 		return "redirect:/user/{id}";
 	}
@@ -60,7 +60,7 @@ public class UserController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public void delete(@PathVariable Long id, HttpServletResponse response) {
 		try {
-			userService.delete(id);
+			userDao.delete(id);
 			response.setStatus(HttpStatus.OK.value());
 		} catch (UserNotFoundException e) {
 			response.setStatus(HttpStatus.NOT_FOUND.value());
@@ -83,13 +83,13 @@ public class UserController {
 			return "/user/form.jsp";
 		}
 
-		userService.create(user);
+		userDao.create(user);
 		return "redirect:/user";
 	}
 
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
 	public String editForm(@PathVariable Long id, Model model) {
-		User user = userService.findById(id);
+		User user = userDao.findById(id);
 		model.addAttribute("user", user);
 		return "/user/form.jsp";
 	}
@@ -102,7 +102,7 @@ public class UserController {
 			return "/user/form.jsp";
 		}
 
-		userService.update(user);
+		userDao.update(user);
 		return "redirect:/user";
 	}
 }
