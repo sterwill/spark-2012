@@ -187,6 +187,18 @@
 			<version>1.2.16</version>
 			<scope>runtime</scope>
 		</dependency>
+		
+		<!-- JSTL -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>taglibs</groupId>
+			<artifactId>standard</artifactId>
+			<version>1.1.2</version>
+		</dependency>
 	</dependencies>
 
 	<repositories>

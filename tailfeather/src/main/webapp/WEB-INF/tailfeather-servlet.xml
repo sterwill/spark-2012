@@ -2,7 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
-	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -14,9 +14,10 @@
     	http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
    	">
 
-	<context:annotation-config />
+	<!-- Spring Context -->
 
-	<!-- Properties -->
+	<context:annotation-config />
+	<context:component-scan base-package="org.tailfeather" />
 	<context:property-placeholder
 		ignore-resource-not-found="false" location="classpath:tailfeather.properties" />
 	<bean id="configuration"
@@ -25,17 +26,16 @@
 		<property name="URL" value="classpath:tailfeather.properties" />
 	</bean>
 
-	<!-- Static resources -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource"
+		p:basename="messages" />
+
+	<!-- Spring MVC -->
+	<mvc:annotation-driven />
 	<mvc:resources mapping="/static/**" location="/static/" />
 
 	<!-- JPA: Package to scan for repositories -->
 	<jpa:repositories base-package="org.tailfeather.repository" />
-
-	<!-- Controllers -->
-	<bean name="/user" class="org.tailfeather.controller.UserController" />
-
-	<!-- Services -->
-	<bean id="repositoryUserService" class="org.tailfeather.service.RepositoryUserService" />
 
 	<!-- Data source -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"

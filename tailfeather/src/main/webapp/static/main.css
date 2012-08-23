@@ -60,3 +60,13 @@ div.logo {
 div.main {
 	margin-left: 100px;
 }
+
+table {
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+
+td, th {
+	border: 1px solid black;
+	padding: .25em;
+}

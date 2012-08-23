@@ -39,6 +39,10 @@ public class User {
 	public Long getId() {
 		return id;
 	}
+	
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getEmail() {
 		return email;
@@ -54,5 +58,11 @@ public class User {
 
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
+	}
+
+	public User update(User user) {
+		this.email = user.email;
+		this.fullName = user.fullName;
+		return this;
 	}
 }
