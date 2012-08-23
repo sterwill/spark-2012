@@ -1,4 +1,4 @@
-package org.tailfeather.service;
+package org.tailfeather.dao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import org.tailfeather.exceptions.UserNotFoundException;
 import org.tailfeather.repository.UserRepository;
 
 @Service
-public class RepositoryUserService implements UserService {
+public class RepositoryUserDao implements UserDao {
 	@Autowired
 	UserRepository userRepository;
 

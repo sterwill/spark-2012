@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.tailfeather.dao.UserDao;
 import org.tailfeather.entity.User;
 import org.tailfeather.exceptions.UserNotFoundException;
-import org.tailfeather.service.UserService;
 import org.tailfeather.validator.UserValidator;
 
 @Controller
@@ -21,7 +21,7 @@ import org.tailfeather.validator.UserValidator;
 public class UserController {
 
 	@Autowired
-	private UserService userService;
+	private UserDao userService;
 
 	@Autowired
 	private UserValidator userValidator;
