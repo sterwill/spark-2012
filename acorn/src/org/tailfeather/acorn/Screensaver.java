@@ -1,16 +1,17 @@
+package org.tailfeather.acorn;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class Screensaver {
-	private final static String CLEAR = "\033[2J";
 	private final String blankLine;
 	private final List<String> lines = new ArrayList<String>();
 	private final Random random = new Random();
 
 	public Screensaver() {
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < Utils.getColumns(); i++)
+		for (int i = 0; i < ConsoleUtils.getColumns(); i++)
 			sb.append(" ");
 		blankLine = sb.toString();
 	}
@@ -28,7 +29,7 @@ public class Screensaver {
 	private void dissolveLine(int line) {
 		StringBuilder sb = new StringBuilder(lines.get(line));
 		for (int i = 0; i < sb.length(); i++) {
-			if (random.nextInt(Utils.getColumns() / 2) == 0) {
+			if (random.nextInt(ConsoleUtils.getColumns() / 2) == 0) {
 				char c = sb.charAt(i);
 				switch (c) {
 				case '.':
@@ -50,13 +51,13 @@ public class Screensaver {
 
 	private void clearLines() {
 		lines.clear();
-		for (int i = 0; i < Utils.getLines(); i++) {
+		for (int i = 0; i < ConsoleUtils.getLines(); i++) {
 			lines.add(blankLine);
 		}
 	}
 
 	private void print() {
-		System.out.print(CLEAR);
+		ConsoleUtils.clear();
 		for (int i = lines.size() - 1; i >= 0; i--) {
 			System.out.println(lines.get(i));
 		}
@@ -66,13 +67,13 @@ public class Screensaver {
 		StringBuilder line = new StringBuilder(blankLine);
 
 		if (random.nextInt(6) == 0) {
-			int pos = random.nextInt(Utils.getColumns() - 1);
+			int pos = random.nextInt(ConsoleUtils.getColumns() - 1);
 			line.setCharAt(pos, '{');
 			line.setCharAt(pos + 1, 'D');
 		}
 
 		lines.add(line.toString());
-		while (lines.size() > Utils.getLines()) {
+		while (lines.size() > ConsoleUtils.getLines()) {
 			String l = lines.remove(0);
 			StringBuilder sb = new StringBuilder(lines.get(0));
 			for (int i = 0; i < l.length(); i++) {
