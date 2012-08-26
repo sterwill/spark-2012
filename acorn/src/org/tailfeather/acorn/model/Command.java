@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.tailfeather.acorn.model.exec.Echo;
 import org.tailfeather.acorn.model.exec.Executable;
+import org.tailfeather.acorn.model.exec.Exit;
 import org.tailfeather.acorn.model.exec.Form;
 
 @XmlRootElement(name = "command")
@@ -19,8 +20,11 @@ public class Command {
 	@XmlElement(name = "name")
 	private List<String> names;
 
-	@XmlElements({ @XmlElement(name = "echo", type = Echo.class), @XmlElement(name = "register", type = Form.class) })
+	@XmlElements({ @XmlElement(name = "echo", type = Echo.class), @XmlElement(name = "register", type = Form.class),
+			@XmlElement(name = "exit", type = Exit.class) })
 	private List<Executable> exec = new ArrayList<Executable>();
+
+	private boolean exit;
 
 	public List<String> getNames() {
 		return names;
@@ -36,5 +40,23 @@ public class Command {
 
 	public void setExec(List<Executable> exec) {
 		this.exec = exec;
+	}
+
+	public boolean isExit() {
+		return this.exit;
+	}
+
+	public void setExit(boolean exit) {
+		this.exit = exit;
+	}
+
+	public void execute() {
+		if (exec.size() == 0) {
+			return;
+		}
+
+		for (Executable e : exec) {
+			e.exececute(this);
+		}
 	}
 }

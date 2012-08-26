@@ -14,4 +14,10 @@
 		<name>who</name>
 		<echo level="error" file="text/command-restricted.txt" />
 	</command>
+	<command>
+		<name>exit</name>
+		<name>quit</name>
+		<name>bye</name>
+		<exit />
+	</command>
 </acorn>
