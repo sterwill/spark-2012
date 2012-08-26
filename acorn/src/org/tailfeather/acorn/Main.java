@@ -10,8 +10,6 @@ import org.tailfeather.acorn.model.Acorn;
 
 public class Main {
 	private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
-	private static final int MAIN_PROMPT_TIMEOUT_SECONDS = 30;
-	private static final int REGISTER_PROMPT_TIMEOUT_SECONDS = 60;
 
 	public static void main(String[] args) throws Exception {
 		LogConfig.configureRootLogger();
