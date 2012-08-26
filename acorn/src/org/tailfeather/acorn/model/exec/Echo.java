@@ -20,24 +20,8 @@ public class Echo extends Executable {
 	@XmlAttribute(name = "file", required = true)
 	private String file;
 
-	public String getLevel() {
-		return level;
-	}
-
-	public void setLevel(String level) {
-		this.level = level;
-	}
-
-	public String getFile() {
-		return file;
-	}
-
-	public void setFile(String file) {
-		this.file = file;
-	}
-
 	@Override
-	public void exececute(Command context) {
+	public void execute(Command command) {
 		String message = FileUtils.getContents(file);
 		if (LEVEL_ERROR.equals(level)) {
 			Console.printRedLine(message);

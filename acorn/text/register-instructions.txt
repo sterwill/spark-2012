@@ -5,3 +5,4 @@ Here's how you do it:
   3. stuff
 
 Type 'cancel' to stop the registration process.
+

@@ -27,11 +27,15 @@ public class Acorn {
 	@XmlAttribute(name = "prompt", required = true)
 	private String prompt;
 
-	@XmlAttribute(name = "timeoutSeconds")
-	private int timeoutSeconds = 30;
+	@XmlAttribute(name = "promptTimeoutSeconds")
+	private int promptTimeoutSeconds = 30;
 
 	@XmlElement(name = "command")
 	private List<Command> commands;
+
+	public int getPromptTimeoutSeconds() {
+		return promptTimeoutSeconds;
+	}
 
 	public void run() {
 		main: while (true) {
@@ -63,7 +67,7 @@ public class Acorn {
 					continue main;
 				}
 
-				promptTimeout = timeoutSeconds;
+				promptTimeout = promptTimeoutSeconds;
 
 				if (input == null) {
 					Console.printLine();
@@ -80,6 +84,7 @@ public class Acorn {
 				commandTest: for (Command c : commands) {
 					for (String name : c.getNames()) {
 						if (commandName.equals(name)) {
+							c.setAcorn(this);
 							c.execute();
 							handled = true;
 

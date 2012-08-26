@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.tailfeather.acorn.model.exec.Echo;
 import org.tailfeather.acorn.model.exec.Executable;
@@ -20,26 +21,18 @@ public class Command {
 	@XmlElement(name = "name")
 	private List<String> names;
 
-	@XmlElements({ @XmlElement(name = "echo", type = Echo.class), @XmlElement(name = "register", type = Form.class),
+	@XmlElements({ @XmlElement(name = "echo", type = Echo.class), @XmlElement(name = "form", type = Form.class),
 			@XmlElement(name = "exit", type = Exit.class) })
 	private List<Executable> exec = new ArrayList<Executable>();
 
+	@XmlTransient
 	private boolean exit;
+
+	@XmlTransient
+	private Acorn acorn;
 
 	public List<String> getNames() {
 		return names;
-	}
-
-	public void setNames(List<String> names) {
-		this.names = names;
-	}
-
-	public List<Executable> getExec() {
-		return exec;
-	}
-
-	public void setExec(List<Executable> exec) {
-		this.exec = exec;
 	}
 
 	public boolean isExit() {
@@ -50,13 +43,21 @@ public class Command {
 		this.exit = exit;
 	}
 
+	public void setAcorn(Acorn acorn) {
+		this.acorn = acorn;
+	}
+
+	public Acorn getAcorn() {
+		return acorn;
+	}
+
 	public void execute() {
 		if (exec.size() == 0) {
 			return;
 		}
 
 		for (Executable e : exec) {
-			e.exececute(this);
+			e.execute(this);
 		}
 	}
 }

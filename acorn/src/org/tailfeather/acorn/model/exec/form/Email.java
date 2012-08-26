@@ -1,38 +1,21 @@
 package org.tailfeather.acorn.model.exec.form;
 
+import java.util.regex.Pattern;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement(name = "email")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Email extends FormField {
-	@XmlAttribute(name = "name")
-	private String name;
-
-	@XmlTransient
-	private String value;
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
-	}
-
 	@Override
 	public boolean isValid() {
-		return false;
+		if (getValue() == null) {
+			return false;
+		}
+
+		String pattern = "^[!#-'\\*\\+\\-/0-9=\\?A-Z\\^_`a-z{-~]+(\\.[!#-'\\*\\+\\-/0-9=\\?A-Z\\^_`a-z{-~]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+		return Pattern.compile(pattern).matcher(getValue()).matches();
 	}
 }

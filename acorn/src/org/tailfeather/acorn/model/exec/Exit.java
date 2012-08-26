@@ -10,7 +10,7 @@ import org.tailfeather.acorn.model.Command;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Exit extends Executable {
 	@Override
-	public void exececute(Command context) {
-		context.setExit(true);
+	public void execute(Command command) {
+		command.setExit(true);
 	}
 }

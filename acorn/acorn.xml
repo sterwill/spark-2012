@@ -1,10 +1,10 @@
 <acorn motd="text/main-motd.txt" prompt="text/main-prompt.txt"
-	timeoutSeconds="30">
+	promptTimeoutSeconds="30">
 	<command>
 		<name>register</name>
 		<form post="http://tailfeather.org/tf/register" instructions="text/register-instructions.txt">
-			<text name="name">Name</text>
-			<email name="email">E-mail Address</email>
+			<text name="name" prompt="  Name: " />
+			<email name="email" prompt="  E-mail Address: " />
 		</form>
 	</command>
 	<command>
