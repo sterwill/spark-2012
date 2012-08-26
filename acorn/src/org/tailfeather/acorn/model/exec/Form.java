@@ -102,35 +102,11 @@ public class Form extends Executable {
 		}
 
 		for (FormField field : info.keySet()) {
-			while (true) {
-				// Read the new value
-				String line;
-				try {
-					line = Console.readLine(field.getPrompt(), command.getAcorn().getPromptTimeoutSeconds(),
-							TimeUnit.SECONDS);
-				} catch (InterruptedException e) {
-					LOGGER.log(Level.WARNING, "Interrupted while prompting for info", e);
-					continue;
-				} catch (TimeoutException e) {
-					return false;
-				}
-
-				if (line == null) {
-					Console.printLine();
-					continue;
-				}
-
-				line = line.trim();
-				if (line.length() == 0) {
-					continue;
-				}
-
-				if ("cancel".equalsIgnoreCase(line)) {
-					return false;
-				}
-
+			String line = field.prompt(command.getAcorn().getPromptTimeoutSeconds());
+			if (line != null) {
 				info.put(field, line);
-				break;
+			} else {
+				return false;
 			}
 		}
 
