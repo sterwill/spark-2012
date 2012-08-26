@@ -30,7 +30,7 @@ public class SlowOutputStream extends FilterOutputStream {
 
 	@Override
 	public void write(byte[] bytes, int off, int len) throws IOException {
-		for (int i = off; i <= off + len; i++) {
+		for (int i = off; i < off + len; i++) {
 			write(bytes[i]);
 		}
 	}

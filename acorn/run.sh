@@ -1,5 +1,7 @@
 #!/bin/sh
 
+export COLUMNS
+export LINES
 OLD_STTY=`stty --save`
 
 # unset ^D

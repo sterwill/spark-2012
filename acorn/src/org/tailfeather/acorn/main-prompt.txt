@@ -1,0 +1,2 @@
+>>> Type 'register' to begin the personnel registration process
+SYSTEM {) 

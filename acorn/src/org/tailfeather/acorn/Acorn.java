@@ -1,14 +1,14 @@
 package org.tailfeather.acorn;
 
+import java.text.MessageFormat;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Acorn {
 	private static final Logger LOGGER = Logger.getLogger(Acorn.class.getName());
-	private static final int OUTPUT_BPS = 100;
-	private static final String MAIN_PROMPT = "SYSTEM {) ";
-
-	public static final SlowConsole CONSOLE = new SlowConsole(OUTPUT_BPS);
+	private static final int TIMEOUT_SECONDS = 30;
 
 	public static void main(String[] args) throws Exception {
 		LogConfig.configureRootLogger();
@@ -25,35 +25,65 @@ public class Acorn {
 	}
 
 	public int run(String args[]) throws Exception {
-		// CONSOLE.clear();
-		CONSOLE.print(Messages.getMessage("org/tailfeather/acorn/main.txt"));
-		CONSOLE.flush();
+		root: while (true) {
+			Console.clear();
+			Console.print(Messages.getMessage("org/tailfeather/acorn/motd.txt"));
+			Console.flush();
 
-		boolean stop = false;
-		while (!stop) {
-			CONSOLE.eraseLine();
-			final String line = CONSOLE.readLine(MAIN_PROMPT);
-			if (line == null) {
-				CONSOLE.println();
-				continue;
-			}
+			prompt: while (true) {
+				final String line;
+				try {
+					line = Console.readLine(Messages.getMessage("org/tailfeather/acorn/main-prompt.txt"),
+							TIMEOUT_SECONDS, TimeUnit.SECONDS);
+				} catch (InterruptedException e) {
+					LOGGER.log(Level.WARNING, "Interrupted while prompting", e);
+					continue;
+				} catch (TimeoutException e) {
+					break;
+				}
 
-			final String trim = line.trim();
-			if (trim.length() == 0) {
-				continue;
-			}
+				if (line == null) {
+					Console.printLine();
+					continue;
+				}
 
-			switch (trim) {
-			case "exit":
-			case "quit":
-			case "bye":
-				CONSOLE.println();
-				CONSOLE.println("Goodbye.");
-				stop = true;
-				break;
+				final String[] tokens = Command.parse(line);
+				if (tokens.length == 0) {
+					continue;
+				}
+
+				switch (tokens[0]) {
+				case "exit":
+					continue root;
+				case "help":
+					printHelp();
+					break;
+				case "ps":
+				case "who":
+				case "ls":
+				case "dir":
+				case "last":
+				case "rm":
+					printErrorLine("Access to that command is restricted");
+					break;
+				default:
+					printErrorLine(MessageFormat.format("Unrecognized command ''{0}'', please try again", tokens[0]));
+					break;
+				}
 			}
 		}
+	}
 
-		return 0;
+	private void printErrorLine(String error) {
+		Console.printLine();
+		Console.printRedLine(error);
+		Console.printLine();
+	}
+
+	private void printHelp() {
+		Console.printLine();
+		Console.printLine("help       prints this text");
+		Console.printLine("register   begins the registration process");
+		Console.printLine();
 	}
 }

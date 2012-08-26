@@ -11,7 +11,7 @@ public class Screensaver {
 
 	public Screensaver() {
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < ConsoleUtils.getColumns(); i++)
+		for (int i = 0; i < Console.getColumns(); i++)
 			sb.append(" ");
 		blankLine = sb.toString();
 	}
@@ -29,7 +29,7 @@ public class Screensaver {
 	private void dissolveLine(int line) {
 		StringBuilder sb = new StringBuilder(lines.get(line));
 		for (int i = 0; i < sb.length(); i++) {
-			if (random.nextInt(ConsoleUtils.getColumns() / 2) == 0) {
+			if (random.nextInt(Console.getColumns() / 2) == 0) {
 				char c = sb.charAt(i);
 				switch (c) {
 				case '.':
@@ -51,13 +51,13 @@ public class Screensaver {
 
 	private void clearLines() {
 		lines.clear();
-		for (int i = 0; i < ConsoleUtils.getLines(); i++) {
+		for (int i = 0; i < Console.getLines(); i++) {
 			lines.add(blankLine);
 		}
 	}
 
 	private void print() {
-		Acorn.CONSOLE.clear();
+		Console.clear();
 		for (int i = lines.size() - 1; i >= 0; i--) {
 			System.out.println(lines.get(i));
 		}
@@ -67,13 +67,13 @@ public class Screensaver {
 		StringBuilder line = new StringBuilder(blankLine);
 
 		if (random.nextInt(6) == 0) {
-			int pos = random.nextInt(ConsoleUtils.getColumns() - 1);
+			int pos = random.nextInt(Console.getColumns() - 1);
 			line.setCharAt(pos, '{');
 			line.setCharAt(pos + 1, 'D');
 		}
 
 		lines.add(line.toString());
-		while (lines.size() > ConsoleUtils.getLines()) {
+		while (lines.size() > Console.getLines()) {
 			String l = lines.remove(0);
 			StringBuilder sb = new StringBuilder(lines.get(0));
 			for (int i = 0; i < l.length(); i++) {
