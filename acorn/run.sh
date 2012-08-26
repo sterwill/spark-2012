@@ -13,6 +13,6 @@ stty intr ""
 # unset ^\
 stty quit ""
 
-java -cp bin org.tailfeather.acorn.Acorn
+java -cp bin org.tailfeather.acorn.Main acorn.xml
 
 stty $OLD_STTY

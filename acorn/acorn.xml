@@ -1,0 +1,17 @@
+<acorn motd="main-motd.txt" prompt="main-prompt.txt"
+	timeoutSeconds="30">
+	<command>
+		<name>register</name>
+		<form post="http://tailfeather.org/tf/register" instructions="register-instructions.txt">
+			<text name="name">Name</text>
+			<email name="email">E-mail Address</email>
+		</form>
+	</command>
+	<command>
+		<name>ls</name>
+		<name>dir</name>
+		<name>ps</name>
+		<name>who</name>
+		<echo level="error" file="command-restricted.txt" />
+	</command>
+</acorn>

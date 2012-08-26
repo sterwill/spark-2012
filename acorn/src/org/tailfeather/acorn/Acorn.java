@@ -30,13 +30,13 @@ public class Acorn {
 	public int run(String args[]) throws Exception {
 		root: while (true) {
 			Console.clear();
-			Console.print(Messages.getMessage("org/tailfeather/acorn/motd.txt"));
+			Console.print(Resources.getMessage("org/tailfeather/acorn/motd.txt"));
 			Console.flush();
 
 			prompt: while (true) {
 				final String line;
 				try {
-					line = Console.readLine(Messages.getMessage("org/tailfeather/acorn/main-prompt.txt"),
+					line = Console.readLine(Resources.getMessage("org/tailfeather/acorn/main-prompt.txt"),
 							MAIN_PROMPT_TIMEOUT_SECONDS, TimeUnit.SECONDS);
 				} catch (InterruptedException e) {
 					LOGGER.log(Level.WARNING, "Interrupted while prompting", e);
@@ -50,7 +50,7 @@ public class Acorn {
 					continue;
 				}
 
-				final String[] tokens = Command.parse(line);
+				final String[] tokens = Acorn.parseCommand(line);
 				if (tokens.length == 0) {
 					continue;
 				}
@@ -81,7 +81,7 @@ public class Acorn {
 	}
 
 	private boolean register() {
-		Console.print(Messages.getMessage("org/tailfeather/acorn/register-instructions.txt"));
+		Console.print(Resources.getMessage("org/tailfeather/acorn/register-instructions.txt"));
 		Console.flush();
 
 		Map<String, String> info = new HashMap<String, String>();
@@ -97,7 +97,7 @@ public class Acorn {
 			}
 
 			// Summarize
-			Console.print(Messages.getMessage("org/tailfeather/acorn/register-verify.txt"));
+			Console.print(Resources.getMessage("org/tailfeather/acorn/register-verify.txt"));
 			for (String key : info.keySet()) {
 				Console.printLine("  " + key + ": " + info.get(key));
 			}
@@ -114,7 +114,7 @@ public class Acorn {
 		while (true) {
 			String line;
 			try {
-				line = Console.readLine(Messages.getMessage("org/tailfeather/acorn/register-verify-prompt.txt"),
+				line = Console.readLine(Resources.getMessage("org/tailfeather/acorn/register-verify-prompt.txt"),
 						REGISTER_PROMPT_TIMEOUT_SECONDS, TimeUnit.SECONDS);
 			} catch (InterruptedException e) {
 				LOGGER.log(Level.WARNING, "Interrupted while prompting for register", e);
@@ -166,12 +166,6 @@ public class Acorn {
 		}
 
 		return true;
-	}
-
-	private void printErrorLine(String error) {
-		Console.printLine();
-		Console.printRedLine(error);
-		Console.printLine();
 	}
 
 	private void printHelp() {

@@ -5,9 +5,9 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.text.MessageFormat;
 
-public class Messages {
+public class Resources {
 	public static String getMessage(String name) {
-		InputStream stream = Messages.class.getClassLoader().getResourceAsStream(name);
+		InputStream stream = Resources.class.getClassLoader().getResourceAsStream(name);
 		if (stream == null) {
 			throw new RuntimeException(MessageFormat.format("Message resource {0} not found", name));
 		}
