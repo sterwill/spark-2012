@@ -1,5 +1,6 @@
 package org.tailfeather.acorn.model.exec;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,8 +17,12 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.tailfeather.acorn.Console;
 import org.tailfeather.acorn.FileUtils;
 import org.tailfeather.acorn.model.Command;
@@ -31,24 +36,19 @@ public class Form extends Executable {
 	private static final Logger LOGGER = Logger.getLogger(Form.class.getName());
 
 	@XmlAttribute(name = "post", required = true)
-	private String post;
+	private String postUri;
 
 	@XmlAttribute(name = "instructions", required = true)
 	private String instructions;
 
+	@XmlAttribute(name = "success", required = true)
+	private String success;
+
 	@XmlElements({ @XmlElement(name = "text", type = Text.class), @XmlElement(name = "email", type = Email.class) })
 	private List<FormField> fields = new ArrayList<FormField>();
 
-	@XmlTransient
-	private boolean valid;
-
-	public boolean isValid() {
-		return valid;
-	}
-
 	@Override
 	public void execute(Command command) {
-		valid = false;
 		Console.print(FileUtils.getContents(instructions));
 		Console.flush();
 
@@ -85,14 +85,37 @@ public class Form extends Executable {
 				return;
 			}
 
-			if (input != null && "y".equalsIgnoreCase(input.trim())) {
-				valid = true;
-				return;
+			if (input != null && !"y".equalsIgnoreCase(input.trim())) {
+				// Answer was "n" or some nonsense
+				Console.printLine();
+				continue;
 			}
 
-			// Answer was "n" or some nonsense
-			Console.printLine();
+			// Submit it
+			if (!submit(info)) {
+				Console.printRedLine("There was an error saving your information, please try again");
+				continue;
+			} else {
+				Console.printLine(FileUtils.getContents(success));
+				break;
+			}
 		}
+	}
+
+	private boolean submit(Map<FormField, String> info) {
+		HttpClient client = new DefaultHttpClient();
+		HttpPost post = new HttpPost(postUri);
+		HttpResponse response;
+		try {
+			response = client.execute(post);
+		} catch (IOException e) {
+			LOGGER.log(Level.WARNING, "Error submitting form", e);
+			return false;
+		}
+
+		return response.getStatusLine().getStatusCode() == HttpStatus.SC_OK
+				|| response.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED
+				|| response.getStatusLine().getStatusCode() == HttpStatus.SC_ACCEPTED;
 	}
 
 	private boolean gatherInfo(Map<FormField, String> info, Command command) {

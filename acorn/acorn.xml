@@ -2,7 +2,8 @@
 	promptTimeoutSeconds="30">
 	<command>
 		<name>register</name>
-		<form post="http://tailfeather.org/tf/register" instructions="text/register-instructions.txt">
+		<form post="http://tailfeather.org/tf/register" instructions="text/register-instructions.txt"
+			success="text/register-success.txt">
 			<text name="name" prompt="  Name: " />
 			<email name="email" prompt="  E-mail Address: " />
 		</form>
