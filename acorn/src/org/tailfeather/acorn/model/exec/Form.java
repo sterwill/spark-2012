@@ -1,11 +1,10 @@
 package org.tailfeather.acorn.model.exec;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
@@ -20,9 +19,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.tailfeather.acorn.Console;
 import org.tailfeather.acorn.FileUtils;
 import org.tailfeather.acorn.model.Command;
@@ -52,10 +54,8 @@ public class Form extends Executable {
 		Console.print(FileUtils.getContents(instructions));
 		Console.flush();
 
-		Map<FormField, String> info = new HashMap<FormField, String>();
-
 		while (true) {
-			if (!gatherInfo(info, command)) {
+			if (!gatherInfo(command)) {
 				Console.printRedLine("Your registration information was NOT saved");
 				return;
 			}
@@ -63,7 +63,7 @@ public class Form extends Executable {
 			Console.printLine();
 			Console.printLine("Please confirm the following information is correct:");
 			for (FormField f : fields) {
-				Console.printLine(MessageFormat.format("{0}''{1}''", f.getPrompt(), info.get(f)));
+				Console.printLine(MessageFormat.format("{0}''{1}''", f.getPrompt(), f.getValue()));
 			}
 			Console.printLine();
 
@@ -92,7 +92,7 @@ public class Form extends Executable {
 			}
 
 			// Submit it
-			if (!submit(info)) {
+			if (!submit()) {
 				Console.printRedLine("There was an error saving your information, please try again");
 				continue;
 			} else {
@@ -102,33 +102,49 @@ public class Form extends Executable {
 		}
 	}
 
-	private boolean submit(Map<FormField, String> info) {
-		HttpClient client = new DefaultHttpClient();
+	private boolean submit() {
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		for (FormField field : fields) {
+			params.add(new BasicNameValuePair(field.getName(), field.getValue()));
+		}
+
+		UrlEncodedFormEntity entity;
+		try {
+			entity = new UrlEncodedFormEntity(params, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			LOGGER.log(Level.WARNING, "Error preparing request entity", e);
+			return false;
+		}
+
 		HttpPost post = new HttpPost(postUri);
+		post.setEntity(entity);
+
 		HttpResponse response;
 		try {
+			HttpClient client = new DefaultHttpClient();
 			response = client.execute(post);
 		} catch (IOException e) {
 			LOGGER.log(Level.WARNING, "Error submitting form", e);
 			return false;
 		}
 
-		return response.getStatusLine().getStatusCode() == HttpStatus.SC_OK
+		if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK
 				|| response.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED
-				|| response.getStatusLine().getStatusCode() == HttpStatus.SC_ACCEPTED;
-	}
-
-	private boolean gatherInfo(Map<FormField, String> info, Command command) {
-		info.clear();
-		for (FormField field : fields) {
-			info.put(field, null);
+				|| response.getStatusLine().getStatusCode() == HttpStatus.SC_ACCEPTED) {
+			return true;
 		}
 
-		for (FormField field : info.keySet()) {
-			String line = field.prompt(command.getAcorn().getPromptTimeoutSeconds());
-			if (line != null) {
-				info.put(field, line);
+		LOGGER.log(Level.WARNING, "Got non-success for " + postUri + ": " + response.getStatusLine());
+		return false;
+	}
+
+	private boolean gatherInfo(Command command) {
+		for (FormField field : fields) {
+			String value = field.prompt(command.getAcorn().getPromptTimeoutSeconds());
+			if (value != null) {
+				field.setValue(value);
 			} else {
+				field.setValue(null);
 				return false;
 			}
 		}
