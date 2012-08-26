@@ -3,6 +3,7 @@ package org.tailfeather.acorn;
 public class SlowConsole {
 	private static final String CLEAR = "\033[2J";
 	private static final String HOME = "\033[H";
+	private static final String CLEAR_LINE = "\033[2K";
 
 	private final long period;
 	private long lastPrinted = -1;
@@ -18,6 +19,11 @@ public class SlowConsole {
 	public void clear() {
 		print(HOME);
 		print(CLEAR);
+		flush();
+	}
+
+	public void eraseLine() {
+		print(CLEAR_LINE);
 		flush();
 	}
 
@@ -37,6 +43,15 @@ public class SlowConsole {
 		}
 	}
 
+	public void println() {
+		println("");
+	}
+
+	public void println(String s) {
+		print(s);
+		print(System.getProperty("line.separator"));
+	}
+
 	public String readLine(String prompt, Object... args) {
 		return System.console().readLine(prompt, args);
 	}
@@ -54,4 +69,5 @@ public class SlowConsole {
 			Thread.currentThread().interrupt();
 		}
 	}
+
 }

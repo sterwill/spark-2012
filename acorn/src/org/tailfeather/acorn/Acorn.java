@@ -25,14 +25,33 @@ public class Acorn {
 	}
 
 	public int run(String args[]) throws Exception {
+		// CONSOLE.clear();
+		CONSOLE.print(Messages.getMessage("org/tailfeather/acorn/main.txt"));
+		CONSOLE.flush();
+
 		boolean stop = false;
 		while (!stop) {
-			CONSOLE.clear();
-			CONSOLE.print(Messages.getMessage("org/tailfeather/acorn/main.txt"));
-			CONSOLE.flush();
-
+			CONSOLE.eraseLine();
 			final String line = CONSOLE.readLine(MAIN_PROMPT);
-			return 0;
+			if (line == null) {
+				CONSOLE.println();
+				continue;
+			}
+
+			final String trim = line.trim();
+			if (trim.length() == 0) {
+				continue;
+			}
+
+			switch (trim) {
+			case "exit":
+			case "quit":
+			case "bye":
+				CONSOLE.println();
+				CONSOLE.println("Goodbye.");
+				stop = true;
+				break;
+			}
 		}
 
 		return 0;
