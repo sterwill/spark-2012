@@ -57,7 +57,7 @@ public class Screensaver {
 	}
 
 	private void print() {
-		ConsoleUtils.clear();
+		Acorn.CONSOLE.clear();
 		for (int i = lines.size() - 1; i >= 0; i--) {
 			System.out.println(lines.get(i));
 		}

@@ -1,18 +1,17 @@
 package org.tailfeather.acorn;
 
-import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Acorn {
 	private static final Logger LOGGER = Logger.getLogger(Acorn.class.getName());
-	private static final int OUTPUT_BPS = 300;
+	private static final int OUTPUT_BPS = 100;
+	private static final String MAIN_PROMPT = "SYSTEM {) ";
+
+	public static final SlowConsole CONSOLE = new SlowConsole(OUTPUT_BPS);
 
 	public static void main(String[] args) throws Exception {
 		LogConfig.configureRootLogger();
-
-		// Wedge in a slow output stream to standard output
-		System.setOut(new PrintStream(new SlowOutputStream(System.out, OUTPUT_BPS)));
 
 		try {
 			System.exit(new Acorn().run(args));
@@ -28,12 +27,12 @@ public class Acorn {
 	public int run(String args[]) throws Exception {
 		boolean stop = false;
 		while (!stop) {
-			ConsoleUtils.clear();
-			System.console().writer().write(Messages.getMessage("org/tailfeather/acorn/main.txt"));
-			System.console().flush();
+			CONSOLE.clear();
+			CONSOLE.print(Messages.getMessage("org/tailfeather/acorn/main.txt"));
+			CONSOLE.flush();
 
-			if (true)
-				return 0;
+			final String line = CONSOLE.readLine(MAIN_PROMPT);
+			return 0;
 		}
 
 		return 0;
