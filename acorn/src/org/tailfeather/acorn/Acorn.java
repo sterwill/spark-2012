@@ -1,6 +1,8 @@
 package org.tailfeather.acorn;
 
 import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
@@ -8,7 +10,8 @@ import java.util.logging.Logger;
 
 public class Acorn {
 	private static final Logger LOGGER = Logger.getLogger(Acorn.class.getName());
-	private static final int TIMEOUT_SECONDS = 30;
+	private static final int MAIN_PROMPT_TIMEOUT_SECONDS = 30;
+	private static final int REGISTER_PROMPT_TIMEOUT_SECONDS = 60;
 
 	public static void main(String[] args) throws Exception {
 		LogConfig.configureRootLogger();
@@ -34,7 +37,7 @@ public class Acorn {
 				final String line;
 				try {
 					line = Console.readLine(Messages.getMessage("org/tailfeather/acorn/main-prompt.txt"),
-							TIMEOUT_SECONDS, TimeUnit.SECONDS);
+							MAIN_PROMPT_TIMEOUT_SECONDS, TimeUnit.SECONDS);
 				} catch (InterruptedException e) {
 					LOGGER.log(Level.WARNING, "Interrupted while prompting", e);
 					continue;
@@ -58,6 +61,9 @@ public class Acorn {
 				case "help":
 					printHelp();
 					break;
+				case "register":
+					register();
+					continue root;
 				case "ps":
 				case "who":
 				case "ls":
@@ -72,6 +78,94 @@ public class Acorn {
 				}
 			}
 		}
+	}
+
+	private boolean register() {
+		Console.print(Messages.getMessage("org/tailfeather/acorn/register-instructions.txt"));
+		Console.flush();
+
+		Map<String, String> info = new HashMap<String, String>();
+		info.put("Name", null);
+		info.put("Dog's Name", null);
+		info.put("E-mail Address", null);
+
+		while (true) {
+			// Gather info
+			if (!getRegistrationInfo(info)) {
+				// cancel or timeout
+				return false;
+			}
+
+			// Summarize
+			Console.print(Messages.getMessage("org/tailfeather/acorn/register-verify.txt"));
+			for (String key : info.keySet()) {
+				Console.printLine("  " + key + ": " + info.get(key));
+			}
+			Console.printLine();
+
+			// Verify
+
+		}
+
+		return true;
+	}
+
+	private boolean verify() {
+		while (true) {
+			String line;
+			try {
+				line = Console.readLine(Messages.getMessage("org/tailfeather/acorn/register-verify-prompt.txt"),
+						REGISTER_PROMPT_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+			} catch (InterruptedException e) {
+				LOGGER.log(Level.WARNING, "Interrupted while prompting for register", e);
+				continue;
+			} catch (TimeoutException e) {
+				return false;
+			}
+		}
+	}
+
+	private boolean getRegistrationInfo(Map<String, String> info) {
+		for (String key : info.keySet()) {
+			while (true) {
+				// Present the previous try's value if there was one
+				String prompt = key;
+				String oldValue = info.get(key);
+				if (oldValue != null) {
+					prompt += " [" + oldValue + "]";
+				}
+				prompt += ": ";
+
+				// Read the new value
+				String line;
+				try {
+					line = Console.readLine(prompt, REGISTER_PROMPT_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+				} catch (InterruptedException e) {
+					LOGGER.log(Level.WARNING, "Interrupted while prompting for register", e);
+					continue;
+				} catch (TimeoutException e) {
+					return false;
+				}
+
+				if (line == null) {
+					Console.printLine();
+					continue;
+				}
+
+				line = line.trim();
+				if (line.length() == 0) {
+					continue;
+				}
+
+				if ("cancel".equalsIgnoreCase(line)) {
+					return false;
+				}
+
+				info.put(key, line);
+			}
+		}
+
+		return true;
 	}
 
 	private void printErrorLine(String error) {

@@ -1,0 +1,7 @@
+Here's how you do it:
+
+  1. thing
+  2. another thing
+  3. stuff
+
+Type 'cancel' to stop the registration process.
