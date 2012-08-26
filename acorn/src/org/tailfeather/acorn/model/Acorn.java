@@ -7,6 +7,8 @@ import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -15,16 +17,17 @@ import org.tailfeather.acorn.Console;
 import org.tailfeather.acorn.FileUtils;
 
 @XmlRootElement(name = "acorn")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Acorn {
 	private static final Logger LOGGER = Logger.getLogger(Acorn.class.getName());
 
 	@XmlAttribute(name = "motd")
 	private String motd;
 
-	@XmlElement(name = "prompt", required = true)
+	@XmlAttribute(name = "prompt", required = true)
 	private String prompt;
 
-	@XmlElement(name = "timeoutSeconds")
+	@XmlAttribute(name = "timeoutSeconds")
 	private int timeoutSeconds = 30;
 
 	@XmlElement(name = "command")
@@ -40,16 +43,27 @@ public class Acorn {
 				Console.flush();
 			}
 
+			// First prompt has no timeout
+			int promptTimeout = Integer.MAX_VALUE;
 			while (true) {
 				final String input;
 				try {
-					input = Console.readLine(FileUtils.getContents(prompt), timeoutSeconds, TimeUnit.SECONDS);
+					input = Console.readLine(FileUtils.getContents(prompt), promptTimeout, TimeUnit.SECONDS);
 				} catch (InterruptedException e) {
 					LOGGER.log(Level.WARNING, "Interrupted while prompting", e);
 					continue;
 				} catch (TimeoutException e) {
-					break main;
+					Console.printLine();
+					printCommandError("Time out after " + promptTimeout + " seconds");
+					try {
+						Thread.sleep(2000);
+					} catch (InterruptedException e2) {
+						Thread.currentThread().interrupt();
+					}
+					continue main;
 				}
+
+				promptTimeout = timeoutSeconds;
 
 				if (input == null) {
 					Console.printLine();

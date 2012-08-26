@@ -1,11 +1,14 @@
 package org.tailfeather.acorn.model.exec.form;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement(name = "text")
-public class Text implements FormFields {
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Text extends FormField {
 	@XmlAttribute(name = "name")
 	private String name;
 

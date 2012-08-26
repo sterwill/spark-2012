@@ -28,21 +28,18 @@ public class Main {
 	}
 
 	public int run(String args[]) throws Exception {
-
 		if (args.length != 1) {
 			System.err.println("usage: " + Main.class.getName() + " acorn.xml");
 			return 1;
 		}
 
 		Acorn acorn = (Acorn) JAXBContext.newInstance(Acorn.class).createUnmarshaller().unmarshal(new File(args[0]));
-
 		if (acorn == null) {
 			System.err.println("Error reading " + args[0]);
 			return 2;
 		}
 
 		acorn.run();
-
 		return 0;
 	}
 }

@@ -13,6 +13,10 @@ public class FileUtils {
 	private final static Logger LOGGER = Logger.getLogger(FileUtils.class.getName());
 
 	public static String getContents(String path) {
+		if (path == null) {
+			throw new IllegalArgumentException("path cannot be null");
+		}
+
 		InputStream stream;
 		try {
 			stream = new FileInputStream(path);

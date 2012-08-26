@@ -1,12 +1,15 @@
 package org.tailfeather.acorn.model.exec;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.tailfeather.acorn.model.Command;
 
 @XmlRootElement(name = "echo")
-public class Echo implements Executable {
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Echo extends Executable {
 
 	@XmlElement(name = "level")
 	private String level;
