@@ -12,8 +12,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class Console {
+	private static final Logger LOGGER = Logger.getLogger(Console.class.getName());
+
 	public static InputStream in;
 	public static PrintStream out;
 	public static PrintStream err;
@@ -24,15 +28,21 @@ public abstract class Console {
 	private static final String ATTR_RESET = "\033[m";
 	private static final String ATTR_RED = "\033[31m";
 
-	private static final int CPS = 200;
-
 	private static int columns = -1;
 	private static int lines = -1;
 
 	static {
 		in = System.in;
-		out = new PrintStream(new SlowOutputStream(System.out, CPS));
-		err = new PrintStream(new SlowOutputStream(System.err, CPS));
+		out = System.out;
+		err = System.err;
+	}
+
+	public static void setOutRate(int cps) {
+		out = new PrintStream(new SlowOutputStream(System.out, cps));
+	}
+
+	public static void setErrRate(int cps) {
+		err = new PrintStream(new SlowOutputStream(System.err, cps));
 	}
 
 	public static int getColumns() {
@@ -142,7 +152,8 @@ public abstract class Console {
 			try {
 				return result.get(timeout, unit);
 			} catch (ExecutionException e) {
-				throw new RuntimeException(e);
+				LOGGER.log(Level.INFO, "Execution exception", e);
+				return null;
 			} catch (TimeoutException e) {
 				result.cancel(true);
 				throw e;

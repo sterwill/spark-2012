@@ -27,6 +27,9 @@ public class Acorn {
 	@XmlAttribute(name = "prompt", required = true)
 	private String prompt;
 
+	@XmlAttribute(name = "cps")
+	private int cps = 300;
+
 	@XmlAttribute(name = "promptTimeoutSeconds")
 	private int promptTimeoutSeconds = 30;
 
@@ -38,6 +41,9 @@ public class Acorn {
 	}
 
 	public void run() {
+		Console.setOutRate(cps);
+		Console.setErrRate(cps);
+
 		main: while (true) {
 			Console.clear();
 			Console.flush();
