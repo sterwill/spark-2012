@@ -9,5 +9,11 @@
 	<classpathentry kind="lib" path="lib/httpclient-cache-4.2.1.jar"/>
 	<classpathentry kind="lib" path="lib/httpcore-4.2.1.jar" sourcepath="/home/sterwill/.m2/repository/org/apache/httpcomponents/httpcore/4.2.1/httpcore-4.2.1-sources.jar"/>
 	<classpathentry kind="lib" path="lib/httpmime-4.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/javacv-0.2-bin/javacpp.jar"/>
+	<classpathentry kind="lib" path="lib/javacv-0.2-bin/javacv-linux-x86_64.jar"/>
+	<classpathentry kind="lib" path="lib/javacv-0.2-bin/javacv.jar"/>
+	<classpathentry kind="lib" path="lib/qrcode.jar"/>
+	<classpathentry kind="lib" path="lib/zxing-2.0/core.jar"/>
+	<classpathentry kind="lib" path="lib/zxing-2.0/javase.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

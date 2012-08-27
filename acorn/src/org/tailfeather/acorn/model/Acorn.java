@@ -12,9 +12,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.tailfeather.acorn.Console;
 import org.tailfeather.acorn.FileUtils;
+import org.tailfeather.acorn.ZXingCodeScanner;
 
 @XmlRootElement(name = "acorn")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -30,19 +32,25 @@ public class Acorn {
 	@XmlAttribute(name = "cps")
 	private int cps = 300;
 
+	@XmlAttribute(name = "camera")
+	private int camera = 0;
+
 	@XmlAttribute(name = "promptTimeoutSeconds")
 	private int promptTimeoutSeconds = 30;
 
 	@XmlElement(name = "command")
 	private List<Command> commands;
 
+	@XmlTransient
+	private ZXingCodeScanner scanner;
+
 	public int getPromptTimeoutSeconds() {
 		return promptTimeoutSeconds;
 	}
 
 	public void run() {
-		Console.setOutRate(cps);
-		Console.setErrRate(cps);
+		configureConsole();
+		scanner = new ZXingCodeScanner(camera);
 
 		main: while (true) {
 			Console.clear();
@@ -108,6 +116,32 @@ public class Acorn {
 				}
 			}
 		}
+	}
+
+	private void configureConsole() {
+		Console.setOutRate(cps);
+		Console.setErrRate(cps);
+		Console.setPromptIdleRunnable(new Runnable() {
+			private final static long MIN_IDLE_PERIOD = 100;
+
+			@Override
+			public void run() {
+				long start = System.currentTimeMillis();
+				String data = scanner.scanCode();
+				if (data != null) {
+					Console.printRedLine(data);
+				} else {
+					// Sleep off the remainder
+					long elapsed = System.currentTimeMillis() - start;
+					if (elapsed < MIN_IDLE_PERIOD) {
+						try {
+							Thread.sleep(elapsed);
+						} catch (InterruptedException e) {
+						}
+					}
+				}
+			}
+		});
 	}
 
 	public static String[] parseInput(String line) {

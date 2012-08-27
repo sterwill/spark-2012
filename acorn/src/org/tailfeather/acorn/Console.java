@@ -18,15 +18,26 @@ import java.util.logging.Logger;
 public abstract class Console {
 	private static final Logger LOGGER = Logger.getLogger(Console.class.getName());
 
-	public static InputStream in;
-	public static PrintStream out;
-	public static PrintStream err;
-
 	private static final String CLEAR = "\033[2J";
 	private static final String HOME = "\033[H";
 	private static final String CLEAR_LINE = "\033[2K";
 	private static final String ATTR_RESET = "\033[m";
 	private static final String ATTR_RED = "\033[31m";
+
+	private static Runnable promptIdleRunnable = new Runnable() {
+		@Override
+		public void run() {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				LOGGER.log(Level.INFO, "interrupted in prompt idle runnable", e);
+			}
+		}
+	};
+
+	private static InputStream in;
+	private static PrintStream out;
+	private static PrintStream err;
 
 	private static int columns = -1;
 	private static int lines = -1;
@@ -43,6 +54,13 @@ public abstract class Console {
 
 	public static void setErrRate(int cps) {
 		err = new PrintStream(new SlowOutputStream(System.err, cps));
+	}
+
+	public static void setPromptIdleRunnable(Runnable r) {
+		if (r == null) {
+			throw new IllegalArgumentException("idle runnable must not be null");
+		}
+		promptIdleRunnable = r;
 	}
 
 	public static int getColumns() {
@@ -176,15 +194,10 @@ public abstract class Console {
 				Console.flush();
 
 				final BufferedReader br = new BufferedReader(new InputStreamReader(Console.in));
-				try {
-					while (!br.ready()) {
-						Thread.sleep(100);
-					}
-					return br.readLine();
-				} catch (InterruptedException e) {
-					// We get here if cancelled
-					return null;
+				while (!br.ready()) {
+					promptIdleRunnable.run();
 				}
+				return br.readLine();
 			}
 		}
 	}
