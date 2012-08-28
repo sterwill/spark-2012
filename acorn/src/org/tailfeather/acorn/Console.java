@@ -1,7 +1,6 @@
 package org.tailfeather.acorn;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
@@ -15,6 +14,10 @@ import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.tailfeather.acorn.model.idle.DefaultPromptIdleHandler;
+import org.tailfeather.acorn.model.idle.PromptIdleHandler;
+import org.tailfeather.acorn.model.idle.PromptIdleHandlerException;
+
 public abstract class Console {
 	private static final Logger LOGGER = Logger.getLogger(Console.class.getName());
 
@@ -23,17 +26,6 @@ public abstract class Console {
 	private static final String CLEAR_LINE = "\033[2K";
 	private static final String ATTR_RESET = "\033[m";
 	private static final String ATTR_RED = "\033[31m";
-
-	private static Runnable promptIdleRunnable = new Runnable() {
-		@Override
-		public void run() {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				LOGGER.log(Level.INFO, "interrupted in prompt idle runnable", e);
-			}
-		}
-	};
 
 	private static InputStream in;
 	private static PrintStream out;
@@ -54,13 +46,6 @@ public abstract class Console {
 
 	public static void setErrRate(int cps) {
 		err = new PrintStream(new SlowOutputStream(System.err, cps));
-	}
-
-	public static void setPromptIdleRunnable(Runnable r) {
-		if (r == null) {
-			throw new IllegalArgumentException("idle runnable must not be null");
-		}
-		promptIdleRunnable = r;
 	}
 
 	public static int getColumns() {
@@ -164,12 +149,25 @@ public abstract class Console {
 
 	public static String readLine(String prompt, int timeout, TimeUnit unit) throws TimeoutException,
 			InterruptedException {
+		try {
+			return readLine(prompt, timeout, unit, new DefaultPromptIdleHandler());
+		} catch (PromptIdleHandlerException e) {
+			throw new RuntimeException("Should never happen");
+		}
+	}
+
+	public static String readLine(String prompt, int timeout, TimeUnit unit, PromptIdleHandler idleHandler)
+			throws TimeoutException, InterruptedException, PromptIdleHandlerException {
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 		try {
-			final Future<String> result = executor.submit(new PromptTask(prompt));
+			final Future<String> result = executor.submit(new PromptTask(prompt, idleHandler));
 			try {
 				return result.get(timeout, unit);
 			} catch (ExecutionException e) {
+				if (e.getCause() instanceof PromptIdleHandlerException) {
+					throw (PromptIdleHandlerException) e.getCause();
+				}
+
 				LOGGER.log(Level.INFO, "Execution exception", e);
 				return null;
 			} catch (TimeoutException e) {
@@ -183,19 +181,21 @@ public abstract class Console {
 
 	private static class PromptTask implements Callable<String> {
 		private final String prompt;
+		private final PromptIdleHandler idleHandler;
 
-		private PromptTask(String prompt) {
+		private PromptTask(String prompt, PromptIdleHandler idleHandler) {
 			this.prompt = prompt;
+			this.idleHandler = idleHandler;
 		}
 
-		public String call() throws IOException {
+		public String call() throws Exception {
 			synchronized (Console.in) {
 				Console.print(prompt);
 				Console.flush();
 
 				final BufferedReader br = new BufferedReader(new InputStreamReader(Console.in));
 				while (!br.ready()) {
-					promptIdleRunnable.run();
+					idleHandler.idle();
 				}
 				return br.readLine();
 			}

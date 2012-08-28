@@ -14,9 +14,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.tailfeather.acorn.CodeScannerRunnable;
 import org.tailfeather.acorn.Console;
 import org.tailfeather.acorn.FileUtils;
-import org.tailfeather.acorn.ZXingCodeScanner;
+import org.tailfeather.acorn.model.idle.CheckForScannedCodeIdleHandler;
+import org.tailfeather.acorn.model.idle.CodeScannedException;
+import org.tailfeather.acorn.model.idle.PromptIdleHandlerException;
 
 @XmlRootElement(name = "acorn")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -41,8 +44,17 @@ public class Acorn {
 	@XmlElement(name = "command")
 	private List<Command> commands;
 
+	@XmlElement(name = "scan")
+	private Scan scan;
+
 	@XmlTransient
-	private ZXingCodeScanner scanner;
+	private CodeScannerRunnable scannerRunnable;
+
+	@XmlTransient
+	private Thread scannerThread;
+
+	@XmlTransient
+	protected String code;
 
 	public int getPromptTimeoutSeconds() {
 		return promptTimeoutSeconds;
@@ -50,7 +62,12 @@ public class Acorn {
 
 	public void run() {
 		configureConsole();
-		scanner = new ZXingCodeScanner(camera);
+		scannerRunnable = new CodeScannerRunnable(camera);
+		scannerThread = new Thread(scannerRunnable);
+		scannerThread.setDaemon(true);
+		scannerThread.start();
+
+		CheckForScannedCodeIdleHandler scannerIdleHandler = new CheckForScannedCodeIdleHandler(scannerRunnable);
 
 		main: while (true) {
 			Console.clear();
@@ -66,7 +83,9 @@ public class Acorn {
 			while (true) {
 				final String input;
 				try {
-					input = Console.readLine(FileUtils.getContents(prompt), promptTimeout, TimeUnit.SECONDS);
+					scannerRunnable.clear();
+					input = Console.readLine(FileUtils.getContents(prompt), promptTimeout, TimeUnit.SECONDS,
+							scannerIdleHandler);
 				} catch (InterruptedException e) {
 					LOGGER.log(Level.WARNING, "Interrupted while prompting", e);
 					continue;
@@ -77,6 +96,13 @@ public class Acorn {
 						Thread.sleep(2000);
 					} catch (InterruptedException e2) {
 						Thread.currentThread().interrupt();
+					}
+					continue main;
+				} catch (PromptIdleHandlerException e) {
+					if (e instanceof CodeScannedException) {
+						if (scan != null) {
+							scan.handleScan(this, ((CodeScannedException) e).getCode());
+						}
 					}
 					continue main;
 				}
@@ -121,27 +147,6 @@ public class Acorn {
 	private void configureConsole() {
 		Console.setOutRate(cps);
 		Console.setErrRate(cps);
-		Console.setPromptIdleRunnable(new Runnable() {
-			private final static long MIN_IDLE_PERIOD = 100;
-
-			@Override
-			public void run() {
-				long start = System.currentTimeMillis();
-				String data = scanner.scanCode();
-				if (data != null) {
-					Console.printRedLine(data);
-				} else {
-					// Sleep off the remainder
-					long elapsed = System.currentTimeMillis() - start;
-					if (elapsed < MIN_IDLE_PERIOD) {
-						try {
-							Thread.sleep(elapsed);
-						} catch (InterruptedException e) {
-						}
-					}
-				}
-			}
-		});
 	}
 
 	public static String[] parseInput(String line) {

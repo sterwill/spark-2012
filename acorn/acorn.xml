@@ -21,4 +21,11 @@
 		<name>bye</name>
 		<exit />
 	</command>
+	<scan bell="sounds/sweet.wav">
+		<code>
+			<command>
+				<echo level="error" file="text/command-restricted.txt" />
+			</command>
+		</code>
+	</scan>
 </acorn>
