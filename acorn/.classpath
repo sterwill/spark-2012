@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7">
+		<accessrules>
+			<accessrule kind="accessible" pattern="sun.*"/>
+		</accessrules>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/commons-codec-1.6.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/fluent-hc-4.2.1.jar"/>
@@ -12,7 +16,6 @@
 	<classpathentry kind="lib" path="lib/javacv-0.2-bin/javacpp.jar"/>
 	<classpathentry kind="lib" path="lib/javacv-0.2-bin/javacv-linux-x86_64.jar"/>
 	<classpathentry kind="lib" path="lib/javacv-0.2-bin/javacv.jar"/>
-	<classpathentry kind="lib" path="lib/qrcode.jar"/>
 	<classpathentry kind="lib" path="lib/zxing-2.0/core.jar"/>
 	<classpathentry kind="lib" path="lib/zxing-2.0/javase.jar"/>
 	<classpathentry kind="output" path="bin"/>
