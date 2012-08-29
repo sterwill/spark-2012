@@ -1,15 +1,9 @@
 package org.tailfeather.acorn.model;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -17,6 +11,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.tailfeather.acorn.Console;
+import org.tailfeather.acorn.FileUtils;
+import org.tailfeather.acorn.SoundUtils;
 
 @XmlRootElement(name = "scan")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -26,8 +22,8 @@ public class Scan {
 	@XmlAttribute(name = "unknownSound")
 	private String unknownSound;
 
-	@XmlAttribute(name = "unknownMessage")
-	private String unknownMessage;
+	@XmlAttribute(name = "unknownFile")
+	private String unknownFile;
 
 	@XmlElement(name = "code")
 	private List<Code> codes = new ArrayList<Code>();
@@ -36,40 +32,22 @@ public class Scan {
 		if (value != null) {
 			boolean handled = false;
 			for (Code code : codes) {
-				Matcher matcher = code.getMatcher(value);
-				if (matcher.matches()) {
-					playSound(code.getSound());
+				if (code.evaluate(value)) {
 					handled = true;
 					break;
 				}
 			}
 
 			if (!handled) {
-				playSound(unknownSound);
-				if (unknownMessage != null) {
+				SoundUtils.playSound(unknownSound);
+				if (unknownFile != null) {
 					Console.printLine();
-					Console.printLine();
-					Console.printRedLine(unknownMessage);
-					Console.printLine();
-					Console.printLine();
+					Console.printRedLine(FileUtils.getContents(unknownFile));
 					try {
 						Thread.sleep(3000);
 					} catch (InterruptedException e) {
 					}
 				}
-			}
-		}
-	}
-
-	private void playSound(String file) {
-		if (file != null) {
-			try {
-				Clip clip = AudioSystem.getClip();
-				AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(file));
-				clip.open(inputStream);
-				clip.start();
-			} catch (Exception e) {
-				LOGGER.log(Level.WARNING, "Error ringing the bell", e);
 			}
 		}
 	}

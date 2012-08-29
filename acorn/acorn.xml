@@ -22,8 +22,8 @@
 		<exit />
 	</command>
 	<scan unknownSound="sounds/sour.wav"
-		unknownMessage="The detected code is not registered with this system">
-		<code pattern="http://splatspace.org/(.*)" sound="sounds/sweet.wav">
+		unknownFile="text/unknown-code.txt">
+		<code pattern="http://splatspace.org(.*)" sound="sounds/sweet.wav">
 		</code>
 	</scan>
 </acorn>

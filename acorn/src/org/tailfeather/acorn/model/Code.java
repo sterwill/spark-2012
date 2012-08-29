@@ -8,6 +8,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.tailfeather.acorn.SoundUtils;
+
 @XmlRootElement(name = "code")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Code {
@@ -17,18 +19,22 @@ public class Code {
 	@XmlAttribute(name = "sound")
 	private String sound;
 
-	public String getPattern() {
-		return pattern;
-	}
-
-	public Matcher getMatcher(String value) {
+	public boolean evaluate(String value) {
 		if (pattern == null) {
 			throw new RuntimeException("Must supply a pattern to a code element");
 		}
-		return Pattern.compile(pattern).matcher(value);
+		Matcher matcher = Pattern.compile(pattern).matcher(value);
+
+		if (matcher.matches()) {
+			SoundUtils.playSound(sound);
+			handleMatch(value);
+			return true;
+		}
+
+		return false;
 	}
 
-	public String getSound() {
-		return sound;
+	private void handleMatch(String value) {
+
 	}
 }

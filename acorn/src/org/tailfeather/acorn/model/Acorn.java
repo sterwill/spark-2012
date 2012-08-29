@@ -78,14 +78,15 @@ public class Acorn {
 				Console.flush();
 			}
 
+			final String promptString = FileUtils.getContents(prompt);
+
 			// First prompt has no timeout
 			int promptTimeout = Integer.MAX_VALUE;
 			while (true) {
 				final String input;
 				try {
 					scannerRunnable.clear();
-					input = Console.readLine(FileUtils.getContents(prompt), promptTimeout, TimeUnit.SECONDS,
-							scannerIdleHandler);
+					input = Console.readLine(promptString, promptTimeout, TimeUnit.SECONDS, scannerIdleHandler);
 				} catch (InterruptedException e) {
 					LOGGER.log(Level.WARNING, "Interrupted while prompting", e);
 					continue;

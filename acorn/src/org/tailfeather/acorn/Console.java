@@ -27,12 +27,12 @@ public abstract class Console {
 	private static final String ATTR_RESET = "\033[m";
 	private static final String ATTR_RED = "\033[31m";
 
-	private static InputStream in;
-	private static PrintStream out;
-	private static PrintStream err;
+	private static volatile InputStream in;
+	private static volatile PrintStream out;
+	private static volatile PrintStream err;
 
-	private static int columns = -1;
-	private static int lines = -1;
+	private static volatile int columns = -1;
+	private static volatile int lines = -1;
 
 	static {
 		in = System.in;
@@ -189,16 +189,14 @@ public abstract class Console {
 		}
 
 		public String call() throws Exception {
-			synchronized (Console.in) {
-				Console.print(prompt);
-				Console.flush();
+			Console.print(prompt);
+			Console.flush();
 
-				final BufferedReader br = new BufferedReader(new InputStreamReader(Console.in));
-				while (!br.ready()) {
-					idleHandler.idle();
-				}
-				return br.readLine();
+			final BufferedReader br = new BufferedReader(new InputStreamReader(Console.in));
+			while (!br.ready()) {
+				idleHandler.idle();
 			}
+			return br.readLine();
 		}
 	}
 }
