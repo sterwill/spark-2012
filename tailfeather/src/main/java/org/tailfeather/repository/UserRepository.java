@@ -1,9 +1,11 @@
 package org.tailfeather.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
 import org.tailfeather.entity.User;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+@Component
+public interface UserRepository extends JpaRepository<User, String> {
 
 	public Iterable<User> findByEmail(String email);
 
