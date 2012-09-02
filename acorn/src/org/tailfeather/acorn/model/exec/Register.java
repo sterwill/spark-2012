@@ -1,7 +1,5 @@
 package org.tailfeather.acorn.model.exec;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,25 +15,19 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.tailfeather.acorn.Console;
 import org.tailfeather.acorn.FileUtils;
+import org.tailfeather.acorn.ServerUtils;
 import org.tailfeather.acorn.model.Command;
 import org.tailfeather.acorn.model.exec.form.Email;
 import org.tailfeather.acorn.model.exec.form.FormField;
 import org.tailfeather.acorn.model.exec.form.Text;
+import org.tailfeather.entity.User;
 
-@XmlRootElement(name = "form")
+@XmlRootElement(name = "register")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Form extends Executable {
-	private static final Logger LOGGER = Logger.getLogger(Form.class.getName());
+public class Register extends Executable {
+	private static final Logger LOGGER = Logger.getLogger(Register.class.getName());
 
 	@XmlAttribute(name = "post", required = true)
 	private String postUri;
@@ -92,50 +84,18 @@ public class Form extends Executable {
 			}
 
 			// Submit it
-			if (!submit()) {
+			try {
+				User user = submit();
+				Console.printLine(user.getId());
+				Console.printLine(FileUtils.getContents(success));
+				Thread.sleep(4000);
+				break;
+			} catch (Exception e) {
+				LOGGER.log(Level.WARNING, "Error submitting", e);
 				Console.printRedLine("There was an error saving your information, please try again");
 				continue;
-			} else {
-				Console.printLine(FileUtils.getContents(success));
-				break;
 			}
 		}
-	}
-
-	private boolean submit() {
-		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		for (FormField field : fields) {
-			params.add(new BasicNameValuePair(field.getName(), field.getValue()));
-		}
-
-		UrlEncodedFormEntity entity;
-		try {
-			entity = new UrlEncodedFormEntity(params, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			LOGGER.log(Level.WARNING, "Error preparing request entity", e);
-			return false;
-		}
-
-		HttpPost post = new HttpPost(postUri);
-		post.setEntity(entity);
-
-		HttpResponse response;
-		try {
-			HttpClient client = new DefaultHttpClient();
-			response = client.execute(post);
-		} catch (IOException e) {
-			LOGGER.log(Level.WARNING, "Error submitting form", e);
-			return false;
-		}
-
-		if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK
-				|| response.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED
-				|| response.getStatusLine().getStatusCode() == HttpStatus.SC_ACCEPTED) {
-			return true;
-		}
-
-		LOGGER.log(Level.WARNING, "Got non-success for " + postUri + ": " + response.getStatusLine());
-		return false;
 	}
 
 	private boolean gatherInfo(Command command) {
@@ -150,5 +110,20 @@ public class Form extends Executable {
 		}
 
 		return true;
+	}
+
+	private User submit() {
+		User user = new User();
+		for (FormField field : fields) {
+			switch (field.getName()) {
+			case "name":
+				user.setFullName(field.getValue());
+				break;
+			case "email":
+				user.setEmail(field.getValue());
+				break;
+			}
+		}
+		return ServerUtils.postUser(postUri, user);
 	}
 }

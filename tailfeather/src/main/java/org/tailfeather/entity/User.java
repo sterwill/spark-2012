@@ -1,46 +1,59 @@
 package org.tailfeather.entity;
 
-import java.util.UUID;
+import java.net.URI;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import javax.ws.rs.Path;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.springframework.util.Assert;
+import org.tailfeather.IdHelper;
+import org.tailfeather.resource.UserResource;
+
+import com.sun.jersey.server.linking.Ref;
+import com.sun.jersey.server.linking.Ref.Style;
 
 @XmlRootElement(name = "user")
 @XmlAccessorType(XmlAccessType.FIELD)
 @Entity
 @Table(name = "users")
+@Path(value = "/")
 public class User {
+	@Ref(style = Style.ABSOLUTE, resource = UserResource.class)
+	@XmlElement(name = "uri")
+	@Transient
+	private URI uri;
+
 	@Id
 	@Column(name = "id")
-	@XmlAttribute(name = "id")
+	@XmlElement(name = "id")
 	private String id;
 
 	@NotNull
 	@Size(min = 7, max = 128)
 	@Pattern(regexp = ".+@.+\\.[a-z]+", message = "email.badformat")
 	@Column(name = "email", nullable = false, unique = true)
-	@XmlAttribute(name = "email")
+	@XmlElement(name = "email")
 	private String email;
 
 	@NotNull
 	@Size(min = 3, max = 80)
 	@Column(name = "full_name", nullable = false)
-	@XmlAttribute(name = "fullName")
+	@XmlElement(name = "fullName")
 	private String fullName;
 
 	public User() {
-		this.id = UUID.randomUUID().toString().substring(0, 7);
+		this.id = IdHelper.newShortId();
 	}
 
 	public User(String email, String fullName) {
@@ -49,6 +62,10 @@ public class User {
 		Assert.hasText(fullName);
 		this.email = email;
 		this.fullName = fullName;
+	}
+
+	public URI getUri() {
+		return uri;
 	}
 
 	public String getId() {

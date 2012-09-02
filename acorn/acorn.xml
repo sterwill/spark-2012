@@ -2,11 +2,11 @@
 	promptTimeoutSeconds="30" cps="200">
 	<command>
 		<name>register</name>
-		<form post="http://tailfeather.org/tf/register" instructions="text/register-instructions.txt"
+		<register post="http://localhost:8080/api/user" instructions="text/register-instructions.txt"
 			success="text/register-success.txt">
 			<text name="name" prompt="  Name: " />
 			<email name="email" prompt="  E-mail Address: " />
-		</form>
+		</register>
 	</command>
 	<command>
 		<name>ls</name>
@@ -21,9 +21,10 @@
 		<name>bye</name>
 		<exit />
 	</command>
-	<scan unknownSound="sounds/sour.wav"
-		unknownFile="text/unknown-code.txt">
-		<code pattern="http://splatspace.org(.*)" sound="sounds/sweet.wav">
+	<scan unknownSound="sounds/sour.wav" unknownFile="text/unknown-code.txt">
+		<code pattern="http://splatspace\.(.*)" sound="sounds/sweet.wav"
+	postUriFormat="http://localhost:8080/api/user/{userId}">
+
 		</code>
 	</scan>
 </acorn>

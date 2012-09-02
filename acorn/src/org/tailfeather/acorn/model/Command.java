@@ -13,7 +13,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.tailfeather.acorn.model.exec.Echo;
 import org.tailfeather.acorn.model.exec.Executable;
 import org.tailfeather.acorn.model.exec.Exit;
-import org.tailfeather.acorn.model.exec.Form;
+import org.tailfeather.acorn.model.exec.Register;
 
 @XmlRootElement(name = "command")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -21,8 +21,8 @@ public class Command {
 	@XmlElement(name = "name")
 	private List<String> names;
 
-	@XmlElements({ @XmlElement(name = "echo", type = Echo.class), @XmlElement(name = "form", type = Form.class),
-			@XmlElement(name = "exit", type = Exit.class) })
+	@XmlElements({ @XmlElement(name = "echo", type = Echo.class),
+			@XmlElement(name = "register", type = Register.class), @XmlElement(name = "exit", type = Exit.class) })
 	private List<Executable> exec = new ArrayList<Executable>();
 
 	@XmlTransient

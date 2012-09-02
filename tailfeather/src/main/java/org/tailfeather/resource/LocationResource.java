@@ -21,45 +21,45 @@ import javax.ws.rs.core.UriInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.tailfeather.dao.UserDao;
-import org.tailfeather.entity.User;
-import org.tailfeather.exceptions.UserNotFoundException;
+import org.tailfeather.dao.LocationDao;
+import org.tailfeather.entity.Location;
+import org.tailfeather.exceptions.LocationNotFoundException;
 
 @Component
-@Path("/user")
-public class UserResource {
+@Path("/location")
+public class LocationResource {
 	@Autowired
-	private UserDao userDao;
+	private LocationDao locationDao;
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON_VALUE)
-	public List<User> list() {
-		return new ArrayList<User>(userDao.findAll());
+	public List<Location> list() {
+		return new ArrayList<Location>(locationDao.findAll());
 	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON_VALUE)
 	@Path("/{id}")
-	public User get(@PathParam("id") String id) {
-		return userDao.findById(id);
+	public Location get(@PathParam("id") String id) {
+		return locationDao.findById(id);
 	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON_VALUE)
-	public Response create(@Valid User user, @Context UriInfo uriInfo) {
-		User created = userDao.create(user);
-		URI uri = uriInfo.getAbsolutePathBuilder().path(User.class).path(created.getId()).build();
+	public Response create(@Valid Location location, @Context UriInfo uriInfo) {
+		Location created = locationDao.create(location);
+		URI uri = uriInfo.getAbsolutePathBuilder().path(Location.class).path(created.getId()).build();
 		return Response.status(Status.CREATED).location(uri).build();
 	}
 
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON_VALUE)
 	@Path("/{id}")
-	public Response update(@Valid User user, @PathParam("id") String id, @Context UriInfo uriInfo) {
-		user.setId(id);
+	public Response update(@Valid Location location, @PathParam("id") String id, @Context UriInfo uriInfo) {
+		location.setId(id);
 		try {
-			userDao.update(user);
-		} catch (UserNotFoundException e) {
+			locationDao.update(location);
+		} catch (LocationNotFoundException e) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		return Response.status(Status.OK).build();
@@ -69,8 +69,8 @@ public class UserResource {
 	@Path("/{id}")
 	public Response delete(@PathParam("id") String id, @Context UriInfo uriInfo) {
 		try {
-			userDao.delete(id);
-		} catch (UserNotFoundException e) {
+			locationDao.delete(id);
+		} catch (LocationNotFoundException e) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		return Response.status(Status.OK).build();

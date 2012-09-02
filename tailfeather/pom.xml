@@ -2,10 +2,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.tailfeather</groupId>
-	<artifactId>tailfeather</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>server</artifactId>
+	<version>1.0</version>
 	<packaging>war</packaging>
-	<name>Tail Feather</name>
+	<name>Tail Feather Server</name>
 
 	<properties>
 		<spring.version>3.1.2.RELEASE</spring.version>
@@ -235,11 +235,14 @@
 		</dependency>
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-server-linking</artifactId>
+			<version>1.13</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-json</artifactId>
 			<version>1.13</version>
 		</dependency>
-
-
 	</dependencies>
 
 	<repositories>

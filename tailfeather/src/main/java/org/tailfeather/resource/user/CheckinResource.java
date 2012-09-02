@@ -1,4 +1,4 @@
-package org.tailfeather.resource;
+package org.tailfeather.resource.user;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -21,45 +21,39 @@ import javax.ws.rs.core.UriInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.tailfeather.dao.UserDao;
-import org.tailfeather.entity.User;
-import org.tailfeather.exceptions.UserNotFoundException;
+import org.tailfeather.dao.CheckinDao;
+import org.tailfeather.entity.Checkin;
+import org.tailfeather.exceptions.CheckinNotFoundException;
 
 @Component
-@Path("/user")
-public class UserResource {
+@Path("/user/{userId}/checkin")
+public class CheckinResource {
 	@Autowired
-	private UserDao userDao;
+	private CheckinDao checkinDao;
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON_VALUE)
-	public List<User> list() {
-		return new ArrayList<User>(userDao.findAll());
-	}
-
-	@GET
-	@Produces(MediaType.APPLICATION_JSON_VALUE)
-	@Path("/{id}")
-	public User get(@PathParam("id") String id) {
-		return userDao.findById(id);
+	public List<Checkin> list() {
+		return new ArrayList<Checkin>(checkinDao.findAll());
 	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON_VALUE)
-	public Response create(@Valid User user, @Context UriInfo uriInfo) {
-		User created = userDao.create(user);
-		URI uri = uriInfo.getAbsolutePathBuilder().path(User.class).path(created.getId()).build();
+	public Response create(@Valid Checkin checkin, @PathParam("userId") String userId, @Context UriInfo uriInfo) {
+		Checkin created = checkinDao.create(checkin);
+		URI uri = uriInfo.getAbsolutePathBuilder().path(Checkin.class).path(created.getId()).build();
 		return Response.status(Status.CREATED).location(uri).build();
 	}
 
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON_VALUE)
 	@Path("/{id}")
-	public Response update(@Valid User user, @PathParam("id") String id, @Context UriInfo uriInfo) {
-		user.setId(id);
+	public Response update(@Valid Checkin checkin, @PathParam("userId") String userId, @PathParam("id") String id,
+			@Context UriInfo uriInfo) {
+		checkin.setId(id);
 		try {
-			userDao.update(user);
-		} catch (UserNotFoundException e) {
+			checkinDao.update(checkin);
+		} catch (CheckinNotFoundException e) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		return Response.status(Status.OK).build();
@@ -69,8 +63,8 @@ public class UserResource {
 	@Path("/{id}")
 	public Response delete(@PathParam("id") String id, @Context UriInfo uriInfo) {
 		try {
-			userDao.delete(id);
-		} catch (UserNotFoundException e) {
+			checkinDao.delete(id);
+		} catch (CheckinNotFoundException e) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		return Response.status(Status.OK).build();

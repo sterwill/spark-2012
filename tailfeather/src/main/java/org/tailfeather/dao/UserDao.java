@@ -3,6 +3,8 @@ package org.tailfeather.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,20 +19,16 @@ public class UserDao {
 
 	@Transactional
 	public User create(User newObject) {
-		User user = new User(newObject.getEmail(), newObject.getFullName());
-		return userRepository.save(user);
+		return userRepository.save(newObject);
 	}
 
-	@Transactional(rollbackFor = UserNotFoundException.class)
-	public User delete(String id) throws UserNotFoundException {
-		User deleted = userRepository.findOne(id);
-
-		if (deleted == null) {
+	@Transactional
+	public void delete(String id) throws UserNotFoundException {
+		try {
+			userRepository.delete(id);
+		} catch (EntityNotFoundException e) {
 			throw new UserNotFoundException(id);
 		}
-
-		userRepository.delete(deleted);
-		return deleted;
 	}
 
 	@Transactional
@@ -44,23 +42,20 @@ public class UserDao {
 	}
 
 	@Transactional
+	public User update(User user) throws UserNotFoundException {
+		try {
+			return userRepository.save(user);
+		} catch (EntityNotFoundException e) {
+			throw new UserNotFoundException(user.getId());
+		}
+	}
+
+	@Transactional
 	public User findByEmail(String email) {
 		Iterable<User> users = userRepository.findByEmail(email);
 		if (users == null) {
 			return null;
 		}
 		return users.iterator().next();
-	}
-
-	@Transactional(rollbackFor = UserNotFoundException.class)
-	public User update(User user) throws UserNotFoundException {
-		User existing = userRepository.findOne(user.getId());
-
-		if (existing == null) {
-			throw new UserNotFoundException(user.getId());
-		}
-
-		existing.update(user);
-		return userRepository.save(existing);
 	}
 }
