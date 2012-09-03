@@ -26,7 +26,7 @@
 		</c:choose>
 	</p>
 	<p>
-		<a href="<c:url value='location/create' />">Create Location</a>
+		<a href="<c:url value='/web/location/create' />">Create Location</a>
 	<p>
 	<table>
 		<tr>

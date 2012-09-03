@@ -40,6 +40,8 @@ public class CheckinController {
 	 */
 	@RequestMapping(value = "/{userId}", method = RequestMethod.GET)
 	public String badge(Model model, @PathVariable(value = "userId") String userId, HttpServletRequest request) {
+		model.addAttribute("userId", userId);
+
 		User user = userDao.findById(userId);
 		if (user != null) {
 			model.addAttribute("user", user);

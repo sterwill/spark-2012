@@ -24,7 +24,7 @@
 	</c:if>
 
 	<p>
-		<a href="<c:url value='checkin/create' />">Create Checkin</a>
+		<a href="<c:url value='/web/checkin/create' />">Create Checkin</a>
 	<p>
 	<table>
 		<tr>
