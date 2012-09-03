@@ -5,7 +5,7 @@ import java.util.Map;
 
 import javax.servlet.http.Cookie;
 
-public class CookieHelper {
+public class ControllerHelper {
 
 	public static Map<String, Cookie> map(Cookie[] cookies) {
 		Map<String, Cookie> map = new HashMap<String, Cookie>();

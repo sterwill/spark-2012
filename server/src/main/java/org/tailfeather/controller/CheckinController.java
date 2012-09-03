@@ -36,26 +36,47 @@ public class CheckinController {
 	private LocationDao locationDao;
 
 	/**
-	 * Badge QR codes point here, so it's a GET instead of a more correct POST.
+	 * Badge QR codes point here, so it's a GET instead of the more correct
+	 * POST.
 	 */
-	@RequestMapping(value = "/{userId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/u/{userId}", method = RequestMethod.GET)
 	public String badge(Model model, @PathVariable(value = "userId") String userId, HttpServletRequest request) {
 		model.addAttribute("userId", userId);
 
 		User user = userDao.findById(userId);
-		if (user != null) {
-			model.addAttribute("user", user);
-			Location location = locationDao.getCookiedLocation(request);
-			if (location != null) {
-				model.addAttribute("location", user);
-				Checkin checkin = new Checkin();
-				checkin.setUser(user);
-				checkin.setLocation(location);
-				checkin.setTime(new Date());
-				model.addAttribute("checkin", checkinDao.create(checkin));
-			}
+		if (user == null) {
+			model.addAttribute("error", String.format("ID " + userId + " is not registered.", userId));
+			return "redirect:/web/checkin/badge-error.jsp";
 		}
-		return "/checkin/badge.jsp";
+
+		Location location = locationDao.getCookiedLocation(request);
+		if (location == null) {
+			model.addAttribute("error", "This scanning device is not configured for a known location.");
+			return "redirect:/web/checkin/badge-error.jsp";
+		}
+
+		Checkin checkin = new Checkin();
+		checkin.setUser(user);
+		checkin.setLocation(location);
+		checkin.setTime(new Date());
+		checkin = checkinDao.create(checkin);
+
+		model.addAttribute("checkinId", checkin.getId());
+		model.addAttribute("instructions", "Instructions for the next step go here");
+		return "redirect:/web/checkin/badge-success";
+	}
+
+	@RequestMapping(value = "/badge-success", method = RequestMethod.GET)
+	public String success(Model model, HttpServletRequest request) {
+		model.addAttribute("checkin", checkinDao.findById(request.getParameter("checkinId")));
+		model.addAttribute("instructions", request.getParameter("instructions"));
+		return "/checkin/badge-success.jsp";
+	}
+
+	@RequestMapping(value = "/badge-error", method = RequestMethod.GET)
+	public String failure(Model model, HttpServletRequest request) {
+		model.addAttribute("error", request.getParameter("error"));
+		return "/checkin/badge-error.jsp";
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
