@@ -54,6 +54,7 @@ public class Register extends Executable {
 
 			Console.printLine();
 			Console.printLine("Please confirm the following information is correct:");
+			Console.printLine();
 			for (FormField f : fields) {
 				Console.printLine(MessageFormat.format("{0}''{1}''", f.getPrompt(), f.getValue()));
 			}
@@ -86,13 +87,12 @@ public class Register extends Executable {
 			// Submit it
 			try {
 				User user = submit();
-				Console.printLine(user.getId());
-				Console.printLine(FileUtils.getContents(success));
-				Thread.sleep(4000);
+				Console.printLine(MessageFormat.format(FileUtils.getContents(success), user.getId(), user.getFullName()));
 				break;
 			} catch (Exception e) {
 				LOGGER.log(Level.WARNING, "Error submitting", e);
 				Console.printRedLine("There was an error saving your information, please try again");
+				Console.printRedLine(MessageFormat.format("  [{0}]", e.getMessage()));
 				continue;
 			}
 		}

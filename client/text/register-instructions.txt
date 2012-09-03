@@ -1,8 +1,16 @@
-Here's how you do it:
 
-  1. thing
-  2. another thing
-  3. stuff
+  REGISTRATION INSTRUCTIONS
 
-Type 'cancel' to stop the registration process.
+  Provide the name you want to be called and and e-mail address
+  where you can be contacted.  This address will only be used
+  to contact you during your employment and will never be shared
+  with any other party.
+  
+  When you submit your information you will be assigned a unique
+  ID by the system.  This ID is encoded in a badge that you are 
+  requested to keep visible at all times.
+  
+  Your badge is your passport to all Tail Feather systems.
+  
+  Type 'cancel' to stop the registration process.
 

@@ -18,6 +18,16 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
+			<!-- Exec -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.1</version>
+				<configuration>
+					<mainClass>org.tailfeather.client.Main</mainClass>
+					<commandlineArgs>acorn.xml</commandlineArgs>
+				</configuration>
+			</plugin>
 			<!-- Package command line app -->
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>

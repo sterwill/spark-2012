@@ -12,5 +12,5 @@ export LINES
 #java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=6543 -cp $CLASSPATH org.tailfeather.acorn.Main acorn.xml
 
 DEBUG="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=6543"
-
-java $DEBUG -cp target/client-1.0-jar-with-dependencies.jar org.tailfeather.client.Main acorn.xml
+#java $DEBUG -cp target/client-1.0-jar-with-dependencies.jar org.tailfeather.client.Main acorn.xml
+mvn -Dexec.args="$DEBUG" compile exec:java

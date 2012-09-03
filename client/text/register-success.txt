@@ -1,0 +1,14 @@
+
+  REGISTRATION SUCCESSFUL
+
+  You are now enrolled in the Tail Feather system.  
+  
+  Your information:
+
+    ID:	    {0}
+    Name:   {1}
+  
+  Your ID is encoded in your badge.  Remember to keep your badge visible
+  so it can be read by Tail Feather systems and agents.
+  
+  You may continue to use this terminal or type ''exit'' to end your session.

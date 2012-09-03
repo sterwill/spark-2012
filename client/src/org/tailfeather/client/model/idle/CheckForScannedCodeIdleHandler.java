@@ -17,7 +17,7 @@ public class CheckForScannedCodeIdleHandler implements PromptIdleHandler {
 	}
 
 	@Override
-	public void idle() throws CodeScannedException {
+	public void idle() throws CodeScannedException, InterruptedException {
 		final String code = scanner.getCode();
 		scanner.clear();
 
@@ -28,10 +28,6 @@ public class CheckForScannedCodeIdleHandler implements PromptIdleHandler {
 			throw new CodeScannedException(code);
 		}
 
-		try {
-			Thread.sleep(50);
-		} catch (InterruptedException e) {
-			LOGGER.log(Level.WARNING, "Interrupted", e);
-		}
+		Thread.sleep(50);
 	}
 }
