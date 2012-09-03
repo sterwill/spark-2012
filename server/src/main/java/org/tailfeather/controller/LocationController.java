@@ -1,5 +1,8 @@
 package org.tailfeather.controller;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +25,8 @@ public class LocationController {
 	private LocationDao locationDao;
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String list(Model model) {
+	public String list(Model model, HttpServletRequest request) {
+		model.addAttribute("currentLocation", locationDao.getCookiedLocation(request));
 		model.addAttribute("locationList", locationDao.findAll());
 		return "/location/list.jsp";
 	}
@@ -51,5 +55,32 @@ public class LocationController {
 			throws LocationNotFoundException {
 		locationDao.update(location);
 		return "redirect:/web/location";
+	}
+
+	@RequestMapping(value = "/cookie/{id}", method = RequestMethod.GET)
+	public String cookie(@PathVariable String id, Model model, HttpServletResponse response) {
+		model.addAttribute("location", locationDao.findById(id));
+		response.addCookie(createLocationCookie(id));
+		return "redirect:/web/location";
+	}
+
+	@RequestMapping(value = "/uncookie/{id}", method = RequestMethod.GET)
+	public String uncookie(@PathVariable String id, Model model, HttpServletResponse response) {
+		response.addCookie(createLocationUncookie(id));
+		return "redirect:/web/location";
+	}
+
+	private Cookie createLocationCookie(String locationId) {
+		Cookie cookie = new Cookie(Location.ID_COOKIE_NAME, locationId.trim());
+		cookie.setMaxAge(Integer.MAX_VALUE);
+		cookie.setPath("/");
+		return cookie;
+	}
+
+	private Cookie createLocationUncookie(String locationId) {
+		Cookie cookie = new Cookie(Location.ID_COOKIE_NAME, locationId.trim());
+		cookie.setMaxAge(0);
+		cookie.setPath("/");
+		return cookie;
 	}
 }

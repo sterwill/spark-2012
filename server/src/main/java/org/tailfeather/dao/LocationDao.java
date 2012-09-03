@@ -2,12 +2,16 @@ package org.tailfeather.dao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.tailfeather.CookieHelper;
 import org.tailfeather.entity.Location;
 import org.tailfeather.exceptions.LocationNotFoundException;
 import org.tailfeather.repository.LocationRepository;
@@ -48,5 +52,13 @@ public class LocationDao {
 		} catch (EntityNotFoundException e) {
 			throw new LocationNotFoundException(location.getId());
 		}
+	}
+
+	public Location getCookiedLocation(HttpServletRequest request) {
+		Map<String, Cookie> cookies = CookieHelper.map(request.getCookies());
+		if (cookies.containsKey(Location.ID_COOKIE_NAME)) {
+			return findById(cookies.get(Location.ID_COOKIE_NAME).getValue());
+		}
+		return null;
 	}
 }

@@ -30,6 +30,7 @@
 	<!-- Spring Security -->
 	<security:http auto-config="true">
 		<!-- Web -->
+		<security:intercept-url pattern="/web/checkin/**" access="ROLE_ANONYMOUS,ROLE_ADMIN,ROLE_AGENT" />
 		<security:intercept-url pattern="/admin.jsp" access="ROLE_ADMIN" />
 		<security:intercept-url pattern="/web/**" access="ROLE_ADMIN" />
 		<!-- API -->
@@ -40,7 +41,8 @@
 	<security:authentication-manager>
 		<security:authentication-provider>
 			<security:user-service>
-				<security:user name="admin" password="foonly" authorities="ROLE_ADMIN" />
+				<security:user name="admin" password="superfoonly" authorities="ROLE_ADMIN" />
+				<security:user name="agent" password="foonly" authorities="ROLE_AGENT" />
 			</security:user-service>
 		</security:authentication-provider>
 	</security:authentication-manager>

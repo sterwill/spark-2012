@@ -13,28 +13,10 @@
 <title>The Tail Feather Group</title>
 <link rel="stylesheet" type="text/css" href="${root}static/main.css" />
 <script type="text/javascript" src="${root}static/jquery-1.8.1.js"></script>
-<script type="text/javascript" src="${root}static/crud.js"></script>
 </head>
 <body>
 	<p>
-		<a href="<c:url value='user/create' />">Create User</a>
-	<p>
-	<table>
-		<tr>
-			<th>id</th>
-			<th>email</th>
-			<th>full name</th>
-			<th>actions</th>
-		</tr>
-		<c:forEach var="user" items="${userList}">
-			<tr>
-				<td><c:out value="${user.id}" /></td>
-				<td><a href="${root}web/user/edit/${user.id}">${user.email}</a></td>
-				<td><c:out value="${user.fullName}" /></td>
-				<td><button
-						onclick="ajaxDelete('/api/user/${user.id}', '${user.fullName}')">delete</button></td>
-			</tr>
-		</c:forEach>
-	</table>
+		The location cookie was deleted.
+	</p>
 </body>
 </html>

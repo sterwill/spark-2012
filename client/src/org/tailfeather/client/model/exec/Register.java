@@ -133,6 +133,6 @@ public class Register extends Executable {
 
 	private void printBadge(User user) {
 		// TODO print the badge, maybe in a background process/thread
-		Console.printRedLine("http://localhost:8080/api/user/" + user.getId());
+		Console.printRedLine("http://localhost:8080/web/checkin/" + user.getId());
 	}
 }

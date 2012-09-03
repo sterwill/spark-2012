@@ -24,6 +24,8 @@ import com.sun.jersey.server.linking.Ref;
 @Entity
 @Table(name = "locations")
 public class Location {
+	public static final String ID_COOKIE_NAME = "Tail-Feather-Location-Id";
+
 	@Ref(resource = LocationResource.class)
 	@XmlAttribute(name = "uri")
 	@Transient
