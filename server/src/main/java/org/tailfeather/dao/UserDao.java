@@ -49,13 +49,4 @@ public class UserDao {
 			throw new UserNotFoundException(user.getId());
 		}
 	}
-
-	@Transactional
-	public User findByEmail(String email) {
-		Iterable<User> users = userRepository.findByEmail(email);
-		if (users == null) {
-			return null;
-		}
-		return users.iterator().next();
-	}
 }

@@ -16,18 +16,13 @@
 </head>
 <body>
 
-	<form:form method="POST" modelAttribute="user">
+	<form:form method="POST" modelAttribute="location">
 		<form:hidden path="id" />
 		<fieldset>
 			<table>
 				<tr>
-					<td>email:</td>
-					<td><form:input path="email" /> <form:errors path="email" /></td>
-				</tr>
-				<tr>
-					<td>full name:</td>
-					<td><form:input path="fullName" /> <form:errors
-							path="fullName" /></td>
+					<td>name:</td>
+					<td><form:input path="name" /> <form:errors path="name" /></td>
 				</tr>
 				<tr>
 					<td></td>

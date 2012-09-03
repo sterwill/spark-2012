@@ -13,29 +13,25 @@
 <title>The Tail Feather Group</title>
 <link rel="stylesheet" type="text/css" href="${root}static/main.css" />
 <script type="text/javascript" src="${root}static/jquery-1.8.1.js"></script>
+<script type="text/javascript" src="${root}static/crud.js"></script>
 </head>
 <body>
-
-	<form:form method="POST" modelAttribute="user">
-		<form:hidden path="id" />
-		<fieldset>
-			<table>
-				<tr>
-					<td>email:</td>
-					<td><form:input path="email" /> <form:errors path="email" /></td>
-				</tr>
-				<tr>
-					<td>full name:</td>
-					<td><form:input path="fullName" /> <form:errors
-							path="fullName" /></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td><input type="submit" id="save" name="action" value="Save" />
-					</td>
-				</tr>
-			</table>
-		</fieldset>
-	</form:form>
+	<p>
+		<a href="<c:url value='location/create' />">Create</a>
+	<p>
+	<table>
+		<tr>
+			<th>id</th>
+			<th>name</th>
+		</tr>
+		<c:forEach var="location" items="${locationList}">
+			<tr>
+				<td><c:out value="${location.id}" /></td>
+				<td><a href="${root}web/location/edit/${location.id}">${location.name}</a></td>
+				<td><button
+						onclick="ajaxDelete('/api/location/${location.id}', '${location.name}')">delete</button></td>
+			</tr>
+		</c:forEach>
+	</table>
 </body>
 </html>

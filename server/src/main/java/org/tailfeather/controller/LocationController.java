@@ -10,46 +10,46 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.tailfeather.dao.UserDao;
-import org.tailfeather.entity.User;
-import org.tailfeather.exceptions.UserNotFoundException;
+import org.tailfeather.dao.LocationDao;
+import org.tailfeather.entity.Location;
+import org.tailfeather.exceptions.LocationNotFoundException;
 
 @Controller
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/location")
+public class LocationController {
 
 	@Autowired
-	private UserDao userDao;
+	private LocationDao locationDao;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(Model model) {
-		model.addAttribute("userList", userDao.findAll());
-		return "/user/list.jsp";
+		model.addAttribute("locationList", locationDao.findAll());
+		return "/location/list.jsp";
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public String createForm(@Valid Model model) {
-		model.addAttribute("user", new User());
-		return "/user/form.jsp";
+		model.addAttribute("location", new Location());
+		return "/location/form.jsp";
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String createSubmit(@Valid @ModelAttribute("user") User user, BindingResult result) {
-		userDao.create(user);
-		return "redirect:/web/user";
+	public String createSubmit(@Valid @ModelAttribute("location") Location location, BindingResult result) {
+		locationDao.create(location);
+		return "redirect:/web/location";
 	}
 
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
 	public String editForm(@PathVariable String id, @Valid Model model) {
-		User user = userDao.findById(id);
-		model.addAttribute("user", user);
-		return "/user/form.jsp";
+		Location location = locationDao.findById(id);
+		model.addAttribute("location", location);
+		return "/location/form.jsp";
 	}
 
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
-	public String editSubmit(@Valid @ModelAttribute("user") User user, BindingResult result)
-			throws UserNotFoundException {
-		userDao.update(user);
-		return "redirect:/web/user";
+	public String editSubmit(@Valid @ModelAttribute("location") Location location, BindingResult result)
+			throws LocationNotFoundException {
+		locationDao.update(location);
+		return "redirect:/web/location";
 	}
 }

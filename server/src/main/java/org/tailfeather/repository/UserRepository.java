@@ -7,7 +7,7 @@ import org.tailfeather.entity.User;
 @Component
 public interface UserRepository extends JpaRepository<User, String> {
 
-	public Iterable<User> findByEmail(String email);
+//	public Iterable<User> findByEmail(String email);
 
 	/* A custom query */
 	// @Query("SELECT p FROM Person p WHERE LOWER(p.lastName) = LOWER(:lastName)")

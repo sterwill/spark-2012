@@ -8,14 +8,11 @@
 <link rel="stylesheet" type="text/css" href="main.css" />
 </head>
 <body>
-	<div class="logo">
-		<img src="static/logo.png" />
-	</div>
-
 	<div class="main">
-		<p>
-			<a href="admin.jsp">Administrator Access</a>
-		</p>
+		<ul>
+			<li><a href="web/user">Users</a></li>
+			<li><a href="web/location">Locations</a></li>
+		</ul>
 	</div>
 </body>
 </html>
