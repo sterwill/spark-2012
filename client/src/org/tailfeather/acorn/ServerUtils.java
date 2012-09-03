@@ -5,6 +5,8 @@ import java.util.logging.Logger;
 
 import javax.ws.rs.core.MediaType;
 
+import org.tailfeather.entity.User;
+
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;

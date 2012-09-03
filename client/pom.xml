@@ -19,6 +19,7 @@
 			</plugin>
 		</plugins>
 	</build>
+
 	<repositories>
 		<repository>
 			<id>project.local</id>
@@ -28,6 +29,13 @@
 	</repositories>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.tailfeather</groupId>
+			<artifactId>server</artifactId>
+			<version>1.0</version>
+			<classifier>classes</classifier>
+		</dependency>
+
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
@@ -88,11 +96,5 @@
 			<version>0.2</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.tailfeather</groupId>
-			<artifactId>tailfeather</artifactId>
-			<version>1.0</version>
-			<type>pom</type>
-		</dependency>
 	</dependencies>
 </project>
