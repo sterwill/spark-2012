@@ -39,15 +39,15 @@ public class User {
 	@XmlElement(name = "id")
 	private String id;
 
-	@NotNull
-	@Size(min = 7, max = 128)
-	@Pattern(regexp = ".+@.+\\.[a-z]+", message = "email.badformat")
+	@NotNull(message = "An e-mail address is required")
+	@Size(min = 7, max = 128, message = "The e-mail address must be at least 7 characters long")
+	@Pattern(regexp = ".+@.+\\.[a-z]+", message = "The e-mail address must be in the form user@domain")
 	@Column(name = "email", nullable = false, unique = true)
 	@XmlElement(name = "email")
 	private String email;
 
-	@NotNull
-	@Size(min = 3, max = 80)
+	@NotNull(message = "A full name is required")
+	@Size(min = 3, max = 80, message = "The name must be at least 3 characters long")
 	@Column(name = "full_name", nullable = false)
 	@XmlElement(name = "fullName")
 	private String fullName;

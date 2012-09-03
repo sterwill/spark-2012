@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import javax.ws.rs.core.MediaType;
 
+import org.apache.http.HttpStatus;
 import org.tailfeather.entity.User;
 
 import com.sun.jersey.api.client.Client;
@@ -17,9 +18,12 @@ public class ServerUtils {
 	private static final Logger LOGGER = Logger.getLogger(ServerUtils.class.getName());
 	private static Client client;
 
-	public static User postUser(String resourceUri, User user) {
+	public static User postUser(String resourceUri, User user) throws TailfeatherServerException {
 		WebResource userResource = getClient().resource(resourceUri);
 		ClientResponse response = userResource.type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, user);
+		if (response.getStatus() != HttpStatus.SC_CREATED) {
+			throw new TailfeatherServerException(response.getEntity(String.class));
+		}
 		URI location = response.getLocation();
 		response.close();
 

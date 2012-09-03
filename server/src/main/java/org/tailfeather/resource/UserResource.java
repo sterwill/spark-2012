@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -31,6 +30,9 @@ public class UserResource {
 	@Autowired
 	private UserDao userDao;
 
+	@Autowired
+	private SimpleRequestValidator validator;
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON_VALUE)
 	public List<User> list() {
@@ -46,7 +48,12 @@ public class UserResource {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON_VALUE)
-	public Response create(@Valid User user, @Context UriInfo uriInfo) {
+	public Response create(User user, @Context UriInfo uriInfo) {
+		Response error = validator.validate(user);
+		if (error != null) {
+			return error;
+		}
+
 		User created = userDao.create(user);
 		URI uri = uriInfo.getAbsolutePathBuilder().path(User.class).path(created.getId()).build();
 		return Response.status(Status.CREATED).location(uri).build();
@@ -55,7 +62,12 @@ public class UserResource {
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON_VALUE)
 	@Path("/{id}")
-	public Response update(@Valid User user, @PathParam("id") String id, @Context UriInfo uriInfo) {
+	public Response update(User user, @PathParam("id") String id, @Context UriInfo uriInfo) {
+		Response error = validator.validate(user);
+		if (error != null) {
+			return error;
+		}
+
 		user.setId(id);
 		try {
 			userDao.update(user);

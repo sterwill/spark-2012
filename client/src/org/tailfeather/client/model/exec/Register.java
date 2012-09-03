@@ -18,6 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.tailfeather.client.Console;
 import org.tailfeather.client.FileUtils;
 import org.tailfeather.client.ServerUtils;
+import org.tailfeather.client.TailfeatherServerException;
 import org.tailfeather.client.model.Command;
 import org.tailfeather.client.model.exec.form.Email;
 import org.tailfeather.client.model.exec.form.FormField;
@@ -48,7 +49,7 @@ public class Register extends Executable {
 
 		while (true) {
 			if (!gatherInfo(command)) {
-				Console.printRedLine("Your registration information was NOT saved");
+				Console.printRedLine("Your information was NOT saved.");
 				return;
 			}
 
@@ -91,8 +92,10 @@ public class Register extends Executable {
 				break;
 			} catch (Exception e) {
 				LOGGER.log(Level.WARNING, "Error submitting", e);
-				Console.printRedLine("There was an error saving your information, please try again");
-				Console.printRedLine(MessageFormat.format("  [{0}]", e.getMessage()));
+				Console.printRedLine("There was an error saving your information, please try again:");
+				Console.printLine();
+				Console.printRedLine(MessageFormat.format("{0}", e.getMessage()));
+				Console.printLine();
 				continue;
 			}
 		}
@@ -112,7 +115,7 @@ public class Register extends Executable {
 		return true;
 	}
 
-	private User submit() {
+	private User submit() throws TailfeatherServerException {
 		User user = new User();
 		for (FormField field : fields) {
 			switch (field.getName()) {
