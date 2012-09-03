@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.tailfeather.IdHelper;
 import org.tailfeather.entity.xmladapter.UserRefAdapter;
-import org.tailfeather.resource.user.CheckinResource;
+import org.tailfeather.resource.CheckinResource;
 
 import com.sun.jersey.server.linking.Ref;
 import com.sun.jersey.server.linking.Ref.Style;
@@ -41,14 +41,14 @@ public class Checkin {
 	private String id;
 
 	@NotNull
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
 	@XmlAttribute(name = "userId")
 	@XmlJavaTypeAdapter(UserRefAdapter.class)
 	private User user;
 
 	@NotNull
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "location_id", referencedColumnName = "id")
 	@XmlAttribute(name = "locationId")
 	private Location location;

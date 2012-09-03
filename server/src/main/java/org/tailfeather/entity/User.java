@@ -42,7 +42,7 @@ public class User {
 	@NotNull(message = "An e-mail address is required")
 	@Size(min = 7, max = 128, message = "The e-mail address must be at least 7 characters long")
 	@Pattern(regexp = ".+@.+\\.[a-z]+", message = "The e-mail address must be in the form user@domain")
-	@Column(name = "email", nullable = false)
+	@Column(name = "email", nullable = false, unique = true)
 	@XmlElement(name = "email")
 	private String email;
 

@@ -54,6 +54,10 @@ public class UserResource {
 			return error;
 		}
 
+		if (userDao.findByEmail(user.getEmail()) != null) {
+			return Response.status(Status.BAD_REQUEST).entity("A user with that e-mail address already exists").build();
+		}
+
 		User created = userDao.create(user);
 		URI uri = uriInfo.getAbsolutePathBuilder().path(User.class).path(created.getId()).build();
 		return Response.status(Status.CREATED).location(uri).build();

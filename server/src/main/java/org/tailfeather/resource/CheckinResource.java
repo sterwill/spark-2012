@@ -1,4 +1,4 @@
-package org.tailfeather.resource.user;
+package org.tailfeather.resource;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import org.tailfeather.entity.Checkin;
 import org.tailfeather.exceptions.CheckinNotFoundException;
 
 @Component
-@Path("/user/{userId}/checkin")
+@Path("/checkin")
 public class CheckinResource {
 	@Autowired
 	private CheckinDao checkinDao;
@@ -39,7 +39,7 @@ public class CheckinResource {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON_VALUE)
-	public Response create(@Valid Checkin checkin, @PathParam("userId") String userId, @Context UriInfo uriInfo) {
+	public Response create(@Valid Checkin checkin, @Context UriInfo uriInfo) {
 		Checkin created = checkinDao.create(checkin);
 		URI uri = uriInfo.getAbsolutePathBuilder().path(Checkin.class).path(created.getId()).build();
 		return Response.status(Status.CREATED).location(uri).build();
@@ -48,8 +48,7 @@ public class CheckinResource {
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON_VALUE)
 	@Path("/{id}")
-	public Response update(@Valid Checkin checkin, @PathParam("userId") String userId, @PathParam("id") String id,
-			@Context UriInfo uriInfo) {
+	public Response update(@Valid Checkin checkin, @PathParam("id") String id, @Context UriInfo uriInfo) {
 		checkin.setId(id);
 		try {
 			checkinDao.update(checkin);

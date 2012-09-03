@@ -42,6 +42,11 @@ public class UserDao {
 	}
 
 	@Transactional
+	public User findByEmail(String email) {
+		return userRepository.findByEmail(email);
+	}
+
+	@Transactional
 	public User update(User user) throws UserNotFoundException {
 		try {
 			return userRepository.save(user);
