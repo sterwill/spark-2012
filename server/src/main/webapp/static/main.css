@@ -47,18 +47,20 @@ p {
 
 p.title {
 	color: #7a1c51;
-	font-size: 200%;
+	font-size: 120%;
 	font-weight: normal;
 	margin-top: 18pt;
 	margin-bottom: 9pt;
 }
 
-div.logo {
-	margin-left: 10px;
+p.link {
+	margin-top: 1em;
+	margin-bottom 1em;
+	font-size: 120%;
 }
 
 div.main {
-	margin-left: 100px;
+	margin-left: 10px;
 }
 
 table {
@@ -66,7 +68,7 @@ table {
 	border-collapse: collapse;
 }
 
-td, th {
+td,th {
 	border: 1px solid black;
 	padding: .25em;
 }

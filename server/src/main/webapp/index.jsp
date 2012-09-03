@@ -5,15 +5,14 @@
 <head>
 <meta charset="UTF-8" />
 <title>The Tail Feather Group</title>
-<link rel="stylesheet" type="text/css" href="main.css" />
+<link rel="stylesheet" type="text/css" href="/static/main.css" />
 </head>
 <body>
-	<div class="logo">
-		<img src="static/logo.png" />
-	</div>
-
 	<div class="main">
-		<p>
+		<img src="static/logo.png" />
+		<br/>
+		<br/>
+		<p class="link">
 			<a href="admin.jsp">Administrator Access</a>
 		</p>
 	</div>
