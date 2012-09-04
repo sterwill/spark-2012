@@ -7,6 +7,13 @@
 	<packaging>war</packaging>
 	<name>Tail Feather Server</name>
 
+	<distributionManagement>
+		<repository>
+			<id>bean</id>
+			<url>scpexe://bean.tinfig.com/home/sterwill/jetty/jetty/webapps</url>
+		</repository>
+	</distributionManagement>
+
 	<properties>
 		<spring.version>3.1.2.RELEASE</spring.version>
 		<sl4j.version>1.6.1</sl4j.version>
@@ -14,6 +21,13 @@
 	</properties>
 
 	<build>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh-external</artifactId>
+				<version>1.0</version>
+			</extension>
+		</extensions>
 		<plugins>
 			<!-- Java -->
 			<plugin>
@@ -34,10 +48,20 @@
 					<classesClassifier>classes</classesClassifier>
 				</configuration>
 			</plugin>
+			<!-- Maven -->
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+			</plugin>
 		</plugins>
 	</build>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.atlassian.maven.plugins</groupId>
+			<artifactId>maven-upload-plugin</artifactId>
+			<version>1.1</version>
+		</dependency>
 		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -271,11 +295,29 @@
 	</dependencies>
 
 	<repositories>
+		<repository>
+			<id>central</id>
+			<url>http://repo.maven.apache.org/maven2/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+		<!-- Atlassian -->
+		<repository>
+			<id>atlassian</id>
+			<url>https://maven.atlassian.com/public/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
 		<!-- Spring -->
 		<repository>
 			<id>springsource-repo</id>
 			<name>SpringSource Repository</name>
 			<url>http://repo.springsource.org/release</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
 		</repository>
 	</repositories>
 </project>
