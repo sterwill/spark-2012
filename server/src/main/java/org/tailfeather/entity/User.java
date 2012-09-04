@@ -26,7 +26,7 @@ import com.sun.jersey.server.linking.Ref.Style;
 @Entity
 @Table(name = "users")
 public class User {
-	@Ref(value = "users/{id}", style = Style.ABSOLUTE, bindings = { @Binding(name = "id", value = "${instance.id}") })
+	@Ref(value = "user/{id}", style = Style.ABSOLUTE, bindings = { @Binding(name = "id", value = "${instance.id}") })
 	@XmlElement(name = "uri")
 	private URI uri;
 

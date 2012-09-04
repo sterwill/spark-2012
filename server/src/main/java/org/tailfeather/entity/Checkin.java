@@ -31,7 +31,7 @@ import com.sun.jersey.server.linking.Ref.Style;
 @Entity
 @Table(name = "checkins")
 public class Checkin {
-	@Ref(value = "users/{id}", style = Style.ABSOLUTE, bindings = { @Binding(name = "id", value = "${instance.id}") })
+	@Ref(value = "checkin/{id}", style = Style.ABSOLUTE, bindings = { @Binding(name = "id", value = "${instance.id}") })
 	@XmlAttribute(name = "uri")
 	@Transient
 	private URI uri;

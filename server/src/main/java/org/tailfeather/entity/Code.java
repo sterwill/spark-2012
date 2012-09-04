@@ -30,7 +30,7 @@ import com.sun.jersey.server.linking.Ref.Style;
 @Entity
 @Table(name = "codes")
 public class Code {
-	@Ref(value = "users/{id}", style = Style.ABSOLUTE, bindings = { @Binding(name = "id", value = "${instance.id}") })
+	@Ref(value = "code/{id}", style = Style.ABSOLUTE, bindings = { @Binding(name = "id", value = "${instance.id}") })
 	@XmlAttribute(name = "uri")
 	@Transient
 	private URI uri;

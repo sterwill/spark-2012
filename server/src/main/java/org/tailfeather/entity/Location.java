@@ -27,7 +27,7 @@ import com.sun.jersey.server.linking.Ref.Style;
 public class Location {
 	public static final String ID_COOKIE_NAME = "Tail-Feather-Location-Id";
 
-	@Ref(value = "users/{id}", style = Style.ABSOLUTE, bindings = { @Binding(name = "id", value = "${instance.id}") })
+	@Ref(value = "location/{id}", style = Style.ABSOLUTE, bindings = { @Binding(name = "id", value = "${instance.id}") })
 	@XmlAttribute(name = "uri")
 	@Transient
 	private URI uri;
