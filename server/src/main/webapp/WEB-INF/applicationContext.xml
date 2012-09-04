@@ -30,12 +30,11 @@
 	<!-- Spring Security -->
 	<security:http auto-config="true">
 		<!-- Web -->
-		<security:intercept-url pattern="/web/checkin/**" access="ROLE_ANONYMOUS,ROLE_ADMIN,ROLE_AGENT" />
-		<security:intercept-url pattern="/admin.jsp" access="ROLE_ADMIN" />
+		<security:intercept-url pattern="/web/checkin/**" access="ROLE_ADMIN,ROLE_AGENT" />
 		<security:intercept-url pattern="/web/**" access="ROLE_ADMIN" />
+		<security:intercept-url pattern="/admin.jsp" access="ROLE_ADMIN" />
 		<!-- API -->
-		<security:intercept-url pattern="/api/user" method="POST" access="ROLE_ADMIN" />
-		<security:intercept-url pattern="/api/user" method="GET" access="ROLE_ADMIN" />
+		<security:intercept-url pattern="/api/**" access="ROLE_ADMIN,ROLE_TERMINAL" />
 		<security:http-basic />
 	</security:http>
 	<security:authentication-manager>
@@ -43,6 +42,7 @@
 			<security:user-service>
 				<security:user name="admin" password="superfoonly" authorities="ROLE_ADMIN" />
 				<security:user name="agent" password="foonly" authorities="ROLE_AGENT" />
+				<security:user name="terminal" password="megafoonly" authorities="ROLE_TERMINAL" />
 			</security:user-service>
 		</security:authentication-provider>
 	</security:authentication-manager>
