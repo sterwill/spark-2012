@@ -19,9 +19,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.tailfeather.IdHelper;
+import org.tailfeather.entity.xmladapter.LocationRefAdapter;
 import org.tailfeather.entity.xmladapter.UserRefAdapter;
-import org.tailfeather.resource.CheckinResource;
 
+import com.sun.jersey.server.linking.Binding;
 import com.sun.jersey.server.linking.Ref;
 import com.sun.jersey.server.linking.Ref.Style;
 
@@ -30,7 +31,7 @@ import com.sun.jersey.server.linking.Ref.Style;
 @Entity
 @Table(name = "checkins")
 public class Checkin {
-	@Ref(style = Style.ABSOLUTE, resource = CheckinResource.class, value = "{id}")
+	@Ref(value = "users/{id}", style = Style.ABSOLUTE, bindings = { @Binding(name = "id", value = "${instance.id}") })
 	@XmlAttribute(name = "uri")
 	@Transient
 	private URI uri;
@@ -43,14 +44,15 @@ public class Checkin {
 	@NotNull
 	@ManyToOne(cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
-	@XmlAttribute(name = "userId")
+	@XmlAttribute(name = "user")
 	@XmlJavaTypeAdapter(UserRefAdapter.class)
 	private User user;
 
 	@NotNull
 	@ManyToOne(cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "location_id", referencedColumnName = "id")
-	@XmlAttribute(name = "locationId")
+	@XmlAttribute(name = "location")
+	@XmlJavaTypeAdapter(LocationRefAdapter.class)
 	private Location location;
 
 	@NotNull

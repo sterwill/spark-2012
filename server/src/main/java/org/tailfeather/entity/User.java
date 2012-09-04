@@ -6,11 +6,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import javax.ws.rs.Path;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -18,8 +16,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.springframework.util.Assert;
 import org.tailfeather.IdHelper;
-import org.tailfeather.resource.UserResource;
 
+import com.sun.jersey.server.linking.Binding;
 import com.sun.jersey.server.linking.Ref;
 import com.sun.jersey.server.linking.Ref.Style;
 
@@ -27,11 +25,9 @@ import com.sun.jersey.server.linking.Ref.Style;
 @XmlAccessorType(XmlAccessType.FIELD)
 @Entity
 @Table(name = "users")
-@Path(value = "/")
 public class User {
-	@Ref(style = Style.ABSOLUTE, resource = UserResource.class)
+	@Ref(value = "users/{id}", style = Style.ABSOLUTE, bindings = { @Binding(name = "id", value = "${instance.id}") })
 	@XmlElement(name = "uri")
-	@Transient
 	private URI uri;
 
 	@Id
