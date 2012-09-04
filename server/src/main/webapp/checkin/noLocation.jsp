@@ -17,7 +17,7 @@
 <body>
 	<p>
 		You do not have a location cookie set. You need to <a
-			href="/web/location">set a cookie</a> before you create checkins.
+			href="/location">set a cookie</a> before you create checkins.
 	</p>
 </body>
 </html>

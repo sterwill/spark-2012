@@ -36,14 +36,14 @@ public class User {
 	private String id;
 
 	@NotNull(message = "An e-mail address is required")
-	@Size(min = 7, max = 128, message = "The e-mail address must be at least 7 characters long")
+	@Size(min = 7, max = 128, message = "The e-mail address must be 7-128 characters long")
 	@Pattern(regexp = ".+@.+\\.[a-z]+", message = "The e-mail address must be in the form user@domain")
 	@Column(name = "email", nullable = false, unique = true)
 	@XmlElement(name = "email")
 	private String email;
 
 	@NotNull(message = "A full name is required")
-	@Size(min = 3, max = 80, message = "The name must be at least 3 characters long")
+	@Size(min = 3, max = 80, message = "The name must be 3-80 characters long")
 	@Column(name = "full_name", nullable = false)
 	@XmlElement(name = "fullName")
 	private String fullName;

@@ -28,15 +28,18 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
-	public String createForm(@Valid Model model) {
+	public String createForm(Model model) {
 		model.addAttribute("user", new User());
 		return "/user/form.jsp";
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public String createSubmit(@Valid @ModelAttribute("user") User user, BindingResult result) {
+		if (result.hasErrors()) {
+			return "/user/form.jsp";
+		}
 		userDao.create(user);
-		return "redirect:/web/user";
+		return "redirect:/user";
 	}
 
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
@@ -49,7 +52,10 @@ public class UserController {
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
 	public String editSubmit(@Valid @ModelAttribute("user") User user, BindingResult result)
 			throws UserNotFoundException {
+		if (result.hasErrors()) {
+			return "/user/form.jsp";
+		}
 		userDao.update(user);
-		return "redirect:/web/user";
+		return "redirect:/user";
 	}
 }

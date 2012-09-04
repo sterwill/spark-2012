@@ -31,6 +31,9 @@ public class LocationResource {
 	@Autowired
 	private LocationDao locationDao;
 
+	@Autowired
+	private SimpleRequestValidator validator;
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON_VALUE)
 	public List<Location> list() {
@@ -47,6 +50,11 @@ public class LocationResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON_VALUE)
 	public Response create(@Valid Location location, @Context UriInfo uriInfo) {
+		Response error = validator.validate(location);
+		if (error != null) {
+			return error;
+		}
+
 		Location created = locationDao.create(location);
 		URI uri = uriInfo.getAbsolutePathBuilder().path(Location.class).path(created.getId()).build();
 		return Response.status(Status.CREATED).location(uri).build();
@@ -57,6 +65,11 @@ public class LocationResource {
 	@Path("/{id}")
 	public Response update(@Valid Location location, @PathParam("id") String id, @Context UriInfo uriInfo) {
 		location.setId(id);
+		Response error = validator.validate(location);
+		if (error != null) {
+			return error;
+		}
+
 		try {
 			locationDao.update(location);
 		} catch (LocationNotFoundException e) {

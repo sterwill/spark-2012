@@ -19,6 +19,5 @@
 		<name>bye</name>
 		<exit />
 	</command>
-	<scan sound="sounds/sweet.wav" unknownSound="sounds/sour.wav" unknownFile="text/unknown-code.txt"
-		pattern="http://localhost:8080/api/user/(.*)" />
+	<scan sound="sounds/sweet.wav" unknownSound="sounds/sour.wav" unknownFile="text/unknown-code.txt" pattern="http://localhost:8080/api/user/(.*)" />
 </acorn>

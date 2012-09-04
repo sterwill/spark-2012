@@ -20,13 +20,14 @@
 		<c:choose>
 			<c:when test="${currentLocation != null}">
 			You have a cookie that identifes your current location as <strong>${currentLocation.name}</strong> (<a
-					href="location/uncookie/${currentLocation.id}">delete this cookie</a>).
+					href="location/uncookie/${currentLocation.id}">delete this
+					cookie</a>).
 			</c:when>
 			<c:otherwise>You do not have a location cookie set.</c:otherwise>
 		</c:choose>
 	</p>
 	<p>
-		<a href="<c:url value='/web/location/create' />">Create Location</a>
+		<a href="<c:url value='/location/create' />">Create Location</a>
 	<p>
 	<table>
 		<tr>
@@ -36,11 +37,11 @@
 		<c:forEach var="location" items="${locationList}">
 			<tr>
 				<td><c:out value="${location.id}" /></td>
-				<td><a href="${root}web/location/edit/${location.id}">${location.name}</a></td>
+				<td><a href="${root}location/edit/${location.id}">${location.name}</a></td>
 				<td><button
 						onclick="ajaxDelete('/api/location/${location.id}', '${location.name}')">delete</button>
 					<button onclick="window.location='location/cookie/${location.id}'">set
-						cookie</button></td>
+						cookie</button> <br /> <img src="/location/qr/${location.id}" /></td>
 			</tr>
 		</c:forEach>
 	</table>

@@ -24,7 +24,7 @@
 	</c:if>
 
 	<p>
-		<a href="<c:url value='/web/checkin/create' />">Create Checkin</a>
+		<a href="<c:url value='/checkin/create' />">Create Checkin</a>
 	<p>
 	<table>
 		<tr>
@@ -36,8 +36,8 @@
 			<tr>
 				<td><c:out value="${checkin.time}" /></td>
 				<td><a
-					href="${root}web/checkin?locationId=${checkin.location.id}">${checkin.location.name}</a></td>
-				<td>${checkin.user.fullName} (<a href="${root}web/checkin?userEmail=${checkin.user.email}">${checkin.user.email}</a>)</td>
+					href="${root}checkin?locationId=${checkin.location.id}">${checkin.location.name}</a></td>
+				<td>${checkin.user.fullName} (<a href="${root}checkin?userEmail=${checkin.user.email}">${checkin.user.email}</a>)</td>
 				<td><button
 						onclick="ajaxDelete('/api/checkin/${checkin.id}', '${checkin.id}')">delete</button>
 			</tr>

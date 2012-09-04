@@ -37,8 +37,8 @@ public class Location {
 	@XmlAttribute(name = "id")
 	private String id;
 
-	@NotNull
-	@Size(min = 3, max = 80)
+	@NotNull(message = "A location name is required")
+	@Size(min = 3, max = 80, message = "The location name must be 3-80 characters long")
 	@Column(name = "name", nullable = false)
 	@XmlAttribute(name = "name")
 	private String name;

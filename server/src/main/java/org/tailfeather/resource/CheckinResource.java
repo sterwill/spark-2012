@@ -31,6 +31,9 @@ public class CheckinResource {
 	@Autowired
 	private CheckinDao checkinDao;
 
+	@Autowired
+	private SimpleRequestValidator validator;
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON_VALUE)
 	public List<Checkin> list() {
@@ -40,6 +43,11 @@ public class CheckinResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON_VALUE)
 	public Response create(@Valid Checkin checkin, @Context UriInfo uriInfo) {
+		Response error = validator.validate(checkin);
+		if (error != null) {
+			return error;
+		}
+
 		Checkin created = checkinDao.create(checkin);
 		URI uri = uriInfo.getAbsolutePathBuilder().path(Checkin.class).path(created.getId()).build();
 		return Response.status(Status.CREATED).location(uri).build();
@@ -50,6 +58,11 @@ public class CheckinResource {
 	@Path("/{id}")
 	public Response update(@Valid Checkin checkin, @PathParam("id") String id, @Context UriInfo uriInfo) {
 		checkin.setId(id);
+		Response error = validator.validate(checkin);
+		if (error != null) {
+			return error;
+		}
+
 		try {
 			checkinDao.update(checkin);
 		} catch (CheckinNotFoundException e) {

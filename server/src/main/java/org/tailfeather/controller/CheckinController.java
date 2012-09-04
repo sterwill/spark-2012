@@ -46,13 +46,13 @@ public class CheckinController {
 		User user = userDao.findById(userId);
 		if (user == null) {
 			model.addAttribute("error", String.format("ID " + userId + " is not registered.", userId));
-			return "redirect:/web/checkin/badge-error.jsp";
+			return "redirect:/checkin/badge-error.jsp";
 		}
 
 		Location location = locationDao.getCookiedLocation(request);
 		if (location == null) {
 			model.addAttribute("error", "This scanning device is not configured for a known location.");
-			return "redirect:/web/checkin/badge-error.jsp";
+			return "redirect:/checkin/badge-error.jsp";
 		}
 
 		Checkin checkin = new Checkin();
@@ -63,7 +63,7 @@ public class CheckinController {
 
 		model.addAttribute("checkinId", checkin.getId());
 		model.addAttribute("instructions", "Instructions for the next step go here");
-		return "redirect:/web/checkin/badge-success";
+		return "redirect:/checkin/badge-success";
 	}
 
 	@RequestMapping(value = "/badge-success", method = RequestMethod.GET)
@@ -101,7 +101,7 @@ public class CheckinController {
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
-	public String createForm(@Valid Model model, HttpServletRequest request) {
+	public String createForm(Model model, HttpServletRequest request) {
 		Location currentLocation = locationDao.getCookiedLocation(request);
 		if (currentLocation == null) {
 			return "/checkin/noLocation.jsp";
@@ -141,7 +141,7 @@ public class CheckinController {
 		checkin.setTime(new Date());
 		checkinDao.create(checkin);
 
-		return "redirect:/web/checkin";
+		return "redirect:/checkin";
 	}
 
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
@@ -154,7 +154,10 @@ public class CheckinController {
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
 	public String editSubmit(@Valid @ModelAttribute("checkin") Checkin checkin, BindingResult result)
 			throws CheckinNotFoundException {
+		if (result.hasErrors()) {
+			return "/checkin/form.jsp";
+		}
 		checkinDao.update(checkin);
-		return "redirect:/web/checkin";
+		return "redirect:/checkin";
 	}
 }

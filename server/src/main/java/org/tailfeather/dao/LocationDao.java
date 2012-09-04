@@ -9,6 +9,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.tailfeather.ControllerHelper;
@@ -18,6 +20,8 @@ import org.tailfeather.repository.LocationRepository;
 
 @Component
 public class LocationDao {
+	private static final Sort SORT_BY_NAME_ASC = new Sort(new Sort.Order(Direction.ASC, "name"));
+
 	@Autowired
 	LocationRepository locationRepository;
 
@@ -37,7 +41,7 @@ public class LocationDao {
 
 	@Transactional
 	public List<Location> findAll() {
-		return new ArrayList<Location>(locationRepository.findAll());
+		return new ArrayList<Location>(locationRepository.findAll(SORT_BY_NAME_ASC));
 	}
 
 	@Transactional

@@ -17,7 +17,7 @@
 </head>
 <body>
 	<p>
-		<a href="<c:url value='/web/user/create' />">Create User</a>
+		<a href="<c:url value='user/create' />">Create User</a>
 	<p>
 	<table>
 		<tr>
@@ -29,7 +29,7 @@
 		<c:forEach var="user" items="${userList}">
 			<tr>
 				<td><c:out value="${user.id}" /></td>
-				<td><a href="${root}web/user/edit/${user.id}">${user.email}</a></td>
+				<td><a href="${root}user/edit/${user.id}">${user.email}</a></td>
 				<td><c:out value="${user.fullName}" /></td>
 				<td><button
 						onclick="ajaxDelete('/api/user/${user.id}', '${user.fullName}')">delete</button></td>

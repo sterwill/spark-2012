@@ -31,6 +31,9 @@ public class CodeResource {
 	@Autowired
 	private CodeDao codeDao;
 
+	@Autowired
+	private SimpleRequestValidator validator;
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON_VALUE)
 	public List<Code> list() {
@@ -40,6 +43,11 @@ public class CodeResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON_VALUE)
 	public Response create(@Valid Code code, @Context UriInfo uriInfo) {
+		Response error = validator.validate(code);
+		if (error != null) {
+			return error;
+		}
+
 		Code created = codeDao.create(code);
 		URI uri = uriInfo.getAbsolutePathBuilder().path(Code.class).path(created.getId()).build();
 		return Response.status(Status.CREATED).location(uri).build();
@@ -50,6 +58,11 @@ public class CodeResource {
 	@Path("/{id}")
 	public Response update(@Valid Code code, @PathParam("id") String id, @Context UriInfo uriInfo) {
 		code.setId(id);
+		Response error = validator.validate(code);
+		if (error != null) {
+			return error;
+		}
+
 		try {
 			codeDao.update(code);
 		} catch (CodeNotFoundException e) {

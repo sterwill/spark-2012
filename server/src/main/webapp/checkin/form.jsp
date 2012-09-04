@@ -19,11 +19,11 @@
 		<c:choose>
 			<c:when test="${currentLocation != null}">
 			You have a cookie that identifes your current location as <strong>${currentLocation.name}</strong> (<a
-					href="/web/location/uncookie/${currentLocation.id}">delete this
+					href="/location/uncookie/${currentLocation.id}">delete this
 					cookie</a>).
 			</c:when>
 			<c:otherwise>You do not have a location cookie set.  You need to <a
-					href="/web/location">set a cookie</a> before you create checkins.</c:otherwise>
+					href="/location">set a cookie</a> before you create checkins.</c:otherwise>
 		</c:choose>
 	</p>
 	<form:form method="POST" modelAttribute="checkin">
