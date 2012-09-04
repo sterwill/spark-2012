@@ -56,6 +56,9 @@ public class Acorn {
 	@XmlTransient
 	protected String code;
 
+	@XmlTransient
+	private String activeUserId;
+
 	public int getPromptTimeoutSeconds() {
 		return promptTimeoutSeconds;
 	}
@@ -161,5 +164,13 @@ public class Acorn {
 
 	public void printCommandError(String error) {
 		Console.printRedLine(error);
+	}
+
+	public String getActiveUserId() {
+		return activeUserId;
+	}
+
+	public void setActiveUserId(String activeUserId) {
+		this.activeUserId = activeUserId;
 	}
 }

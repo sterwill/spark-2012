@@ -1,9 +1,7 @@
-<acorn motd="text/main-motd.txt" prompt="text/main-prompt.txt"
-	promptTimeoutSeconds="30" cps="200">
+<acorn motd="text/main-motd.txt" prompt="text/main-prompt.txt" promptTimeoutSeconds="30" cps="200">
 	<command>
 		<name>register</name>
-		<register post="http://localhost:8080/api/user" instructions="text/register-instructions.txt"
-			success="text/register-success.txt">
+		<register post="http://localhost:8080/api/user" instructions="text/register-instructions.txt" success="text/register-success.txt">
 			<text name="name" prompt="  Name: " />
 			<email name="email" prompt="  E-mail Address: " />
 		</register>
@@ -21,10 +19,6 @@
 		<name>bye</name>
 		<exit />
 	</command>
-	<scan unknownSound="sounds/sour.wav" unknownFile="text/unknown-code.txt">
-		<code pattern="http://splatspace\.(.*)" sound="sounds/sweet.wav"
-	postUriFormat="http://localhost:8080/api/user/{userId}">
-
-		</code>
-	</scan>
+	<scan sound="sounds/sweet.wav" unknownSound="sounds/sour.wav" unknownFile="text/unknown-code.txt"
+		pattern="http://localhost:8080/api/user/(.*)" />
 </acorn>
