@@ -75,13 +75,13 @@ public class LocationController {
 	@RequestMapping(value = "/cookie/{id}", method = RequestMethod.GET)
 	public String cookie(@PathVariable String id, Model model, HttpServletResponse response) {
 		response.addCookie(createLocationCookie(id));
-		return "redirect:/location/showCookie";
+		return "showCookie.jsp";
 	}
 
 	@RequestMapping(value = "/uncookie/{id}", method = RequestMethod.GET)
 	public String uncookie(@PathVariable String id, Model model, HttpServletResponse response) {
 		response.addCookie(createLocationUncookie(id));
-		return "redirect:/location/showCookie";
+		return "showCookie.jsp";
 	}
 
 	@RequestMapping(value = "/showCookie", method = RequestMethod.GET)
