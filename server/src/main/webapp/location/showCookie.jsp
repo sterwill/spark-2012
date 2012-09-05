@@ -15,7 +15,7 @@
 <script type="text/javascript" src="${root}static/jquery-1.8.1.js"></script>
 </head>
 <body>
-	<p style="font-size: x-large;">
+	<p style="font-size: xx-large;">
 		<c:choose>
 			<c:when test="${currentLocation != null}">
 			Your cookie says you are <strong>${currentLocation.name}</strong> (<a
