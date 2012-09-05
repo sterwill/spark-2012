@@ -30,7 +30,7 @@
 	<!-- Spring Security -->
 	<security:http auto-config="true">
 		<!-- API -->
-		<security:intercept-url pattern="/api/**" access="ROLE_ADMIN" />
+		<security:intercept-url pattern="/api/user/**" access="ROLE_ANONYMOUS,ROLE_ADMIN" method="GET" />
 		<!-- Web -->
 		<security:intercept-url pattern="/" access="ROLE_ANONYMOUS,ROLE_ADMIN" />
 		<security:intercept-url pattern="/favicon.ico" access="ROLE_ANONYMOUS,ROLE_ADMIN" />

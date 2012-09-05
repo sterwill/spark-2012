@@ -96,8 +96,6 @@ public class LocationController {
 			throws WriterException, IOException {
 		String uri = String.format("%s://%s:%d/location/cookie/%s", request.getScheme(), request.getServerName(),
 				request.getServerPort(), id);
-		// URI uri =
-		// uriInfo.getAbsolutePathBuilder().path("location").path("cookie").path(id).build();
 		response.setStatus(Status.OK.getStatusCode());
 		response.setContentType("image/png");
 		QRCodeWriter writer = new QRCodeWriter();

@@ -36,8 +36,8 @@
 		</tr>
 		<c:forEach var="location" items="${locationList}">
 			<tr>
-				<td><c:out value="${location.id}" /></td>
-				<td><a href="${root}location/edit/${location.id}">${location.name}</a></td>
+				<td><a href="${root}location/edit/${location.id}">${location.id}</a></td>
+				<td>${location.name}</td>
 				<td><button
 						onclick="ajaxDelete('/api/location/${location.id}', '${location.name}')">delete</button>
 					<button onclick="window.location='location/cookie/${location.id}'">set

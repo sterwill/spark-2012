@@ -32,7 +32,7 @@ public class Location {
 	private String name;
 
 	public Location() {
-		this.id = IdHelper.newLongId();
+		this.id = IdHelper.newShortId();
 	}
 
 	public String getId() {

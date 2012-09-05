@@ -28,10 +28,11 @@
 		</tr>
 		<c:forEach var="user" items="${userList}">
 			<tr>
-				<td><c:out value="${user.id}" /></td>
-				<td><a href="${root}user/edit/${user.id}">${user.email}</a></td>
+				<td><a href="${root}user/edit/${user.id}">${user.id}</a></td>
+				<td>${user.email}</td>
 				<td><c:out value="${user.fullName}" /></td>
-				<td><button
+				<td><a href="${root}user/qr/${user.id}">Badge</a>
+					<button
 						onclick="ajaxDelete('/api/user/${user.id}', '${user.fullName}')">delete</button></td>
 			</tr>
 		</c:forEach>
