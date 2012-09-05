@@ -15,10 +15,10 @@
 <script type="text/javascript" src="${root}static/jquery-1.8.1.js"></script>
 </head>
 <body>
-	<p>
+	<p style="font-size: x-large;">
 		<c:choose>
 			<c:when test="${currentLocation != null}">
-			You have a cookie that identifes your current location as <strong>${currentLocation.name}</strong> (<a
+			Your cookie says you are <strong>${currentLocation.name}</strong> (<a
 					href="location/uncookie/${currentLocation.id}">delete this
 					cookie</a>).
 			</c:when>
