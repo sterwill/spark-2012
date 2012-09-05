@@ -20,7 +20,7 @@
 		<c:choose>
 			<c:when test="${currentLocation != null}">
 			You have a cookie that identifes your current location as <strong>${currentLocation.name}</strong> (<a
-					href="location/uncookie/${currentLocation.id}">delete this
+					href="/location/uncookie/${currentLocation.id}">delete this
 					cookie</a>).
 			</c:when>
 			<c:otherwise>You do not have a location cookie set.</c:otherwise>
