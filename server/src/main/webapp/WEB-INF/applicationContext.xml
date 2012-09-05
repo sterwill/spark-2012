@@ -37,6 +37,7 @@
 		<security:intercept-url pattern="/index.jsp" access="ROLE_ANONYMOUS,ROLE_ADMIN" />
 		<security:intercept-url pattern="/static/**" access="ROLE_ANONYMOUS,ROLE_ADMIN" />
 		<security:intercept-url pattern="/location/cookie/**" access="ROLE_ANONYMOUS,ROLE_ADMIN" />
+		<security:intercept-url pattern="/location/uncookie/**" access="ROLE_ANONYMOUS,ROLE_ADMIN" />
 		<security:intercept-url pattern="/location/showCookie" access="ROLE_ANONYMOUS,ROLE_ADMIN" />
 		<security:intercept-url pattern="/**" access="ROLE_ADMIN" />
 		<!-- Basic Auth -->
