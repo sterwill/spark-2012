@@ -30,13 +30,14 @@
 	<!-- Spring Security -->
 	<security:http auto-config="true">
 		<!-- API -->
-		<security:intercept-url pattern="/api/**" access="ROLE_ADMIN,ROLE_TERMINAL" />
+		<security:intercept-url pattern="/api/**" access="ROLE_ADMIN" />
 		<!-- Web -->
-		<security:intercept-url pattern="/location/qr/**" access="ROLE_ANONYMOUS,ROLE_ADMIN,ROLE_TERMINAL" />
-		<security:intercept-url pattern="/location/showCookie" access="ROLE_ANONYMOUS,ROLE_ADMIN,ROLE_TERMINAL" />
-		<security:intercept-url pattern="/checkin/**" access="ROLE_AGENT,ROLE_ADMIN" />
+		<security:intercept-url pattern="/" access="ROLE_ANONYMOUS,ROLE_ADMIN" />
+		<security:intercept-url pattern="/index.jsp" access="ROLE_ANONYMOUS,ROLE_ADMIN" />
+		<security:intercept-url pattern="/static/**" access="ROLE_ANONYMOUS,ROLE_ADMIN" />
+		<security:intercept-url pattern="/location/cookie/**" access="ROLE_ANONYMOUS,ROLE_ADMIN" />
+		<security:intercept-url pattern="/location/showCookie" access="ROLE_ANONYMOUS,ROLE_ADMIN" />
 		<security:intercept-url pattern="/**" access="ROLE_ADMIN" />
-		<security:intercept-url pattern="/index.jsp" access="ROLE_ANONYMOUS,ROLE_ADMIN,ROLE_TERMINAL" />
 		<!-- Basic Auth -->
 		<security:http-basic />
 	</security:http>
@@ -44,8 +45,6 @@
 		<security:authentication-provider>
 			<security:user-service>
 				<security:user name="admin" password="superfoonly" authorities="ROLE_ADMIN" />
-				<security:user name="agent" password="foonly" authorities="ROLE_AGENT" />
-				<security:user name="terminal" password="megafoonly" authorities="ROLE_TERMINAL" />
 			</security:user-service>
 		</security:authentication-provider>
 	</security:authentication-manager>
