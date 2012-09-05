@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.tailfeather.client.Console;
 import org.tailfeather.client.FileUtils;
+import org.tailfeather.client.ServerUtils;
 import org.tailfeather.client.SoundUtils;
 
 @XmlRootElement(name = "scan")
@@ -30,14 +31,14 @@ public class Scan {
 	@XmlAttribute(name = "unknownFile")
 	private String unknownFile;
 
-	public void handleScan(Acorn acorn, String value) {
+	public boolean handleScan(Acorn acorn, String value) {
 		if (value != null) {
 			Matcher matcher = Pattern.compile(pattern).matcher(value);
 
 			if (matcher.matches()) {
 				SoundUtils.playSound(sound);
 				handleMatch(value, matcher, acorn);
-				return;
+				return true;
 			}
 
 			SoundUtils.playSound(unknownSound);
@@ -50,10 +51,13 @@ public class Scan {
 				}
 			}
 		}
+
+		return false;
 	}
 
 	private void handleMatch(String value, Matcher matcher, Acorn acorn) {
 		String userId = matcher.group(1);
-		acorn.setActiveUserId(userId);
+		String userUri = value;
+		acorn.setActiveUser(ServerUtils.getUser(userUri));
 	}
 }

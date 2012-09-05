@@ -20,6 +20,7 @@ import org.tailfeather.client.FileUtils;
 import org.tailfeather.client.model.idle.CheckForScannedCodeIdleHandler;
 import org.tailfeather.client.model.idle.CodeScannedException;
 import org.tailfeather.client.model.idle.PromptIdleHandlerException;
+import org.tailfeather.entity.User;
 
 @XmlRootElement(name = "acorn")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -31,6 +32,9 @@ public class Acorn {
 
 	@XmlAttribute(name = "prompt", required = true)
 	private String prompt;
+
+	@XmlAttribute(name = "userPrompt", required = true)
+	private String userPrompt;
 
 	@XmlAttribute(name = "cps")
 	private int cps = 300;
@@ -57,7 +61,7 @@ public class Acorn {
 	protected String code;
 
 	@XmlTransient
-	private String activeUserId;
+	private User activeUser;
 
 	public int getPromptTimeoutSeconds() {
 		return promptTimeoutSeconds;
@@ -73,6 +77,7 @@ public class Acorn {
 		CheckForScannedCodeIdleHandler scannerIdleHandler = new CheckForScannedCodeIdleHandler(scannerRunnable);
 
 		main: while (true) {
+			setActiveUser(null);
 			Console.clear();
 			Console.flush();
 
@@ -81,11 +86,10 @@ public class Acorn {
 				Console.flush();
 			}
 
-			final String promptString = FileUtils.getContents(prompt);
-
 			// First prompt has no timeout
 			int promptTimeout = Integer.MAX_VALUE;
 			while (true) {
+				final String promptString = makePrompt();
 				final String input;
 				try {
 					scannerRunnable.clear();
@@ -105,7 +109,11 @@ public class Acorn {
 				} catch (PromptIdleHandlerException e) {
 					if (e instanceof CodeScannedException) {
 						if (scan != null) {
-							scan.handleScan(this, ((CodeScannedException) e).getCode());
+							if (scan.handleScan(this, ((CodeScannedException) e).getCode())) {
+								// A known user ID was read
+								Console.printLine();
+								continue;
+							}
 						}
 					}
 					continue main;
@@ -148,6 +156,14 @@ public class Acorn {
 		}
 	}
 
+	private String makePrompt() {
+		if (activeUser == null) {
+			return FileUtils.getContents(prompt);
+		}
+
+		return MessageFormat.format(FileUtils.getContents(userPrompt), activeUser.getFullName(), activeUser.getId());
+	}
+
 	private void configureConsole() {
 		Console.setOutRate(cps);
 		Console.setErrRate(cps);
@@ -166,11 +182,11 @@ public class Acorn {
 		Console.printRedLine(error);
 	}
 
-	public String getActiveUserId() {
-		return activeUserId;
+	public User getActiveUser() {
+		return activeUser;
 	}
 
-	public void setActiveUserId(String activeUserId) {
-		this.activeUserId = activeUserId;
+	public void setActiveUser(User activeUser) {
+		this.activeUser = activeUser;
 	}
 }

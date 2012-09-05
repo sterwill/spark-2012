@@ -1,4 +1,5 @@
-<acorn motd="text/main-motd.txt" prompt="text/main-prompt.txt" promptTimeoutSeconds="30" cps="200">
+<acorn motd="text/main-motd.txt" prompt="text/main-prompt.txt" userPrompt="text/user-prompt.txt"
+	promptTimeoutSeconds="30" cps="200">
 	<command>
 		<name>register</name>
 		<register post="http://localhost:8080/api/user" instructions="text/register-instructions.txt" success="text/register-success.txt">
