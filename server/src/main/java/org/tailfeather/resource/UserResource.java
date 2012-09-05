@@ -59,7 +59,7 @@ public class UserResource {
 		}
 
 		User created = userDao.create(user);
-		URI uri = uriInfo.getAbsolutePathBuilder().path(User.class).path(created.getId()).build();
+		URI uri = uriInfo.getAbsolutePathBuilder().path(UserResource.class, "get").build(created.getId());
 		return Response.status(Status.CREATED).location(uri).build();
 	}
 

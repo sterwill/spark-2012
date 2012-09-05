@@ -1,7 +1,5 @@
 package org.tailfeather.entity;
 
-import java.net.URI;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -17,19 +15,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.springframework.util.Assert;
 import org.tailfeather.IdHelper;
 
-import com.sun.jersey.server.linking.Binding;
-import com.sun.jersey.server.linking.Ref;
-import com.sun.jersey.server.linking.Ref.Style;
-
 @XmlRootElement(name = "user")
 @XmlAccessorType(XmlAccessType.FIELD)
 @Entity
 @Table(name = "users")
 public class User {
-	@Ref(value = "user/{id}", style = Style.ABSOLUTE, bindings = { @Binding(name = "id", value = "${instance.id}") })
-	@XmlElement(name = "uri")
-	private URI uri;
-
 	@Id
 	@Column(name = "id")
 	@XmlElement(name = "id")
@@ -58,10 +48,6 @@ public class User {
 		Assert.hasText(fullName);
 		this.email = email;
 		this.fullName = fullName;
-	}
-
-	public URI getUri() {
-		return uri;
 	}
 
 	public String getId() {

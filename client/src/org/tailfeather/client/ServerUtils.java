@@ -13,6 +13,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 
 public class ServerUtils {
 	private static final Logger LOGGER = Logger.getLogger(ServerUtils.class.getName());
@@ -45,6 +46,7 @@ public class ServerUtils {
 				c.setFollowRedirects(true);
 				c.setConnectTimeout(5000);
 				c.setReadTimeout(10000);
+				c.addFilter(new HTTPBasicAuthFilter("admin", "superfoonly"));
 				client = c;
 			}
 			return client;

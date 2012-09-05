@@ -1,16 +1,14 @@
 package org.tailfeather.entity.xmladapter;
 
-import java.net.URI;
-
 import javax.xml.bind.JAXB;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 import org.tailfeather.entity.Location;
 
-public class LocationRefAdapter extends XmlAdapter<URI, Location> {
+public class LocationAdapter extends XmlAdapter<String, Location> {
 
 	@Override
-	public Location unmarshal(URI v) throws Exception {
+	public Location unmarshal(String v) throws Exception {
 		if (v == null) {
 			return null;
 		}
@@ -18,10 +16,10 @@ public class LocationRefAdapter extends XmlAdapter<URI, Location> {
 	}
 
 	@Override
-	public URI marshal(Location v) throws Exception {
+	public String marshal(Location v) throws Exception {
 		if (v == null) {
 			return null;
 		}
-		return v.getUri();
+		return v.getId();
 	}
 }

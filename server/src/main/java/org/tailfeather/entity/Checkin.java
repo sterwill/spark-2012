@@ -1,6 +1,5 @@
 package org.tailfeather.entity;
 
-import java.net.URI;
 import java.util.Date;
 
 import javax.persistence.CascadeType;
@@ -10,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -19,23 +17,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.tailfeather.IdHelper;
-import org.tailfeather.entity.xmladapter.LocationRefAdapter;
-import org.tailfeather.entity.xmladapter.UserRefAdapter;
-
-import com.sun.jersey.server.linking.Binding;
-import com.sun.jersey.server.linking.Ref;
-import com.sun.jersey.server.linking.Ref.Style;
+import org.tailfeather.entity.xmladapter.LocationAdapter;
+import org.tailfeather.entity.xmladapter.UserAdapter;
 
 @XmlRootElement(name = "checkin")
 @XmlAccessorType(XmlAccessType.FIELD)
 @Entity
 @Table(name = "checkins")
 public class Checkin {
-	@Ref(value = "checkin/{id}", style = Style.ABSOLUTE, bindings = { @Binding(name = "id", value = "${instance.id}") })
-	@XmlAttribute(name = "uri")
-	@Transient
-	private URI uri;
-
 	@Id
 	@Column(name = "id")
 	@XmlAttribute(name = "id")
@@ -45,14 +34,14 @@ public class Checkin {
 	@ManyToOne(cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
 	@XmlAttribute(name = "user")
-	@XmlJavaTypeAdapter(UserRefAdapter.class)
+	@XmlJavaTypeAdapter(UserAdapter.class)
 	private User user;
 
 	@NotNull
 	@ManyToOne(cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "location_id", referencedColumnName = "id")
 	@XmlAttribute(name = "location")
-	@XmlJavaTypeAdapter(LocationRefAdapter.class)
+	@XmlJavaTypeAdapter(LocationAdapter.class)
 	private Location location;
 
 	@NotNull
@@ -61,10 +50,6 @@ public class Checkin {
 
 	public Checkin() {
 		this.id = IdHelper.newLongId();
-	}
-
-	public URI getUri() {
-		return uri;
 	}
 
 	public String getId() {

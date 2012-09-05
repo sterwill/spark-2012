@@ -40,6 +40,13 @@ public class CheckinResource {
 		return new ArrayList<Checkin>(checkinDao.findAll());
 	}
 
+	@GET
+	@Produces(MediaType.APPLICATION_JSON_VALUE)
+	@Path("/{id}")
+	public Checkin get(@PathParam("id") String id) {
+		return checkinDao.findById(id);
+	}
+
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON_VALUE)
 	public Response create(@Valid Checkin checkin, @Context UriInfo uriInfo) {
@@ -49,7 +56,7 @@ public class CheckinResource {
 		}
 
 		Checkin created = checkinDao.create(checkin);
-		URI uri = uriInfo.getAbsolutePathBuilder().path(Checkin.class).path(created.getId()).build();
+		URI uri = uriInfo.getAbsolutePathBuilder().path(CheckinResource.class, "get").build(created.getId());
 		return Response.status(Status.CREATED).location(uri).build();
 	}
 

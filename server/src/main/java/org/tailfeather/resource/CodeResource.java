@@ -40,6 +40,13 @@ public class CodeResource {
 		return new ArrayList<Code>(codeDao.findAll());
 	}
 
+	@GET
+	@Produces(MediaType.APPLICATION_JSON_VALUE)
+	@Path("/{id}")
+	public Code get(@PathParam("id") String id) {
+		return codeDao.findById(id);
+	}
+
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON_VALUE)
 	public Response create(@Valid Code code, @Context UriInfo uriInfo) {
@@ -49,7 +56,7 @@ public class CodeResource {
 		}
 
 		Code created = codeDao.create(code);
-		URI uri = uriInfo.getAbsolutePathBuilder().path(Code.class).path(created.getId()).build();
+		URI uri = uriInfo.getAbsolutePathBuilder().path(CodeResource.class, "get").build(created.getId());
 		return Response.status(Status.CREATED).location(uri).build();
 	}
 

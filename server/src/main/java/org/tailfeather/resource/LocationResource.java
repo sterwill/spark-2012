@@ -56,7 +56,7 @@ public class LocationResource {
 		}
 
 		Location created = locationDao.create(location);
-		URI uri = uriInfo.getAbsolutePathBuilder().path(Location.class).path(created.getId()).build();
+		URI uri = uriInfo.getAbsolutePathBuilder().path(LocationResource.class, "get").build(created.getId());
 		return Response.status(Status.CREATED).location(uri).build();
 	}
 

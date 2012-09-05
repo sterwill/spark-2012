@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.tailfeather.IdHelper;
-import org.tailfeather.entity.xmladapter.UserRefAdapter;
+import org.tailfeather.entity.xmladapter.UserAdapter;
 
 import com.sun.jersey.server.linking.Binding;
 import com.sun.jersey.server.linking.Ref;
@@ -48,7 +48,7 @@ public class Code {
 	@ManyToOne(cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
 	@XmlAttribute(name = "userId")
-	@XmlJavaTypeAdapter(UserRefAdapter.class)
+	@XmlJavaTypeAdapter(UserAdapter.class)
 	private User user;
 
 	@NotNull
