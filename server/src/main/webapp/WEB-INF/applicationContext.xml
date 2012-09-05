@@ -33,6 +33,7 @@
 		<security:intercept-url pattern="/api/**" access="ROLE_ADMIN" />
 		<!-- Web -->
 		<security:intercept-url pattern="/" access="ROLE_ANONYMOUS,ROLE_ADMIN" />
+		<security:intercept-url pattern="/favicon.ico" access="ROLE_ANONYMOUS,ROLE_ADMIN" />
 		<security:intercept-url pattern="/index.jsp" access="ROLE_ANONYMOUS,ROLE_ADMIN" />
 		<security:intercept-url pattern="/static/**" access="ROLE_ANONYMOUS,ROLE_ADMIN" />
 		<security:intercept-url pattern="/location/cookie/**" access="ROLE_ANONYMOUS,ROLE_ADMIN" />
