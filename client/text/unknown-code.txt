@@ -1,5 +1,5 @@
 
-  UNKNOWN CODE
+  BADGE UNRECOGNIZED
   
-  The detected code is not registered with this system.
+  Your badge is not registered with this system.
 

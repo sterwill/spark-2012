@@ -1,5 +1,8 @@
 package org.tailfeather.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -37,6 +40,9 @@ public class User {
 	@Column(name = "full_name", nullable = false)
 	@XmlElement(name = "fullName")
 	private String fullName;
+
+	@XmlElement(name = "codes")
+	private List<Code> codes = new ArrayList<Code>();
 
 	public User() {
 		this.id = IdHelper.newShortId();
@@ -78,5 +84,13 @@ public class User {
 		this.email = user.email;
 		this.fullName = user.fullName;
 		return this;
+	}
+
+	public List<Code> getCodes() {
+		return codes;
+	}
+
+	public void setCodes(List<Code> codes) {
+		this.codes = codes;
 	}
 }

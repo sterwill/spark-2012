@@ -20,7 +20,9 @@ import javax.ws.rs.core.UriInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.tailfeather.dao.CodeDao;
 import org.tailfeather.dao.UserDao;
+import org.tailfeather.entity.Code;
 import org.tailfeather.entity.User;
 import org.tailfeather.exceptions.UserNotFoundException;
 
@@ -29,6 +31,9 @@ import org.tailfeather.exceptions.UserNotFoundException;
 public class UserResource {
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private CodeDao codeDao;
 
 	@Autowired
 	private SimpleRequestValidator validator;
@@ -43,7 +48,11 @@ public class UserResource {
 	@Produces(MediaType.APPLICATION_JSON_VALUE)
 	@Path("/{id}")
 	public User get(@PathParam("id") String id) {
-		return userDao.findById(id);
+		User user = userDao.findById(id);
+		for (Code c : codeDao.findByUser(user.getId())) {
+			user.getCodes().add(c);
+		}
+		return user;
 	}
 
 	@POST

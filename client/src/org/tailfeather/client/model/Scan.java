@@ -1,5 +1,6 @@
 package org.tailfeather.client.model;
 
+import java.text.MessageFormat;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,6 +14,7 @@ import org.tailfeather.client.Console;
 import org.tailfeather.client.FileUtils;
 import org.tailfeather.client.ServerUtils;
 import org.tailfeather.client.SoundUtils;
+import org.tailfeather.entity.User;
 
 @XmlRootElement(name = "scan")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -22,8 +24,11 @@ public class Scan {
 	@XmlAttribute(name = "pattern", required = true)
 	private String pattern;
 
-	@XmlAttribute(name = "sound")
-	private String sound;
+	@XmlAttribute(name = "knownSound")
+	private String knownSound;
+
+	@XmlAttribute(name = "knownFile")
+	private String knownFile;
 
 	@XmlAttribute(name = "unknownSound")
 	private String unknownSound;
@@ -31,14 +36,11 @@ public class Scan {
 	@XmlAttribute(name = "unknownFile")
 	private String unknownFile;
 
-	public boolean handleScan(Acorn acorn, String value) {
+	public User handleScan(String value) {
 		if (value != null) {
 			Matcher matcher = Pattern.compile(pattern).matcher(value);
-
 			if (matcher.matches()) {
-				SoundUtils.playSound(sound);
-				handleMatch(value, matcher, acorn);
-				return true;
+				return getMatchedUser(value, matcher);
 			}
 
 			SoundUtils.playSound(unknownSound);
@@ -51,13 +53,28 @@ public class Scan {
 				}
 			}
 		}
-
-		return false;
+		return null;
 	}
 
-	private void handleMatch(String value, Matcher matcher, Acorn acorn) {
+	private User getMatchedUser(String value, Matcher matcher) {
+		String uri = value;
 		String userId = matcher.group(1);
-		String userUri = value;
-		acorn.setActiveUser(ServerUtils.getUser(userUri));
+
+		Console.printLine();
+		Console.printLine(MessageFormat.format("Retrieving information for user {0}...", userId));
+
+		User user = ServerUtils.getUser(uri);
+		if (user != null) {
+			if (knownFile != null) {
+				SoundUtils.playSound(knownSound);
+				Console.print(MessageFormat.format(FileUtils.getContents(knownFile), user.getFullName()));
+			}
+			return user;
+		}
+
+		Console.printLine();
+		Console.printRedLine("Your information could not be retrieved at this time.");
+		Console.printLine();
+		return null;
 	}
 }

@@ -1,6 +1,8 @@
 package org.tailfeather.client.model;
 
+import java.text.DateFormat;
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -14,12 +16,14 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.tailfeather.client.CodeComparator;
 import org.tailfeather.client.CodeScannerRunnable;
 import org.tailfeather.client.Console;
 import org.tailfeather.client.FileUtils;
 import org.tailfeather.client.model.idle.CheckForScannedCodeIdleHandler;
 import org.tailfeather.client.model.idle.CodeScannedException;
 import org.tailfeather.client.model.idle.PromptIdleHandlerException;
+import org.tailfeather.entity.Code;
 import org.tailfeather.entity.User;
 
 @XmlRootElement(name = "acorn")
@@ -60,9 +64,6 @@ public class Acorn {
 	@XmlTransient
 	protected String code;
 
-	@XmlTransient
-	private User activeUser;
-
 	public int getPromptTimeoutSeconds() {
 		return promptTimeoutSeconds;
 	}
@@ -76,8 +77,9 @@ public class Acorn {
 
 		CheckForScannedCodeIdleHandler scannerIdleHandler = new CheckForScannedCodeIdleHandler(scannerRunnable);
 
+		User activeUser;
 		main: while (true) {
-			setActiveUser(null);
+			activeUser = null;
 			Console.clear();
 			Console.flush();
 
@@ -89,7 +91,7 @@ public class Acorn {
 			// First prompt has no timeout
 			int promptTimeout = Integer.MAX_VALUE;
 			while (true) {
-				final String promptString = makePrompt();
+				final String promptString = makePrompt(activeUser);
 				final String input;
 				try {
 					scannerRunnable.clear();
@@ -109,9 +111,11 @@ public class Acorn {
 				} catch (PromptIdleHandlerException e) {
 					if (e instanceof CodeScannedException) {
 						if (scan != null) {
-							if (scan.handleScan(this, ((CodeScannedException) e).getCode())) {
-								// A known user ID was read
-								Console.printLine();
+							User user = scan.handleScan(((CodeScannedException) e).getCode());
+							if (user != null) {
+								printUserSummary(user);
+								// Back to prompt (with user info this time)
+								activeUser = user;
 								continue;
 							}
 						}
@@ -156,12 +160,26 @@ public class Acorn {
 		}
 	}
 
-	private String makePrompt() {
-		if (activeUser == null) {
+	private void printUserSummary(User user) {
+		List<Code> codes = user.getCodes();
+		if (codes != null && codes.size() > 0) {
+			DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+			Collections.sort(codes, new CodeComparator());
+			Console.printLine("  You have submitted the following codes:");
+			for (Code code : codes) {
+				Console.printLine("    " + dateFormat.format(code.getTime()) + " " + code.getCode());
+			}
+		} else {
+			Console.printLine("  You have not yet submitted any codes.");
+		}
+	}
+
+	private String makePrompt(User user) {
+		if (user == null) {
 			return FileUtils.getContents(prompt);
 		}
 
-		return MessageFormat.format(FileUtils.getContents(userPrompt), activeUser.getFullName(), activeUser.getId());
+		return MessageFormat.format(FileUtils.getContents(userPrompt), user.getFullName(), user.getId());
 	}
 
 	private void configureConsole() {
@@ -180,13 +198,5 @@ public class Acorn {
 
 	public void printCommandError(String error) {
 		Console.printRedLine(error);
-	}
-
-	public User getActiveUser() {
-		return activeUser;
-	}
-
-	public void setActiveUser(User activeUser) {
-		this.activeUser = activeUser;
 	}
 }
