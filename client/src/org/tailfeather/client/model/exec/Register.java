@@ -1,5 +1,6 @@
 package org.tailfeather.client.model.exec;
 
+import java.io.File;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.tailfeather.client.BadgeRenderer;
 import org.tailfeather.client.Console;
 import org.tailfeather.client.FileUtils;
 import org.tailfeather.client.ServerUtils;
@@ -41,6 +43,12 @@ public class Register extends Executable {
 
 	@XmlElements({ @XmlElement(name = "text", type = Text.class), @XmlElement(name = "email", type = Email.class) })
 	private List<FormField> fields = new ArrayList<FormField>();
+
+	@XmlAttribute(name = "badgeTemplate", required = true)
+	private String badgeTemplate;
+
+	@XmlAttribute(name = "badgeTemplateRectId", required = true)
+	private String badgeTemplateRectId;
 
 	@Override
 	public void execute(Command command) {
@@ -132,6 +140,9 @@ public class Register extends Executable {
 	}
 
 	private void printBadge(User user) {
-		Console.printRedLine("TODO print a badge for http://localhost:8080/web/checkin/" + user.getId());
+		if (badgeTemplate != null) {
+			BadgeRenderer printer = new BadgeRenderer(new File(badgeTemplate), badgeTemplateRectId);
+			printer.print(postUri);
+		}
 	}
 }

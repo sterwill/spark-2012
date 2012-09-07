@@ -14,4 +14,4 @@ export LINES
 #DEBUG="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=6543"
 #java $DEBUG -cp target/client-1.0-jar-with-dependencies.jar org.tailfeather.client.Main acorn.xml
 export MAVEN_OPTS="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000"
-mvn compile exec:java
+mvn -e compile exec:java

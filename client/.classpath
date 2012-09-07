@@ -171,4 +171,17 @@
   <classpathentry kind="var" path="M2_REPO/org/google/javacv/javacv/0.2/javacv-0.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/google/javacv/javacpp/0.2/javacpp-0.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/google/javacv/javacv-linux-x86_64/0.2/javacv-linux-x86_64-0.2.jar"/>
+  <classpathentry kind="var" path="M2_REPO/batik/batik-svggen/1.6-1/batik-svggen-1.6-1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/batik/batik-gvt/1.6-1/batik-gvt-1.6-1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/batik/batik-awt-util/1.6-1/batik-awt-util-1.6-1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/batik/batik-util/1.6-1/batik-util-1.6-1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/batik/batik-gui-util/1.6-1/batik-gui-util-1.6-1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/batik/batik-ext/1.6-1/batik-ext-1.6-1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/xml-apis/xmlParserAPIs/2.0.2/xmlParserAPIs-2.0.2.jar"/>
+  <classpathentry kind="var" path="M2_REPO/batik/batik-svg-dom/1.6-1/batik-svg-dom-1.6-1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/batik/batik-dom/1.6-1/batik-dom-1.6-1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/batik/batik-css/1.6-1/batik-css-1.6-1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/batik/batik-xml/1.6-1/batik-xml-1.6-1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/xerces/xercesImpl/2.5.0/xercesImpl-2.5.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/batik/batik-parser/1.6-1/batik-parser-1.6-1.jar"/>
 </classpath>
