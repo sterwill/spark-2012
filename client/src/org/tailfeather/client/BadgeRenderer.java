@@ -68,11 +68,13 @@ public class BadgeRenderer {
 			float qrWidth = Float.parseFloat(templateQrElement.getAttribute("width"));
 			float qrHeight = Float.parseFloat(templateQrElement.getAttribute("height"));
 
-			String nameStyle = templateNameElement.getAttribute("style");
+			String flowRootTransform = templateNameElement.getAttribute("transform");
+			String flowRootStyle = templateNameElement.getAttribute("style");
 			float nameX = Float.parseFloat(templateNameRectElement.getAttribute("x"));
 			float nameY = Float.parseFloat(templateNameRectElement.getAttribute("y"));
 			float nameWidth = Float.parseFloat(templateNameRectElement.getAttribute("width"));
 			float nameHeight = Float.parseFloat(templateNameRectElement.getAttribute("height"));
+			String rectStyle = templateNameRectElement.getAttribute("style");
 
 			// Replace the elements
 			Element parent;
@@ -86,7 +88,8 @@ public class BadgeRenderer {
 
 			parent = (Element) templateNameElement.getParentNode();
 			parent.removeChild(templateNameElement);
-			parent.appendChild(createTextElement(doc, name, nameX, nameY, nameWidth, nameHeight, nameStyle));
+			parent.appendChild(createTextElement(doc, name, nameX, nameY, nameWidth, nameHeight, flowRootTransform,
+					flowRootStyle, rectStyle));
 
 			ProcessBuilder pb = new ProcessBuilder("rm", "-f", "/tmp/badge.pdf", "/tmp/badge.svg");
 			Process p = pb.start();
@@ -115,10 +118,12 @@ public class BadgeRenderer {
 		}
 	}
 
-	private Node createTextElement(Document doc, String name, float x, float y, float width, float height, String style) {
+	private Node createTextElement(Document doc, String name, float x, float y, float width, float height,
+			String flowRootTransform, String flowRootStyle, String rectStyle) {
 		Element flowRoot = doc.createElementNS(SVG_NS, "flowRoot");
 		flowRoot.setAttribute("xml:space", "preserve");
-		flowRoot.setAttribute("style", style);
+		flowRoot.setAttribute("transform", flowRootTransform);
+		flowRoot.setAttribute("style", flowRootStyle);
 		doc.getDocumentElement().appendChild(flowRoot);
 
 		Element flowRegion = doc.createElementNS(SVG_NS, "flowRegion");
@@ -129,6 +134,7 @@ public class BadgeRenderer {
 		rect.setAttribute("y", Float.toString(y));
 		rect.setAttribute("width", Float.toString(width));
 		rect.setAttribute("height", Float.toString(height));
+		rect.setAttribute("style", rectStyle);
 		flowRegion.appendChild(rect);
 
 		Element flowPara = doc.createElementNS(SVG_NS, "flowPara");
