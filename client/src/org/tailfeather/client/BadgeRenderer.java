@@ -35,7 +35,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 public class BadgeRenderer {
 	private static final Logger LOGGER = Logger.getLogger(BadgeRenderer.class.getName());
 
-	private static final int QR_SIZE_PIXELS = 1200;
+	private static final int QR_SIZE_PIXELS = 600;
 
 	private static final String XLINK_NS = "http://www.w3.org/1999/xlink";
 	private static final String SVG_NS = "http://www.w3.org/2000/svg";
@@ -61,16 +61,18 @@ public class BadgeRenderer {
 				LOGGER.log(Level.SEVERE, "Couldn't find name element in template");
 				return;
 			}
+			Element templateNameRectElement = (Element) templateNameElement.getFirstChild().getFirstChild();
 
 			float qrX = Float.parseFloat(templateQrElement.getAttribute("x"));
 			float qrY = Float.parseFloat(templateQrElement.getAttribute("y"));
 			float qrWidth = Float.parseFloat(templateQrElement.getAttribute("width"));
 			float qrHeight = Float.parseFloat(templateQrElement.getAttribute("height"));
 
-			float nameX = Float.parseFloat(templateNameElement.getAttribute("x"));
-			float nameY = Float.parseFloat(templateNameElement.getAttribute("y"));
-			float nameWidth = Float.parseFloat(templateNameElement.getAttribute("width"));
-			float nameHeight = Float.parseFloat(templateNameElement.getAttribute("height"));
+			String nameStyle = templateNameElement.getAttribute("style");
+			float nameX = Float.parseFloat(templateNameRectElement.getAttribute("x"));
+			float nameY = Float.parseFloat(templateNameRectElement.getAttribute("y"));
+			float nameWidth = Float.parseFloat(templateNameRectElement.getAttribute("width"));
+			float nameHeight = Float.parseFloat(templateNameRectElement.getAttribute("height"));
 
 			// Replace the elements
 			Element parent;
@@ -84,7 +86,7 @@ public class BadgeRenderer {
 
 			parent = (Element) templateNameElement.getParentNode();
 			parent.removeChild(templateNameElement);
-			parent.appendChild(createTextElement(doc, name, nameX, nameY, nameWidth, nameHeight));
+			parent.appendChild(createTextElement(doc, name, nameX, nameY, nameWidth, nameHeight, nameStyle));
 
 			ProcessBuilder pb = new ProcessBuilder("rm", "-f", "/tmp/badge.pdf", "/tmp/badge.svg");
 			Process p = pb.start();
@@ -92,7 +94,7 @@ public class BadgeRenderer {
 
 			writeDocument(doc, "/tmp/badge.svg");
 
-			pb = new ProcessBuilder("convert", "-density", "300", "/tmp/badge.svg", "/tmp/badge.pdf");
+			pb = new ProcessBuilder("inkscape", "-z", "-A=/tmp/badge.pdf", "/tmp/badge.svg");
 			p = pb.start();
 			int exitCode = p.waitFor();
 			if (exitCode != 0) {
@@ -100,51 +102,57 @@ public class BadgeRenderer {
 				return;
 			}
 
-			// pb = new ProcessBuilder("lpr", "/tmp/badge.pdf");
-			// p = pb.start();
-			// p.waitFor();
-			// if (exitCode != 0) {
-			// LOGGER.log(Level.SEVERE,
-			// "Error printing /tmp/badge.pdf with lpr");
-			// return;
-			// }
-
+			pb = new ProcessBuilder("lpr", "/tmp/badge.pdf");
+			p = pb.start();
+			p.waitFor();
+			if (exitCode != 0) {
+				LOGGER.log(Level.SEVERE, "Error printing /tmp/badge.pdf with lpr");
+				return;
+			}
 		} catch (IOException | WriterException | InterruptedException | TransformerException | SAXException
 				| ParserConfigurationException e) {
 			LOGGER.log(Level.SEVERE, "Error printing badge", e);
 		}
 	}
 
-	private Node createTextElement(Document doc, String name, float x, float y, float width, float height) {
-		Element element = doc.createElementNS(SVG_NS, "text");
-		doc.getDocumentElement().appendChild(element);
+	private Node createTextElement(Document doc, String name, float x, float y, float width, float height, String style) {
+		Element flowRoot = doc.createElementNS(SVG_NS, "flowRoot");
+		flowRoot.setAttribute("xml:space", "preserve");
+		flowRoot.setAttribute("style", style);
+		doc.getDocumentElement().appendChild(flowRoot);
 
-		// SVG attributes
-		element.setAttribute("x", Float.toString(x));
-		element.setAttribute("y", Float.toString(y));
+		Element flowRegion = doc.createElementNS(SVG_NS, "flowRegion");
+		flowRoot.appendChild(flowRegion);
 
-		return element;
+		Element rect = doc.createElementNS(SVG_NS, "rect");
+		rect.setAttribute("x", Float.toString(x));
+		rect.setAttribute("y", Float.toString(y));
+		rect.setAttribute("width", Float.toString(width));
+		rect.setAttribute("height", Float.toString(height));
+		flowRegion.appendChild(rect);
+
+		Element flowPara = doc.createElementNS(SVG_NS, "flowPara");
+		flowPara.setTextContent(name);
+		flowRoot.appendChild(flowPara);
+
+		return flowRoot;
 	}
 
 	private Node createImageElement(Document doc, byte[] base64Png, float x, float y, float width, float height)
 			throws IOException, WriterException {
 		Element element = doc.createElementNS(SVG_NS, "image");
-		doc.getDocumentElement().appendChild(element);
-
-		// SVG attributes
 		element.setAttribute("x", Float.toString(x));
 		element.setAttribute("y", Float.toString(y));
 		element.setAttribute("width", Float.toString(width));
 		element.setAttribute("height", Float.toString(height));
 		element.setAttribute("preserveAspectRatio", "none");
-
-		// xlink attributes
 		String href = "data:image/png;base64," + new String(base64Png);
-		element.setAttributeNS(XLINK_NS, "href", href);
-		element.setAttributeNS(XLINK_NS, "type", "simple");
-		element.setAttributeNS(XLINK_NS, "actuate", "onLoad");
-		element.setAttributeNS(XLINK_NS, "show", "embed");
-
+		element.setAttribute("xmlns:xlink", XLINK_NS);
+		element.setAttribute("xlink:href", href);
+		element.setAttribute("xlink:type", "simple");
+		element.setAttribute("xlink:actuate", "onLoad");
+		element.setAttribute("xlink:show", "embed");
+		doc.getDocumentElement().appendChild(element);
 		return element;
 	}
 
