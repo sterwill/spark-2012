@@ -97,7 +97,7 @@ public class BadgeRenderer {
 
 			writeDocument(doc, "/tmp/badge.svg");
 
-			pb = new ProcessBuilder("inkscape", "-z", "-A=/tmp/badge.pdf", "/tmp/badge.svg");
+			pb = new ProcessBuilder("inkscape", "-z", "-C", "-A=/tmp/badge.pdf", "/tmp/badge.svg");
 			p = pb.start();
 			int exitCode = p.waitFor();
 			if (exitCode != 0) {
