@@ -1,24 +1,30 @@
 package org.tailfeather.client;
 
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.batik.dom.GenericDOMImplementation;
-import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
-import org.apache.batik.svggen.SVGGraphics2D;
-import org.apache.batik.util.XMLResourceDescriptor;
-import org.w3c.dom.DOMImplementation;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.apache.commons.codec.binary.Base64;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -28,69 +34,161 @@ import com.google.zxing.qrcode.QRCodeWriter;
 
 public class BadgeRenderer {
 	private static final Logger LOGGER = Logger.getLogger(BadgeRenderer.class.getName());
-	private static final int QR_SIZE_PIXELS = 1200;
-	private final File svgTemplate;
-	private final String qrCodeElementId;
 
-	public BadgeRenderer(File svgTemplate, String qrCodeElementId) {
+	private static final int QR_SIZE_PIXELS = 1200;
+
+	private static final String XLINK_NS = "http://www.w3.org/1999/xlink";
+	private static final String SVG_NS = "http://www.w3.org/2000/svg";
+
+	private final File svgTemplate;
+
+	public BadgeRenderer(File svgTemplate) {
 		this.svgTemplate = svgTemplate;
-		this.qrCodeElementId = qrCodeElementId;
 	}
 
-	public void print(String qrCode) {
+	public void print(String qrCode, String name) {
 		try {
-			BufferedImage qrImage = generateQRCode(qrCode);
-
+			// Load template and find the template elements
 			Document doc = readTemplate();
-			Element qrCodeElement = doc.getElementById(qrCodeElementId);
-			if (qrCodeElement == null) {
-				LOGGER.log(Level.SEVERE, MessageFormat.format("Could not find element by id [{0}] in SVG file {1}",
-						qrCodeElementId, svgTemplate));
+
+			Element templateQrElement = findElementByAttribute(doc.getDocumentElement(), "id", "qr");
+			if (templateQrElement == null) {
+				LOGGER.log(Level.SEVERE, "Couldn't find qr element in template");
+				return;
+			}
+			Element templateNameElement = findElementByAttribute(doc.getDocumentElement(), "id", "name");
+			if (templateNameElement == null) {
+				LOGGER.log(Level.SEVERE, "Couldn't find name element in template");
 				return;
 			}
 
-			float x = Float.parseFloat(qrCodeElement.getAttribute("x"));
-			float y = Float.parseFloat(qrCodeElement.getAttribute("y"));
-			float width = Float.parseFloat(qrCodeElement.getAttribute("width"));
-			float height = Float.parseFloat(qrCodeElement.getAttribute("height"));
+			float qrX = Float.parseFloat(templateQrElement.getAttribute("x"));
+			float qrY = Float.parseFloat(templateQrElement.getAttribute("y"));
+			float qrWidth = Float.parseFloat(templateQrElement.getAttribute("width"));
+			float qrHeight = Float.parseFloat(templateQrElement.getAttribute("height"));
 
-			// Round up so the image is a bit bigger than what's there
-			width = (float) Math.ceil(width);
-			height = (float) Math.ceil(height);
+			float nameX = Float.parseFloat(templateNameElement.getAttribute("x"));
+			float nameY = Float.parseFloat(templateNameElement.getAttribute("y"));
+			float nameWidth = Float.parseFloat(templateNameElement.getAttribute("width"));
+			float nameHeight = Float.parseFloat(templateNameElement.getAttribute("height"));
 
-			SVGGraphics2D generator = new SVGGraphics2D(doc);
+			// Replace the elements
+			Element parent;
 
-			AffineTransformOp affineOp = new AffineTransformOp(AffineTransform.getScaleInstance(
-					width / qrImage.getWidth(), height / qrImage.getHeight()), null);
-			generator.drawImage(qrImage, affineOp, (int) x, (int) y);
+			byte[] qrPngBytes = generateQRCodePNG(qrCode);
+			byte[] qrPngBase64 = Base64.encodeBase64(qrPngBytes);
 
-			doc.getDocumentElement().appendChild(generator.getRoot());
+			parent = (Element) templateQrElement.getParentNode();
+			parent.removeChild(templateQrElement);
+			parent.appendChild(createImageElement(doc, qrPngBase64, qrX, qrY, qrWidth, qrHeight));
 
-			Writer out = new OutputStreamWriter(new FileOutputStream("/tmp/out.svg"), "UTF-8");
-			generator.stream(doc.getDocumentElement(), out, true);
-			out.close();
+			parent = (Element) templateNameElement.getParentNode();
+			parent.removeChild(templateNameElement);
+			parent.appendChild(createTextElement(doc, name, nameX, nameY, nameWidth, nameHeight));
 
-		} catch (IOException | WriterException e) {
+			ProcessBuilder pb = new ProcessBuilder("rm", "-f", "/tmp/badge.pdf", "/tmp/badge.svg");
+			Process p = pb.start();
+			p.waitFor();
+
+			writeDocument(doc, "/tmp/badge.svg");
+
+			pb = new ProcessBuilder("convert", "-density", "300", "/tmp/badge.svg", "/tmp/badge.pdf");
+			p = pb.start();
+			int exitCode = p.waitFor();
+			if (exitCode != 0) {
+				LOGGER.log(Level.SEVERE, "Error running inkscape to convert to pdf");
+				return;
+			}
+
+			// pb = new ProcessBuilder("lpr", "/tmp/badge.pdf");
+			// p = pb.start();
+			// p.waitFor();
+			// if (exitCode != 0) {
+			// LOGGER.log(Level.SEVERE,
+			// "Error printing /tmp/badge.pdf with lpr");
+			// return;
+			// }
+
+		} catch (IOException | WriterException | InterruptedException | TransformerException | SAXException
+				| ParserConfigurationException e) {
 			LOGGER.log(Level.SEVERE, "Error printing badge", e);
-			e.printStackTrace();
 		}
 	}
 
-	private Document readTemplate() throws IOException {
-		String parser = XMLResourceDescriptor.getXMLParserClassName();
-		SAXSVGDocumentFactory f = new SAXSVGDocumentFactory(parser);
-		return f.createDocument(svgTemplate.toURI().toString());
+	private Node createTextElement(Document doc, String name, float x, float y, float width, float height) {
+		Element element = doc.createElementNS(SVG_NS, "text");
+		doc.getDocumentElement().appendChild(element);
+
+		// SVG attributes
+		element.setAttribute("x", Float.toString(x));
+		element.setAttribute("y", Float.toString(y));
+
+		return element;
 	}
 
-	private Document newDocument() throws IOException {
-		DOMImplementation domImpl = GenericDOMImplementation.getDOMImplementation();
-		String svgNS = "http://www.w3.org/2000/svg";
-		return domImpl.createDocument(svgNS, "svg", null);
+	private Node createImageElement(Document doc, byte[] base64Png, float x, float y, float width, float height)
+			throws IOException, WriterException {
+		Element element = doc.createElementNS(SVG_NS, "image");
+		doc.getDocumentElement().appendChild(element);
+
+		// SVG attributes
+		element.setAttribute("x", Float.toString(x));
+		element.setAttribute("y", Float.toString(y));
+		element.setAttribute("width", Float.toString(width));
+		element.setAttribute("height", Float.toString(height));
+		element.setAttribute("preserveAspectRatio", "none");
+
+		// xlink attributes
+		String href = "data:image/png;base64," + new String(base64Png);
+		element.setAttributeNS(XLINK_NS, "href", href);
+		element.setAttributeNS(XLINK_NS, "type", "simple");
+		element.setAttributeNS(XLINK_NS, "actuate", "onLoad");
+		element.setAttributeNS(XLINK_NS, "show", "embed");
+
+		return element;
 	}
 
-	private BufferedImage generateQRCode(String qrCode) throws WriterException {
+	private Element findElementByAttribute(Element e, String localName, String value) {
+		String attrValue = e.getAttribute(localName);
+		if (attrValue != null && attrValue.equals(value)) {
+			return e;
+		}
+
+		for (int i = 0; i < e.getChildNodes().getLength(); i++) {
+			Node node = e.getChildNodes().item(i);
+			if (node.getNodeType() == Node.ELEMENT_NODE) {
+				Element child = findElementByAttribute((Element) node, localName, value);
+				if (child != null) {
+					return child;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	private Document readTemplate() throws IOException, SAXException, ParserConfigurationException {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setNamespaceAware(true);
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		return builder.parse(svgTemplate);
+	}
+
+	private void writeDocument(Document doc, String path) throws TransformerException, UnsupportedEncodingException,
+			FileNotFoundException {
+		TransformerFactory tFactory = TransformerFactory.newInstance();
+		Transformer transformer = tFactory.newTransformer();
+		DOMSource source = new DOMSource(doc);
+		Writer out = new OutputStreamWriter(new FileOutputStream(path), "UTF-8");
+		StreamResult result = new StreamResult(out);
+		transformer.transform(source, result);
+	}
+
+	private byte[] generateQRCodePNG(String qrCode) throws IOException, WriterException {
 		QRCodeWriter writer = new QRCodeWriter();
 		BitMatrix matrix = writer.encode(qrCode, BarcodeFormat.QR_CODE, QR_SIZE_PIXELS, QR_SIZE_PIXELS);
-		return MatrixToImageWriter.toBufferedImage(matrix);
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		MatrixToImageWriter.writeToStream(matrix, "png", bos);
+		return bos.toByteArray();
 	}
 }
