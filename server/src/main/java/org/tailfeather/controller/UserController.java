@@ -26,7 +26,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping("user")
 public class UserController {
 
 	@Autowired
@@ -38,13 +38,13 @@ public class UserController {
 		return "/user/list.jsp";
 	}
 
-	@RequestMapping(value = "/create", method = RequestMethod.GET)
+	@RequestMapping(value = "create", method = RequestMethod.GET)
 	public String createForm(Model model) {
 		model.addAttribute("user", new User());
 		return "/user/form.jsp";
 	}
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@RequestMapping(value = "create", method = RequestMethod.POST)
 	public String createSubmit(@Valid @ModelAttribute("user") User user, BindingResult result) {
 		if (result.hasErrors()) {
 			return "/user/form.jsp";
@@ -53,14 +53,14 @@ public class UserController {
 		return "redirect:/user";
 	}
 
-	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "edit/{id}", method = RequestMethod.GET)
 	public String editForm(@PathVariable String id, @Valid Model model) {
 		User user = userDao.findById(id);
 		model.addAttribute("user", user);
 		return "/user/form.jsp";
 	}
 
-	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
+	@RequestMapping(value = "edit/{id}", method = RequestMethod.POST)
 	public String editSubmit(@Valid @ModelAttribute("user") User user, BindingResult result)
 			throws UserNotFoundException {
 		if (result.hasErrors()) {
@@ -70,7 +70,7 @@ public class UserController {
 		return "redirect:/user";
 	}
 
-	@RequestMapping(value = "/qr/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "qr/{id}", method = RequestMethod.GET)
 	public void qr(@PathVariable String id, HttpServletRequest request, HttpServletResponse response)
 			throws WriterException, IOException {
 		String uri = String.format("%s://%s:%d/api/user/%s", request.getScheme(), request.getServerName(),

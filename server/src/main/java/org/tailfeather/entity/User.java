@@ -1,5 +1,6 @@
 package org.tailfeather.entity;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +29,9 @@ public class User {
 	@Column(name = "id")
 	@XmlElement(name = "id")
 	private String id;
+
+	@XmlElement(name = "checkinUri")
+	private URI checkinUri;
 
 	@NotNull(message = "An e-mail address is required")
 	@Size(min = 7, max = 128, message = "The e-mail address must be 7-128 characters long")
@@ -64,6 +68,14 @@ public class User {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public URI getCheckinUri() {
+		return checkinUri;
+	}
+
+	public void setCheckinUri(URI checkinUri) {
+		this.checkinUri = checkinUri;
 	}
 
 	public String getEmail() {

@@ -46,7 +46,7 @@ public class BadgeRenderer {
 		this.svgTemplate = svgTemplate;
 	}
 
-	public void print(String qrCode, String name) {
+	public void render(String qrCode, String name, boolean print) {
 		try {
 			// Load template and find the template elements
 			Document doc = readTemplate();
@@ -105,12 +105,14 @@ public class BadgeRenderer {
 				return;
 			}
 
-			pb = new ProcessBuilder("lpr", "/tmp/badge.pdf");
-			p = pb.start();
-			p.waitFor();
-			if (exitCode != 0) {
-				LOGGER.log(Level.SEVERE, "Error printing /tmp/badge.pdf with lpr");
-				return;
+			if (print) {
+				pb = new ProcessBuilder("lpr", "/tmp/badge.pdf");
+				p = pb.start();
+				p.waitFor();
+				if (exitCode != 0) {
+					LOGGER.log(Level.SEVERE, "Error printing /tmp/badge.pdf with lpr");
+					return;
+				}
 			}
 		} catch (IOException | WriterException | InterruptedException | TransformerException | SAXException
 				| ParserConfigurationException e) {

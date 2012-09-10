@@ -23,7 +23,7 @@ import org.tailfeather.entity.User;
 import org.tailfeather.exceptions.CheckinNotFoundException;
 
 @Controller
-@RequestMapping("/checkin")
+@RequestMapping("checkin")
 public class CheckinController {
 
 	@Autowired
@@ -39,19 +39,20 @@ public class CheckinController {
 	 * Badge QR codes point here, so it's a GET instead of the more correct
 	 * POST.
 	 */
-	@RequestMapping(value = "/u/{userId}", method = RequestMethod.GET)
+	@RequestMapping(value = "{userId}", method = RequestMethod.GET)
 	public String badge(Model model, @PathVariable(value = "userId") String userId, HttpServletRequest request) {
-		model.addAttribute("userId", userId);
+		/*
+		 * Curious scanners without location cookies should get a general page.
+		 */
+		Location location = locationDao.getCookiedLocation(request);
+		if (location == null) {
+			return "redirect:/checkin/curious-scan.jsp";
+		}
 
+		model.addAttribute("userId", userId);
 		User user = userDao.findById(userId);
 		if (user == null) {
 			model.addAttribute("error", String.format("ID " + userId + " is not registered.", userId));
-			return "redirect:/checkin/badge-error.jsp";
-		}
-
-		Location location = locationDao.getCookiedLocation(request);
-		if (location == null) {
-			model.addAttribute("error", "This scanning device is not configured for a known location.");
 			return "redirect:/checkin/badge-error.jsp";
 		}
 
@@ -66,14 +67,14 @@ public class CheckinController {
 		return "redirect:/checkin/badge-success";
 	}
 
-	@RequestMapping(value = "/badge-success", method = RequestMethod.GET)
+	@RequestMapping(value = "badge-success", method = RequestMethod.GET)
 	public String success(Model model, HttpServletRequest request) {
 		model.addAttribute("checkin", checkinDao.findById(request.getParameter("checkinId")));
 		model.addAttribute("instructions", request.getParameter("instructions"));
 		return "/checkin/badge-success.jsp";
 	}
 
-	@RequestMapping(value = "/badge-error", method = RequestMethod.GET)
+	@RequestMapping(value = "badge-error", method = RequestMethod.GET)
 	public String failure(Model model, HttpServletRequest request) {
 		model.addAttribute("error", request.getParameter("error"));
 		return "/checkin/badge-error.jsp";
@@ -100,7 +101,7 @@ public class CheckinController {
 		return "/checkin/list.jsp";
 	}
 
-	@RequestMapping(value = "/create", method = RequestMethod.GET)
+	@RequestMapping(value = "create", method = RequestMethod.GET)
 	public String createForm(Model model, HttpServletRequest request) {
 		Location currentLocation = locationDao.getCookiedLocation(request);
 		if (currentLocation == null) {
@@ -112,7 +113,7 @@ public class CheckinController {
 		return "/checkin/form.jsp";
 	}
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@RequestMapping(value = "create", method = RequestMethod.POST)
 	public String createSubmit(Model model, @ModelAttribute("checkin") Checkin checkin, BindingResult result,
 			HttpServletRequest request) {
 		Location currentLocation = locationDao.getCookiedLocation(request);
@@ -144,14 +145,14 @@ public class CheckinController {
 		return "redirect:/checkin";
 	}
 
-	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "edit/{id}", method = RequestMethod.GET)
 	public String editForm(@PathVariable String id, @Valid Model model) {
 		Checkin checkin = checkinDao.findById(id);
 		model.addAttribute("checkin", checkin);
 		return "/checkin/form.jsp";
 	}
 
-	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
+	@RequestMapping(value = "edit/{id}", method = RequestMethod.POST)
 	public String editSubmit(@Valid @ModelAttribute("checkin") Checkin checkin, BindingResult result)
 			throws CheckinNotFoundException {
 		if (result.hasErrors()) {

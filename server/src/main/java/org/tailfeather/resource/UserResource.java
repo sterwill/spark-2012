@@ -47,8 +47,9 @@ public class UserResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON_VALUE)
 	@Path("/{id}")
-	public User get(@PathParam("id") String id) {
+	public User get(@PathParam("id") String id, @Context UriInfo uriInfo) {
 		User user = userDao.findById(id);
+		user.setCheckinUri(uriInfo.getAbsolutePathBuilder().replacePath("/checkin").path(user.getId()).build());
 		for (Code c : codeDao.findByUser(user.getId())) {
 			user.getCodes().add(c);
 		}
@@ -68,6 +69,8 @@ public class UserResource {
 		}
 
 		User created = userDao.create(user);
+		user.setCheckinUri(uriInfo.getAbsolutePathBuilder().replacePath("/checkin").path(created.getId()).build());
+
 		URI uri = uriInfo.getAbsolutePathBuilder().path(UserResource.class, "get").build(created.getId());
 		return Response.status(Status.CREATED).location(uri).build();
 	}

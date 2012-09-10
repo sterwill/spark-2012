@@ -27,7 +27,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.sun.jersey.api.client.ClientResponse.Status;
 
 @Controller
-@RequestMapping("/location")
+@RequestMapping("location")
 public class LocationController {
 
 	@Autowired
@@ -40,13 +40,13 @@ public class LocationController {
 		return "/location/list.jsp";
 	}
 
-	@RequestMapping(value = "/create", method = RequestMethod.GET)
+	@RequestMapping(value = "create", method = RequestMethod.GET)
 	public String createForm(Model model) {
 		model.addAttribute("location", new Location());
 		return "/location/form.jsp";
 	}
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@RequestMapping(value = "create", method = RequestMethod.POST)
 	public String createSubmit(@Valid @ModelAttribute("location") Location location, BindingResult result) {
 		if (result.hasErrors()) {
 			return "/location/form.jsp";
@@ -55,14 +55,14 @@ public class LocationController {
 		return "redirect:/location";
 	}
 
-	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "edit/{id}", method = RequestMethod.GET)
 	public String editForm(@PathVariable String id, @Valid Model model) {
 		Location location = locationDao.findById(id);
 		model.addAttribute("location", location);
 		return "/location/form.jsp";
 	}
 
-	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
+	@RequestMapping(value = "edit/{id}", method = RequestMethod.POST)
 	public String editSubmit(@Valid @ModelAttribute("location") Location location, BindingResult result)
 			throws LocationNotFoundException {
 		if (result.hasErrors()) {
@@ -72,26 +72,26 @@ public class LocationController {
 		return "redirect:/location";
 	}
 
-	@RequestMapping(value = "/cookie/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "cookie/{id}", method = RequestMethod.GET)
 	public String cookie(@PathVariable String id, Model model, HttpServletResponse response) {
 		response.addCookie(createLocationCookie(id));
 		model.addAttribute("currentLocation", locationDao.findById(id));
 		return "/location/showCookie.jsp";
 	}
 
-	@RequestMapping(value = "/uncookie/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "uncookie/{id}", method = RequestMethod.GET)
 	public String uncookie(@PathVariable String id, Model model, HttpServletResponse response) {
 		response.addCookie(createLocationUncookie(id));
 		return "/location/showCookie.jsp";
 	}
 
-	@RequestMapping(value = "/showCookie", method = RequestMethod.GET)
+	@RequestMapping(value = "showCookie", method = RequestMethod.GET)
 	public String showCookie(Model model, HttpServletRequest request) {
 		model.addAttribute("currentLocation", locationDao.getCookiedLocation(request));
 		return "showCookie.jsp";
 	}
 
-	@RequestMapping(value = "/qr/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "qr/{id}", method = RequestMethod.GET)
 	public void qr(@PathVariable String id, HttpServletRequest request, HttpServletResponse response)
 			throws WriterException, IOException {
 		String uri = String.format("%s://%s:%d/location/cookie/%s", request.getScheme(), request.getServerName(),

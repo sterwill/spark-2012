@@ -47,6 +47,9 @@ public class Register extends Executable {
 	@XmlAttribute(name = "badgeTemplate", required = true)
 	private String badgeTemplate;
 
+	@XmlAttribute(name = "print")
+	private boolean print = true;
+
 	@Override
 	public void execute(Command command) {
 		Console.print(FileUtils.getContents(instructions));
@@ -139,7 +142,7 @@ public class Register extends Executable {
 	private void printBadge(User user) {
 		if (badgeTemplate != null) {
 			BadgeRenderer renderer = new BadgeRenderer(new File(badgeTemplate));
-			renderer.print(postUri, user.getFullName());
+			renderer.render(user.getCheckinUri().toString(), user.getFullName(), print);
 		}
 	}
 }
