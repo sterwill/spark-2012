@@ -21,6 +21,8 @@
 		<name>bye</name>
 		<exit />
 	</command>
+	<secret value="supercow" />
+	<secret value="bungiemoo" />
 	<scan knownSound="sounds/sweet.wav" knownFile="text/known-code.txt" unknownSound="sounds/sour.wav" unknownFile="text/unknown-code.txt"
-		pattern="http://.*/api/user/(.*)" />
+		pattern="http://.*/api/(.*)" />
 </acorn>

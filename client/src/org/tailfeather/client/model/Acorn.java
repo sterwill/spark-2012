@@ -20,6 +20,7 @@ import org.tailfeather.client.CodeComparator;
 import org.tailfeather.client.CodeScannerRunnable;
 import org.tailfeather.client.Console;
 import org.tailfeather.client.FileUtils;
+import org.tailfeather.client.TailfeatherServerException;
 import org.tailfeather.client.model.idle.CheckForScannedCodeIdleHandler;
 import org.tailfeather.client.model.idle.CodeScannedException;
 import org.tailfeather.client.model.idle.PromptIdleHandlerException;
@@ -51,6 +52,9 @@ public class Acorn {
 
 	@XmlElement(name = "command")
 	private List<Command> commands;
+
+	@XmlElement(name = "secret")
+	private List<Secret> secrets;
 
 	@XmlElement(name = "scan")
 	private Scan scan;
@@ -95,7 +99,11 @@ public class Acorn {
 				final String input;
 				try {
 					scannerRunnable.clear();
-					input = Console.readLine(promptString, promptTimeout, TimeUnit.SECONDS, scannerIdleHandler);
+					if (activeUser != null) {
+						input = Console.readLine(promptString, promptTimeout, TimeUnit.SECONDS);
+					} else {
+						input = Console.readLine(promptString, promptTimeout, TimeUnit.SECONDS, scannerIdleHandler);
+					}
 				} catch (InterruptedException e) {
 					LOGGER.log(Level.WARNING, "Interrupted while prompting", e);
 					continue;
@@ -137,9 +145,10 @@ public class Acorn {
 
 				final String commandName = tokens[0];
 				boolean handled = false;
+
 				commandTest: for (Command c : commands) {
 					for (String name : c.getNames()) {
-						if (commandName.equals(name)) {
+						if (commandName.equalsIgnoreCase(name)) {
 							c.setAcorn(this);
 							c.execute();
 							handled = true;
@@ -149,6 +158,25 @@ public class Acorn {
 							}
 
 							break commandTest;
+						}
+					}
+				}
+
+				if (activeUser != null) {
+					secretTest: for (Secret s : secrets) {
+						if (commandName.equalsIgnoreCase(s.getValue())) {
+							try {
+								s.report(activeUser);
+							} catch (TailfeatherServerException e) {
+								LOGGER.log(Level.SEVERE, "Error sending secret code", e);
+								Console.printRedLine("There was an error sending this code to the server, please try again:");
+								Console.printLine();
+								Console.printRedLine(MessageFormat.format("{0}", e.getMessage()));
+								Console.printLine();
+							}
+
+							handled = true;
+							break secretTest;
 						}
 					}
 				}

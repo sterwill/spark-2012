@@ -27,7 +27,7 @@ import org.tailfeather.entity.User;
 import org.tailfeather.exceptions.UserNotFoundException;
 
 @Component
-@Path("/user")
+@Path("user")
 public class UserResource {
 	@Autowired
 	private UserDao userDao;
@@ -46,7 +46,17 @@ public class UserResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON_VALUE)
-	@Path("/{id}")
+	@Path("{id}/messages")
+	public List<String> messages() {
+		List<String> ret = new ArrayList<String>();
+		ret.add("foo");
+		ret.add("bar");
+		return ret;
+	}
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON_VALUE)
+	@Path("{id}")
 	public User get(@PathParam("id") String id, @Context UriInfo uriInfo) {
 		User user = userDao.findById(id);
 		user.setCheckinUri(uriInfo.getAbsolutePathBuilder().replacePath("/checkin").path(user.getId()).build());
@@ -77,7 +87,7 @@ public class UserResource {
 
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON_VALUE)
-	@Path("/{id}")
+	@Path("{id}")
 	public Response update(User user, @PathParam("id") String id, @Context UriInfo uriInfo) {
 		Response error = validator.validate(user);
 		if (error != null) {
@@ -94,7 +104,7 @@ public class UserResource {
 	}
 
 	@DELETE
-	@Path("/{id}")
+	@Path("{id}")
 	public Response delete(@PathParam("id") String id, @Context UriInfo uriInfo) {
 		try {
 			userDao.delete(id);

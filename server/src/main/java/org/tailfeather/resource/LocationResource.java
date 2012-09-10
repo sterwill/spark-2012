@@ -26,7 +26,7 @@ import org.tailfeather.entity.Location;
 import org.tailfeather.exceptions.LocationNotFoundException;
 
 @Component
-@Path("/location")
+@Path("location")
 public class LocationResource {
 	@Autowired
 	private LocationDao locationDao;
@@ -42,7 +42,7 @@ public class LocationResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON_VALUE)
-	@Path("/{id}")
+	@Path("{id}")
 	public Location get(@PathParam("id") String id) {
 		return locationDao.findById(id);
 	}
@@ -62,7 +62,7 @@ public class LocationResource {
 
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON_VALUE)
-	@Path("/{id}")
+	@Path("{id}")
 	public Response update(@Valid Location location, @PathParam("id") String id, @Context UriInfo uriInfo) {
 		location.setId(id);
 		Response error = validator.validate(location);
@@ -79,7 +79,7 @@ public class LocationResource {
 	}
 
 	@DELETE
-	@Path("/{id}")
+	@Path("{id}")
 	public Response delete(@PathParam("id") String id, @Context UriInfo uriInfo) {
 		try {
 			locationDao.delete(id);

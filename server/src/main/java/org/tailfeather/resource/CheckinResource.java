@@ -21,12 +21,13 @@ import javax.ws.rs.core.UriInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.tailfeather.IdHelper;
 import org.tailfeather.dao.CheckinDao;
 import org.tailfeather.entity.Checkin;
 import org.tailfeather.exceptions.CheckinNotFoundException;
 
 @Component
-@Path("/checkin")
+@Path("checkin")
 public class CheckinResource {
 	@Autowired
 	private CheckinDao checkinDao;
@@ -42,7 +43,7 @@ public class CheckinResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON_VALUE)
-	@Path("/{id}")
+	@Path("{id}")
 	public Checkin get(@PathParam("id") String id) {
 		return checkinDao.findById(id);
 	}
@@ -55,6 +56,7 @@ public class CheckinResource {
 			return error;
 		}
 
+		checkin.setId(IdHelper.newLongId());
 		Checkin created = checkinDao.create(checkin);
 		URI uri = uriInfo.getAbsolutePathBuilder().path(CheckinResource.class, "get").build(created.getId());
 		return Response.status(Status.CREATED).location(uri).build();
@@ -62,7 +64,7 @@ public class CheckinResource {
 
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON_VALUE)
-	@Path("/{id}")
+	@Path("{id}")
 	public Response update(@Valid Checkin checkin, @PathParam("id") String id, @Context UriInfo uriInfo) {
 		checkin.setId(id);
 		Response error = validator.validate(checkin);
@@ -79,7 +81,7 @@ public class CheckinResource {
 	}
 
 	@DELETE
-	@Path("/{id}")
+	@Path("{id}")
 	public Response delete(@PathParam("id") String id, @Context UriInfo uriInfo) {
 		try {
 			checkinDao.delete(id);

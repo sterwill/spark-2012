@@ -19,6 +19,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.springframework.util.Assert;
 import org.tailfeather.IdHelper;
+import org.tailfeather.resource.CodeResource;
+import org.tailfeather.resource.UserResource;
+
+import com.sun.jersey.server.linking.Binding;
+import com.sun.jersey.server.linking.Ref;
+import com.sun.jersey.server.linking.Ref.Style;
 
 @XmlRootElement(name = "user")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -32,6 +38,14 @@ public class User {
 
 	@XmlElement(name = "checkinUri")
 	private URI checkinUri;
+
+	@XmlElement(name = "codeUri")
+	@Ref(style = Style.ABSOLUTE, resource = CodeResource.class, method = "create")
+	private URI codeUri;
+
+	@XmlElement(name = "messagesUri")
+	@Ref(style = Style.ABSOLUTE, resource = UserResource.class, method = "messages", bindings = { @Binding(name = "id", value = "${instance.id}") })
+	private URI messagesUri;
 
 	@NotNull(message = "An e-mail address is required")
 	@Size(min = 7, max = 128, message = "The e-mail address must be 7-128 characters long")
@@ -76,6 +90,14 @@ public class User {
 
 	public void setCheckinUri(URI checkinUri) {
 		this.checkinUri = checkinUri;
+	}
+
+	public URI getCodeUri() {
+		return codeUri;
+	}
+
+	public void setCodeUri(URI codeUri) {
+		this.codeUri = codeUri;
 	}
 
 	public String getEmail() {

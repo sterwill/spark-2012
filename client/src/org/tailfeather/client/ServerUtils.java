@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.http.HttpStatus;
+import org.tailfeather.entity.Code;
 import org.tailfeather.entity.User;
 
 import com.sun.jersey.api.client.Client;
@@ -31,6 +32,15 @@ public class ServerUtils {
 		userResource = getClient().resource(location);
 		user = userResource.accept(MediaType.APPLICATION_JSON_TYPE).get(User.class);
 		return user;
+	}
+
+	public static void postSecretCode(String resourceUri, Code code) throws TailfeatherServerException {
+		WebResource codeResource = getClient().resource(resourceUri);
+		ClientResponse response = codeResource.type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, code);
+		if (response.getStatus() != HttpStatus.SC_CREATED) {
+			throw new TailfeatherServerException(response.getEntity(String.class));
+		}
+		response.close();
 	}
 
 	public static User getUser(String resourceUri) {

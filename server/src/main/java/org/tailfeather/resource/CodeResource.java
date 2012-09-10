@@ -21,12 +21,13 @@ import javax.ws.rs.core.UriInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.tailfeather.IdHelper;
 import org.tailfeather.dao.CodeDao;
 import org.tailfeather.entity.Code;
 import org.tailfeather.exceptions.CodeNotFoundException;
 
 @Component
-@Path("/code/{id}")
+@Path("code")
 public class CodeResource {
 	@Autowired
 	private CodeDao codeDao;
@@ -42,7 +43,7 @@ public class CodeResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON_VALUE)
-	@Path("/{id}")
+	@Path("{id}")
 	public Code get(@PathParam("id") String id) {
 		return codeDao.findById(id);
 	}
@@ -55,6 +56,7 @@ public class CodeResource {
 			return error;
 		}
 
+		code.setId(IdHelper.newLongId());
 		Code created = codeDao.create(code);
 		URI uri = uriInfo.getAbsolutePathBuilder().path(CodeResource.class, "get").build(created.getId());
 		return Response.status(Status.CREATED).location(uri).build();
@@ -62,7 +64,7 @@ public class CodeResource {
 
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON_VALUE)
-	@Path("/{id}")
+	@Path("{id}")
 	public Response update(@Valid Code code, @PathParam("id") String id, @Context UriInfo uriInfo) {
 		code.setId(id);
 		Response error = validator.validate(code);
@@ -79,7 +81,7 @@ public class CodeResource {
 	}
 
 	@DELETE
-	@Path("/{id}")
+	@Path("{id}")
 	public Response delete(@PathParam("id") String id, @Context UriInfo uriInfo) {
 		try {
 			codeDao.delete(id);
