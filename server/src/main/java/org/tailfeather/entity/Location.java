@@ -9,6 +9,7 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.tailfeather.IdHelper;
@@ -28,7 +29,7 @@ public class Location {
 	@NotNull(message = "A location name is required")
 	@Size(min = 3, max = 80, message = "The location name must be 3-80 characters long")
 	@Column(name = "name", nullable = false)
-	@XmlAttribute(name = "name")
+	@XmlElement(name = "name")
 	private String name;
 
 	public Location() {
