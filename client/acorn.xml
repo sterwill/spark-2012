@@ -2,7 +2,7 @@
 	promptTimeoutSeconds="30" cps="200" camera="0">
 	<command>
 		<name>register</name>
-		<register post="http://localhost:8080/api/user" instructions="text/register-instructions.txt" success="text/register-success.txt"
+		<register post="http://tailfeather.org/api/user" instructions="text/register-instructions.txt" success="text/register-success.txt"
 			badgeTemplate="images/badge.svg" print="false">
 			<text name="name" prompt="  Name: " />
 			<email name="email" prompt="  E-mail Address: " />
