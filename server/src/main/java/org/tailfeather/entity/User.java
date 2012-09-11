@@ -19,7 +19,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.springframework.util.Assert;
 import org.tailfeather.IdHelper;
-import org.tailfeather.resource.CodeResource;
 import org.tailfeather.resource.UserResource;
 
 import com.sun.jersey.server.linking.Binding;
@@ -36,16 +35,12 @@ public class User {
 	@XmlElement(name = "id")
 	private String id;
 
+	@XmlElement(name = "selfUri")
+	@Ref(style = Style.ABSOLUTE, resource = UserResource.class, method = "get", bindings = { @Binding(name = "id", value = "${instance.id}") })
+	private URI selfUri;
+
 	@XmlElement(name = "checkinUri")
 	private URI checkinUri;
-
-	@XmlElement(name = "codeUri")
-	@Ref(style = Style.ABSOLUTE, resource = CodeResource.class, method = "create")
-	private URI codeUri;
-
-	@XmlElement(name = "messagesUri")
-	@Ref(style = Style.ABSOLUTE, resource = UserResource.class, method = "messages", bindings = { @Binding(name = "id", value = "${instance.id}") })
-	private URI messagesUri;
 
 	@NotNull(message = "An e-mail address is required")
 	@Size(min = 7, max = 128, message = "The e-mail address must be 7-128 characters long")
@@ -63,6 +58,10 @@ public class User {
 	@Transient
 	@XmlElement(name = "codes")
 	private List<Code> codes = new ArrayList<Code>();
+
+	@Transient
+	@XmlElement(name = "checkins")
+	private List<Checkin> checkins;
 
 	public User() {
 		this.id = IdHelper.newShortId();
@@ -84,20 +83,20 @@ public class User {
 		this.id = id;
 	}
 
+	public URI getSelfUri() {
+		return selfUri;
+	}
+
+	public void setSelfUri(URI selfUri) {
+		this.selfUri = selfUri;
+	}
+
 	public URI getCheckinUri() {
 		return checkinUri;
 	}
 
 	public void setCheckinUri(URI checkinUri) {
 		this.checkinUri = checkinUri;
-	}
-
-	public URI getCodeUri() {
-		return codeUri;
-	}
-
-	public void setCodeUri(URI codeUri) {
-		this.codeUri = codeUri;
 	}
 
 	public String getEmail() {
@@ -122,11 +121,11 @@ public class User {
 		return this;
 	}
 
-	public List<Code> getCodes() {
-		return codes;
+	public List<Checkin> getCheckins() {
+		return checkins;
 	}
 
-	public void setCodes(List<Code> codes) {
-		this.codes = codes;
+	public void setCheckins(List<Checkin> checkins) {
+		this.checkins = checkins;
 	}
 }

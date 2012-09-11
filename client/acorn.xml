@@ -21,8 +21,11 @@
 		<name>bye</name>
 		<exit />
 	</command>
-	<secret value="supercow" />
-	<secret value="bungiemoo" />
+	<command>
+		<name>secretgame</name>
+		<exit />
+	</command>
+	<fakeCheckin value="mishfarket" locationId="ec09dea" />
 	<scan knownSound="sounds/sweet.wav" knownFile="text/known-code.txt" unknownSound="sounds/sour.wav" unknownFile="text/unknown-code.txt"
 		pattern="http://.*/checkin/(.*)" />
 </acorn>

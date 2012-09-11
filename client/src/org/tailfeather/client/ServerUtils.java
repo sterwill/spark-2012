@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.http.HttpStatus;
+import org.tailfeather.entity.Checkin;
 import org.tailfeather.entity.Code;
 import org.tailfeather.entity.User;
 
@@ -41,6 +42,20 @@ public class ServerUtils {
 			throw new TailfeatherServerException(response.getEntity(String.class));
 		}
 		response.close();
+	}
+
+	public static void postCheckin(String resourceUri, Checkin checkin) throws TailfeatherServerException {
+		WebResource checkinResource = getClient().resource(resourceUri);
+		ClientResponse response = checkinResource.type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class,
+				checkin);
+		if (response.getStatus() != HttpStatus.SC_CREATED) {
+			throw new TailfeatherServerException(response.getEntity(String.class));
+		}
+		response.close();
+	}
+
+	public static User getUser(User user) {
+		return getUser(user.getSelfUri().toString());
 	}
 
 	public static User getUser(String resourceUri) {

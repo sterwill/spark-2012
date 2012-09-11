@@ -20,9 +20,10 @@ import javax.ws.rs.core.UriInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.tailfeather.dao.CheckinDao;
 import org.tailfeather.dao.CodeDao;
 import org.tailfeather.dao.UserDao;
-import org.tailfeather.entity.Code;
+import org.tailfeather.entity.Checkin;
 import org.tailfeather.entity.User;
 import org.tailfeather.exceptions.UserNotFoundException;
 
@@ -34,6 +35,9 @@ public class UserResource {
 
 	@Autowired
 	private CodeDao codeDao;
+
+	@Autowired
+	private CheckinDao checkinDao;
 
 	@Autowired
 	private SimpleRequestValidator validator;
@@ -60,8 +64,9 @@ public class UserResource {
 	public User get(@PathParam("id") String id, @Context UriInfo uriInfo) {
 		User user = userDao.findById(id);
 		user.setCheckinUri(uriInfo.getAbsolutePathBuilder().replacePath("/checkin").path(user.getId()).build());
-		for (Code c : codeDao.findByUser(user.getId())) {
-			user.getCodes().add(c);
+
+		for (Checkin c : checkinDao.findByUser(user.getId())) {
+			user.getCheckins().add(c);
 		}
 		return user;
 	}

@@ -2,7 +2,6 @@ package org.tailfeather.client.model;
 
 import java.text.DateFormat;
 import java.text.MessageFormat;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -16,7 +15,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.tailfeather.client.CodeComparator;
 import org.tailfeather.client.CodeScannerRunnable;
 import org.tailfeather.client.Console;
 import org.tailfeather.client.FileUtils;
@@ -24,7 +22,7 @@ import org.tailfeather.client.TailfeatherServerException;
 import org.tailfeather.client.model.idle.CheckForScannedCodeIdleHandler;
 import org.tailfeather.client.model.idle.CodeScannedException;
 import org.tailfeather.client.model.idle.PromptIdleHandlerException;
-import org.tailfeather.entity.Code;
+import org.tailfeather.entity.Checkin;
 import org.tailfeather.entity.User;
 
 @XmlRootElement(name = "acorn")
@@ -53,8 +51,8 @@ public class Acorn {
 	@XmlElement(name = "command")
 	private List<Command> commands;
 
-	@XmlElement(name = "secret")
-	private List<Secret> secrets;
+	@XmlElement(name = "fakeCheckins")
+	private List<FakeCheckin> fakeCheckins;
 
 	@XmlElement(name = "scan")
 	private Scan scan;
@@ -121,7 +119,7 @@ public class Acorn {
 						if (scan != null) {
 							User user = scan.handleScan(((CodeScannedException) e).getCode());
 							if (user != null) {
-								printUserSummary(user);
+								printProgress(user);
 								// Back to prompt (with user info this time)
 								activeUser = user;
 								continue;
@@ -162,13 +160,13 @@ public class Acorn {
 					}
 				}
 
-				if (activeUser != null) {
-					secretTest: for (Secret s : secrets) {
-						if (commandName.equalsIgnoreCase(s.getValue())) {
+				if (!handled && activeUser != null) {
+					checkinTest: for (FakeCheckin c : fakeCheckins) {
+						if (commandName.equalsIgnoreCase(c.getValue())) {
 							try {
-								s.report(activeUser);
+								c.report(activeUser, this);
 							} catch (TailfeatherServerException e) {
-								LOGGER.log(Level.SEVERE, "Error sending secret code", e);
+								LOGGER.log(Level.SEVERE, "Error sending location code", e);
 								Console.printRedLine("There was an error sending this code to the server, please try again:");
 								Console.printLine();
 								Console.printRedLine(MessageFormat.format("{0}", e.getMessage()));
@@ -176,7 +174,7 @@ public class Acorn {
 							}
 
 							handled = true;
-							break secretTest;
+							break checkinTest;
 						}
 					}
 				}
@@ -185,20 +183,6 @@ public class Acorn {
 					printCommandError(MessageFormat.format("Unrecognized command ''{0}'', please try again", tokens[0]));
 				}
 			}
-		}
-	}
-
-	private void printUserSummary(User user) {
-		List<Code> codes = user.getCodes();
-		if (codes != null && codes.size() > 0) {
-			DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-			Collections.sort(codes, new CodeComparator());
-			Console.printLine("  You have submitted the following codes:");
-			for (Code code : codes) {
-				Console.printLine("    " + dateFormat.format(code.getTime()) + " " + code.getCode());
-			}
-		} else {
-			Console.printLine("  You have not yet submitted any codes.");
 		}
 	}
 
@@ -226,5 +210,29 @@ public class Acorn {
 
 	public void printCommandError(String error) {
 		Console.printRedLine(error);
+	}
+
+	public static void printProgress(User user) {
+		List<Checkin> checkins = user.getCheckins();
+
+		if (checkins == null || checkins.size() == 0) {
+			Console.printLine();
+			Console.printLine("  You have not checked in at any other locations.");
+			Console.printLine("  Show your badge to a Tail Feather agent to check in.");
+			Console.printLine();
+		} else {
+			if (checkins.size() == 1) {
+				Console.printLine("  You have checked in at 1 location:");
+			} else {
+				Console.printLine(MessageFormat.format("  You have checked in at {0} locations:", checkins.size()));
+			}
+
+			Console.printLine();
+			for (Checkin c : checkins) {
+				DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+				Console.printLine("    " + c.getLocation() + "(" + dateFormat.format(c.getTime()) + ")");
+			}
+			Console.printLine();
+		}
 	}
 }
