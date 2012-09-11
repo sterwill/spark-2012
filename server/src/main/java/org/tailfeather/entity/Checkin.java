@@ -13,11 +13,11 @@ import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.tailfeather.IdHelper;
-import org.tailfeather.entity.xmladapter.LocationAdapter;
 import org.tailfeather.entity.xmladapter.UserAdapter;
 
 @XmlRootElement(name = "checkin")
@@ -40,12 +40,11 @@ public class Checkin {
 	@NotNull
 	@ManyToOne(cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "location_id", referencedColumnName = "id")
-	@XmlAttribute(name = "location")
-	@XmlJavaTypeAdapter(LocationAdapter.class)
+	@XmlElement(name = "location")
 	private Location location;
 
 	@NotNull
-	@XmlAttribute(name = "time")
+	@XmlElement(name = "time")
 	private Date time;
 
 	public Checkin() {

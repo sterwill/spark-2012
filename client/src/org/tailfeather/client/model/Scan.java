@@ -57,15 +57,16 @@ public class Scan {
 	}
 
 	private User getMatchedUser(String value, Matcher matcher) {
-		String uri = value;
-		String userId = matcher.group(1);
+		String checkinUri = value;
+		String host = matcher.group(1);
+		String userId = matcher.group(2);
 
 		SoundUtils.playSound(knownSound);
 
 		Console.printLine();
 		Console.printLine(MessageFormat.format("Retrieving information for user {0}...", userId));
 
-		User user = ServerUtils.getUser(uri);
+		User user = ServerUtils.getUser(String.format("http://%s/api/user/%s", host, userId));
 		if (user != null) {
 			if (knownFile != null) {
 				Console.print(MessageFormat.format(FileUtils.getContents(knownFile), user.getFullName()));

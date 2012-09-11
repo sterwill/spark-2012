@@ -27,5 +27,5 @@
 	</command>
 	<fakeCheckin value="mishfarket" locationId="ec09dea" />
 	<scan knownSound="sounds/sweet.wav" knownFile="text/known-code.txt" unknownSound="sounds/sour.wav" unknownFile="text/unknown-code.txt"
-		pattern="http://.*/checkin/(.*)" />
+		pattern="http://(.*)/checkin/(.*)" />
 </acorn>

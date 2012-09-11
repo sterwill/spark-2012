@@ -214,6 +214,7 @@ public class Acorn {
 
 	public static void printProgress(User user) {
 		List<Checkin> checkins = user.getCheckins();
+		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 
 		if (checkins == null || checkins.size() == 0) {
 			Console.printLine();
@@ -229,8 +230,7 @@ public class Acorn {
 
 			Console.printLine();
 			for (Checkin c : checkins) {
-				DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-				Console.printLine("    " + c.getLocation() + "(" + dateFormat.format(c.getTime()) + ")");
+				Console.printLine("    " + c.getLocation().getName());
 			}
 			Console.printLine();
 		}
