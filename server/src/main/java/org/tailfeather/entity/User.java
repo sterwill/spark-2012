@@ -19,6 +19,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.springframework.util.Assert;
 import org.tailfeather.IdHelper;
+import org.tailfeather.resource.CheckinResource;
 import org.tailfeather.resource.UserResource;
 
 import com.sun.jersey.server.linking.Binding;
@@ -40,7 +41,11 @@ public class User {
 	private URI selfUri;
 
 	@XmlElement(name = "checkinUri")
+	@Ref(style = Style.ABSOLUTE, resource = CheckinResource.class, method = "post")
 	private URI checkinUri;
+
+	@XmlElement(name = "badgeUri")
+	private URI badgeUri;
 
 	@NotNull(message = "An e-mail address is required")
 	@Size(min = 7, max = 128, message = "The e-mail address must be 7-128 characters long")
@@ -93,6 +98,14 @@ public class User {
 
 	public void setCheckinUri(URI checkinUri) {
 		this.checkinUri = checkinUri;
+	}
+
+	public URI getBadgeUri() {
+		return badgeUri;
+	}
+
+	public void setBadgeUri(URI badgeUri) {
+		this.badgeUri = badgeUri;
 	}
 
 	public String getEmail() {

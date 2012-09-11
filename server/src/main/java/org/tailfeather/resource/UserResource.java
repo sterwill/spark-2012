@@ -63,7 +63,7 @@ public class UserResource {
 	@Path("{id}")
 	public User get(@PathParam("id") String id, @Context UriInfo uriInfo) {
 		User user = userDao.findById(id);
-		user.setCheckinUri(uriInfo.getAbsolutePathBuilder().replacePath("/checkin").path(user.getId()).build());
+		user.setBadgeUri(uriInfo.getAbsolutePathBuilder().replacePath("/checkin").path(user.getId()).build());
 
 		for (Checkin c : checkinDao.findByUser(user.getId())) {
 			user.getCheckins().add(c);
@@ -84,7 +84,7 @@ public class UserResource {
 		}
 
 		User created = userDao.create(user);
-		user.setCheckinUri(uriInfo.getAbsolutePathBuilder().replacePath("/checkin").path(created.getId()).build());
+		user.setBadgeUri(uriInfo.getAbsolutePathBuilder().replacePath("/checkin").path(created.getId()).build());
 
 		URI uri = uriInfo.getAbsolutePathBuilder().path(UserResource.class, "get").build(created.getId());
 		return Response.status(Status.CREATED).location(uri).build();

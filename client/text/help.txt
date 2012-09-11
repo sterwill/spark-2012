@@ -1,0 +1,6 @@
+
+  HELP
+
+  register	Register as a new employee
+  exit		End your session
+

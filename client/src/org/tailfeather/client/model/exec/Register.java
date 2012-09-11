@@ -141,9 +141,9 @@ public class Register extends Executable {
 
 	private void printBadge(User user) {
 		if (badgeTemplate != null) {
-			LOGGER.log(Level.INFO, MessageFormat.format("Printing badge for: {0}", user.getCheckinUri().toString()));
+			LOGGER.log(Level.INFO, MessageFormat.format("Printing badge for: {0}", user.getBadgeUri().toString()));
 			BadgeRenderer renderer = new BadgeRenderer(new File(badgeTemplate));
-			renderer.render(user.getCheckinUri().toString(), user.getFullName(), print);
+			renderer.render(user.getBadgeUri().toString(), user.getFullName(), print);
 		}
 	}
 }

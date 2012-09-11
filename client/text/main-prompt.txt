@@ -1,2 +1,3 @@
-:: Type 'register' to begin the personnel registration process.
+:: Scan your badge to authenticate, or type 'register' to begin the
+:: registration process.
 SYSTEM {) 

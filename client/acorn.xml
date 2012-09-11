@@ -22,6 +22,10 @@
 		<exit />
 	</command>
 	<command>
+		<name>help</name>
+		<echo file="text/help.txt" />
+	</command>
+	<command>
 		<name>secretgame</name>
 		<exit />
 	</command>

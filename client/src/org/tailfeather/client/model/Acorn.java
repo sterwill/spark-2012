@@ -2,6 +2,7 @@ package org.tailfeather.client.model;
 
 import java.text.DateFormat;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -52,10 +53,10 @@ public class Acorn {
 	private int promptTimeoutSeconds = 30;
 
 	@XmlElement(name = "command")
-	private List<Command> commands;
+	private List<Command> commands = new ArrayList<Command>();
 
-	@XmlElement(name = "fakeCheckins")
-	private List<FakeCheckin> fakeCheckins;
+	@XmlElement(name = "fakeCheckin")
+	private List<FakeCheckin> fakeCheckins = new ArrayList<FakeCheckin>();
 
 	@XmlElement(name = "scan")
 	private Scan scan;
