@@ -2,11 +2,11 @@ package org.tailfeather.client;
 
 import java.util.Comparator;
 
-import org.tailfeather.entity.Code;
+import org.tailfeather.entity.Checkin;
 
-public class CodeComparator implements Comparator<Code> {
+public class CheckinComparator implements Comparator<Checkin> {
 	@Override
-	public int compare(Code o1, Code o2) {
+	public int compare(Checkin o1, Checkin o2) {
 		if (o1 == o2) {
 			return 0;
 		}

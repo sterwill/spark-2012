@@ -14,13 +14,11 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.tailfeather.IdHelper;
-import org.tailfeather.entity.xmladapter.UserAdapter;
 
 import com.sun.jersey.server.linking.Binding;
 import com.sun.jersey.server.linking.Ref;
@@ -32,24 +30,23 @@ import com.sun.jersey.server.linking.Ref.Style;
 @Table(name = "codes")
 public class Code {
 	@Ref(value = "code/{id}", style = Style.ABSOLUTE, bindings = { @Binding(name = "id", value = "${instance.id}") })
-	@XmlAttribute(name = "uri")
+	@XmlElement(name = "uri")
 	@Transient
 	private URI uri;
 
 	@Column(name = "code")
-	@XmlAttribute(name = "code")
+	@XmlElement(name = "code")
 	private String code;
 
 	@Id
 	@Column(name = "id")
-	@XmlAttribute(name = "id")
+	@XmlElement(name = "id")
 	private String id;
 
 	@NotNull
 	@ManyToOne(cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
-	@XmlAttribute(name = "userId")
-	@XmlJavaTypeAdapter(UserAdapter.class)
+	@XmlTransient
 	private User user;
 
 	@NotNull

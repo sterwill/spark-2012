@@ -12,13 +12,13 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.tailfeather.IdHelper;
-import org.tailfeather.entity.xmladapter.UserAdapter;
+import org.tailfeather.entity.xmladapter.DateAdapter;
 
 @XmlRootElement(name = "checkin")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -27,14 +27,13 @@ import org.tailfeather.entity.xmladapter.UserAdapter;
 public class Checkin {
 	@Id
 	@Column(name = "id")
-	@XmlAttribute(name = "id")
+	@XmlElement(name = "id")
 	private String id;
 
 	@NotNull
 	@ManyToOne(cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
-	@XmlAttribute(name = "user")
-	@XmlJavaTypeAdapter(UserAdapter.class)
+	@XmlTransient
 	private User user;
 
 	@NotNull
@@ -45,6 +44,7 @@ public class Checkin {
 
 	@NotNull
 	@XmlElement(name = "time")
+	@XmlJavaTypeAdapter(value = DateAdapter.class)
 	private Date time;
 
 	public Checkin() {

@@ -2,6 +2,8 @@ package org.tailfeather.client.model;
 
 import java.text.DateFormat;
 import java.text.MessageFormat;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -15,6 +17,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.tailfeather.client.CheckinComparator;
 import org.tailfeather.client.CodeScannerRunnable;
 import org.tailfeather.client.Console;
 import org.tailfeather.client.FileUtils;
@@ -214,7 +217,7 @@ public class Acorn {
 
 	public static void printProgress(User user) {
 		List<Checkin> checkins = user.getCheckins();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL);
 
 		if (checkins == null || checkins.size() == 0) {
 			Console.printLine();
@@ -228,9 +231,14 @@ public class Acorn {
 				Console.printLine(MessageFormat.format("  You have checked in at {0} locations:", checkins.size()));
 			}
 
+			Collections.sort(checkins, new CheckinComparator());
 			Console.printLine();
 			for (Checkin c : checkins) {
-				Console.printLine("    " + c.getLocation().getName());
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(c.getTime());
+
+				Console.printLine(String.format("    %s (%s)", c.getLocation().getName(),
+						dateFormat.format(cal.getTime())));
 			}
 			Console.printLine();
 		}
