@@ -60,13 +60,14 @@ public class Scan {
 		String uri = value;
 		String userId = matcher.group(1);
 
+		SoundUtils.playSound(knownSound);
+
 		Console.printLine();
 		Console.printLine(MessageFormat.format("Retrieving information for user {0}...", userId));
 
 		User user = ServerUtils.getUser(uri);
 		if (user != null) {
 			if (knownFile != null) {
-				SoundUtils.playSound(knownSound);
 				Console.print(MessageFormat.format(FileUtils.getContents(knownFile), user.getFullName()));
 			}
 			return user;

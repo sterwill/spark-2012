@@ -56,12 +56,8 @@ public class User {
 	private String fullName;
 
 	@Transient
-	@XmlElement(name = "codes")
-	private List<Code> codes = new ArrayList<Code>();
-
-	@Transient
 	@XmlElement(name = "checkins")
-	private List<Checkin> checkins;
+	private List<Checkin> checkins = new ArrayList<Checkin>();
 
 	public User() {
 		this.id = IdHelper.newShortId();
