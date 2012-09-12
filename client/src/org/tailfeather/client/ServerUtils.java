@@ -1,6 +1,7 @@
 package org.tailfeather.client;
 
 import java.net.URI;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.ws.rs.core.MediaType;
@@ -22,22 +23,42 @@ public class ServerUtils {
 	private static Client client;
 
 	public static User postUser(String resourceUri, User user) throws TailfeatherServerException {
-		WebResource userResource = getClient().resource(resourceUri);
-		ClientResponse response = userResource.type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, user);
+		WebResource userResource;
+		ClientResponse response;
+
+		try {
+			userResource = getClient().resource(resourceUri);
+			response = userResource.type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, user);
+		} catch (Exception e) {
+			LOGGER.log(Level.SEVERE, "Web service error", e);
+			throw new TailfeatherServerException(e.getMessage());
+		}
 		if (response.getStatus() != HttpStatus.SC_CREATED) {
 			throw new TailfeatherServerException(response.getEntity(String.class));
 		}
-		URI location = response.getLocation();
-		response.close();
 
-		userResource = getClient().resource(location);
-		user = userResource.accept(MediaType.APPLICATION_JSON_TYPE).get(User.class);
-		return user;
+		try {
+			URI location = response.getLocation();
+			response.close();
+
+			userResource = getClient().resource(location);
+			user = userResource.accept(MediaType.APPLICATION_JSON_TYPE).get(User.class);
+			return user;
+		} catch (Exception e) {
+			LOGGER.log(Level.SEVERE, "Web service error", e);
+			throw new TailfeatherServerException(e.getMessage());
+		}
 	}
 
 	public static void postSecretCode(String resourceUri, Code code) throws TailfeatherServerException {
-		WebResource codeResource = getClient().resource(resourceUri);
-		ClientResponse response = codeResource.type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, code);
+		ClientResponse response;
+		try {
+			WebResource codeResource = getClient().resource(resourceUri);
+			response = codeResource.type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, code);
+		} catch (Exception e) {
+			LOGGER.log(Level.SEVERE, "Web service error", e);
+			throw new TailfeatherServerException(e.getMessage());
+		}
 		if (response.getStatus() != HttpStatus.SC_CREATED) {
 			throw new TailfeatherServerException(response.getEntity(String.class));
 		}
@@ -45,22 +66,33 @@ public class ServerUtils {
 	}
 
 	public static void postCheckin(String resourceUri, Checkin checkin) throws TailfeatherServerException {
-		WebResource checkinResource = getClient().resource(resourceUri);
-		ClientResponse response = checkinResource.type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class,
-				checkin);
+		ClientResponse response;
+		try {
+			WebResource checkinResource = getClient().resource(resourceUri);
+			response = checkinResource.type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, checkin);
+		} catch (Exception e) {
+			LOGGER.log(Level.SEVERE, "Web service error", e);
+			throw new TailfeatherServerException(e.getMessage());
+		}
+
 		if (response.getStatus() != HttpStatus.SC_CREATED) {
 			throw new TailfeatherServerException(response.getEntity(String.class));
 		}
 		response.close();
 	}
 
-	public static User getUser(User user) {
+	public static User getUser(User user) throws TailfeatherServerException {
 		return getUser(user.getSelfUri().toString());
 	}
 
-	public static User getUser(String resourceUri) {
-		WebResource userResource = getClient().resource(resourceUri);
-		return userResource.get(User.class);
+	public static User getUser(String resourceUri) throws TailfeatherServerException {
+		try {
+			WebResource userResource = getClient().resource(resourceUri);
+			return userResource.get(User.class);
+		} catch (Exception e) {
+			LOGGER.log(Level.SEVERE, "Web service error", e);
+			throw new TailfeatherServerException(e.getMessage());
+		}
 	}
 
 	private static Client getClient() {

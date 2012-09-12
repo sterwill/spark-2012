@@ -13,6 +13,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.tailfeather.client.model.exec.Echo;
 import org.tailfeather.client.model.exec.Executable;
 import org.tailfeather.client.model.exec.Exit;
+import org.tailfeather.client.model.exec.MatchGame;
 import org.tailfeather.client.model.exec.PrintStatus;
 import org.tailfeather.client.model.exec.Register;
 
@@ -24,6 +25,7 @@ public class Command {
 
 	@XmlElements({ @XmlElement(name = "echo", type = Echo.class),
 			@XmlElement(name = "printStatus", type = PrintStatus.class),
+			@XmlElement(name = "matchgame", type = MatchGame.class),
 			@XmlElement(name = "register", type = Register.class), @XmlElement(name = "exit", type = Exit.class) })
 	private List<Executable> exec = new ArrayList<Executable>();
 
@@ -51,6 +53,15 @@ public class Command {
 
 	public Acorn getAcorn() {
 		return acorn;
+	}
+
+	public boolean enabled() {
+		for (Executable e : exec) {
+			if (e.enabled(this)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void execute() {

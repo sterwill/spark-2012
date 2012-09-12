@@ -32,7 +32,7 @@
 	</command>
 	<command>
 		<name>project orchard</name>
-		<exit />
+		<matchgame />
 	</command>
 	<fakeCheckin value="mishfarket" locationId="ec09dea" locationName="Mish Farket" />
 	<scan knownSound="sounds/sweet.wav" knownFile="text/known-code.txt" unknownSound="sounds/sour.wav" unknownFile="text/unknown-code.txt"

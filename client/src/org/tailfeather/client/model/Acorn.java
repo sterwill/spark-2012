@@ -88,6 +88,10 @@ public class Acorn {
 		return promptTimeoutSeconds;
 	}
 
+	public String getPhaseThreeTriggerLocationId() {
+		return phaseThreeTriggerLocationId;
+	}
+
 	public void run() {
 		configureConsole();
 		scannerRunnable = new CodeScannerRunnable(camera);
@@ -162,7 +166,7 @@ public class Acorn {
 
 				commandTest: for (Command c : commands) {
 					for (String name : c.getNames()) {
-						if (commandName.equalsIgnoreCase(name)) {
+						if (commandName.equalsIgnoreCase(name) && c.enabled()) {
 							c.setAcorn(this);
 							c.execute();
 							handled = true;
@@ -232,7 +236,18 @@ public class Acorn {
 		if (activeUser == null) {
 			return;
 		}
-		User user = ServerUtils.getUser(activeUser.getSelfUri().toString());
+
+		User user;
+		try {
+			user = ServerUtils.getUser(activeUser.getSelfUri().toString());
+		} catch (TailfeatherServerException e) {
+			Console.printLine();
+			Console.printRedLine("There was an error getting your information from the server.");
+			Console.printRedLine("Please contact a Tail Feather administrator.");
+			Console.printLine();
+			return;
+		}
+
 		List<Checkin> checkins = user.getCheckins();
 
 		if (checkins == null || checkins.size() == 0) {
@@ -283,5 +298,9 @@ public class Acorn {
 
 	public boolean hasActiveUser() {
 		return activeUser != null;
+	}
+
+	public User getActiveUser() {
+		return activeUser;
 	}
 }

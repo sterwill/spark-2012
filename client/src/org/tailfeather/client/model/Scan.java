@@ -14,6 +14,7 @@ import org.tailfeather.client.Console;
 import org.tailfeather.client.FileUtils;
 import org.tailfeather.client.ServerUtils;
 import org.tailfeather.client.SoundUtils;
+import org.tailfeather.client.TailfeatherServerException;
 import org.tailfeather.entity.User;
 
 @XmlRootElement(name = "scan")
@@ -66,7 +67,23 @@ public class Scan {
 		Console.printLine();
 		Console.printLine(MessageFormat.format("Retrieving information for user {0}...", userId));
 
-		User user = ServerUtils.getUser(String.format("http://%s/api/user/%s", host, userId));
+		User user;
+		try {
+			user = ServerUtils.getUser(String.format("http://%s/api/user/%s", host, userId));
+		} catch (TailfeatherServerException e) {
+			Console.printLine();
+			Console.printRedLine("There was an error getting your information from the server.");
+			Console.printRedLine("Please contact a Tail Feather administrator.");
+			Console.printLine();
+
+			try {
+				Thread.sleep(3000);
+			} catch (InterruptedException e2) {
+			}
+
+			return null;
+		}
+
 		if (user != null) {
 			if (knownFile != null) {
 				Console.print(MessageFormat.format(FileUtils.getContents(knownFile), user.getFullName()));
