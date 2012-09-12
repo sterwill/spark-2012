@@ -31,7 +31,7 @@
 		<printStatus />
 	</command>
 	<command>
-		<name>secretgame</name>
+		<name>project orchard</name>
 		<exit />
 	</command>
 	<fakeCheckin value="mishfarket" locationId="ec09dea" locationName="Mish Farket" />

@@ -153,12 +153,11 @@ public class Acorn {
 					continue;
 				}
 
-				final String[] tokens = parseInput(input);
-				if (tokens.length == 0) {
+				final String commandName = parseInput(input);
+				if (commandName.length() == 0) {
 					continue;
 				}
 
-				final String commandName = tokens[0];
 				boolean handled = false;
 
 				commandTest: for (Command c : commands) {
@@ -197,7 +196,8 @@ public class Acorn {
 				}
 
 				if (!handled) {
-					printCommandError(MessageFormat.format("Unrecognized command ''{0}'', please try again", tokens[0]));
+					printCommandError(MessageFormat.format("Unrecognized command ''{0}'', please try again",
+							commandName));
 				}
 			}
 		}
@@ -216,13 +216,12 @@ public class Acorn {
 		Console.setErrRate(cps);
 	}
 
-	public static String[] parseInput(String line) {
+	public static String parseInput(String line) {
 		if (line == null || line.trim().length() == 0) {
-			return new String[0];
+			return "";
 		}
 
-		line = line.trim();
-		return line.split("\\s+");
+		return line.trim();
 	}
 
 	public void printCommandError(String error) {
