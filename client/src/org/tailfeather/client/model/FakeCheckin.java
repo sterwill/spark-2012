@@ -64,7 +64,6 @@ public class FakeCheckin {
 
 		Console.printLine();
 		Console.printRedLine(String.format("  >>> Checked into %s", locationName));
-		Console.printLine();
 
 		acorn.printStatus();
 	}
