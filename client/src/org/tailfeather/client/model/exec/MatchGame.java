@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.tailfeather.client.Console;
 import org.tailfeather.client.ServerUtils;
 import org.tailfeather.client.TailfeatherServerException;
+import org.tailfeather.client.matchgame.MatchGameFrame;
 import org.tailfeather.client.model.Command;
 import org.tailfeather.entity.Checkin;
 import org.tailfeather.entity.Location;
@@ -25,6 +26,7 @@ public class MatchGame extends Executable {
 
 	@Override
 	public void execute(Command command) {
+		new MatchGameFrame().run();
 	}
 
 	public void reportWin(Command command) {

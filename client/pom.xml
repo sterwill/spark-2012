@@ -126,9 +126,11 @@
 		</dependency>
 
 		<dependency>
-			<groupId>batik</groupId>
-			<artifactId>batik-svggen</artifactId>
-			<version>1.6-1</version>
+			<groupId>com.oracle</groupId>
+			<artifactId>javafx</artifactId>
+			<version>2.0</version>
+			<scope>system</scope>
+			<systemPath>/home/sterwill/java/java/jre/lib/jfxrt.jar</systemPath>
 		</dependency>
 
 	</dependencies>

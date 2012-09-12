@@ -14,28 +14,32 @@
       <attribute value="jar:file:/home/sterwill/.m2/repository/javax/ws/rs/jsr311-api/1.1.1/jsr311-api-1.1.1-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
-  <classpathentry kind="var" path="M2_REPO/javax/el/el-api/2.2/el-api-2.2.jar" sourcepath="M2_REPO/javax/el/el-api/2.2/el-api-2.2-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/javax/el/el-api/2.2/el-api-2.2.jar" sourcepath="M2_REPO/javax/el/el-api/2.2/el-api-2.2-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/home/sterwill/.m2/repository/javax/el/el-api/2.2/el-api-2.2-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
   <classpathentry kind="var" path="M2_REPO/javax/xml/bind/jaxb-api/2.2.2/jaxb-api-2.2.2.jar" sourcepath="M2_REPO/javax/xml/bind/jaxb-api/2.2.2/jaxb-api-2.2.2-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/javax/xml/stream/stax-api/1.0-2/stax-api-1.0-2.jar" sourcepath="M2_REPO/javax/xml/stream/stax-api/1.0-2/stax-api-1.0-2-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/javax/activation/activation/1.1/activation-1.1.jar" sourcepath="M2_REPO/javax/activation/activation/1.1/activation-1.1-sources.jar"/>
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
   <classpathentry kind="var" path="M2_REPO/org/tailfeather/server/1.0/server-1.0-classes.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/atlassian/maven/plugins/maven-upload-plugin/1.1/maven-upload-plugin-1.1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-plugin-api/2.0.8/maven-plugin-api-2.0.8.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-project/2.0.8/maven-project-2.0.8.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-settings/2.0.8/maven-settings-2.0.8.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-model/2.0.8/maven-model-2.0.8.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-plugin-api/2.0.8/maven-plugin-api-2.0.8.jar" sourcepath="M2_REPO/org/apache/maven/maven-plugin-api/2.0.8/maven-plugin-api-2.0.8-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-project/2.0.8/maven-project-2.0.8.jar" sourcepath="M2_REPO/org/apache/maven/maven-project/2.0.8/maven-project-2.0.8-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-settings/2.0.8/maven-settings-2.0.8.jar" sourcepath="M2_REPO/org/apache/maven/maven-settings/2.0.8/maven-settings-2.0.8-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-model/2.0.8/maven-model-2.0.8.jar" sourcepath="M2_REPO/org/apache/maven/maven-model/2.0.8/maven-model-2.0.8-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/codehaus/plexus/plexus-utils/1.4.6/plexus-utils-1.4.6.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/codehaus/plexus/plexus-container-default/1.0-alpha-9-stable-1/plexus-container-default-1.0-alpha-9-stable-1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/junit/junit/3.8.1/junit-3.8.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/codehaus/plexus/plexus-container-default/1.0-alpha-9-stable-1/plexus-container-default-1.0-alpha-9-stable-1.jar" sourcepath="M2_REPO/org/codehaus/plexus/plexus-container-default/1.0-alpha-9-stable-1/plexus-container-default-1.0-alpha-9-stable-1-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/junit/junit/3.8.1/junit-3.8.1.jar" sourcepath="M2_REPO/junit/junit/3.8.1/junit-3.8.1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/classworlds/classworlds/1.1-alpha-2/classworlds-1.1-alpha-2.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-profile/2.0.8/maven-profile-2.0.8.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-artifact-manager/2.0.8/maven-artifact-manager-2.0.8.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-repository-metadata/2.0.8/maven-repository-metadata-2.0.8.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-artifact/2.0.8/maven-artifact-2.0.8.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/apache/maven/wagon/wagon-provider-api/1.0-beta-2/wagon-provider-api-1.0-beta-2.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-plugin-registry/2.0.8/maven-plugin-registry-2.0.8.jar"/>
-  <classpathentry kind="var" path="M2_REPO/commons-io/commons-io/1.4/commons-io-1.4.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-profile/2.0.8/maven-profile-2.0.8.jar" sourcepath="M2_REPO/org/apache/maven/maven-profile/2.0.8/maven-profile-2.0.8-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-artifact-manager/2.0.8/maven-artifact-manager-2.0.8.jar" sourcepath="M2_REPO/org/apache/maven/maven-artifact-manager/2.0.8/maven-artifact-manager-2.0.8-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-repository-metadata/2.0.8/maven-repository-metadata-2.0.8.jar" sourcepath="M2_REPO/org/apache/maven/maven-repository-metadata/2.0.8/maven-repository-metadata-2.0.8-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-artifact/2.0.8/maven-artifact-2.0.8.jar" sourcepath="M2_REPO/org/apache/maven/maven-artifact/2.0.8/maven-artifact-2.0.8-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/maven/wagon/wagon-provider-api/1.0-beta-2/wagon-provider-api-1.0-beta-2.jar" sourcepath="M2_REPO/org/apache/maven/wagon/wagon-provider-api/1.0-beta-2/wagon-provider-api-1.0-beta-2-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/apache/maven/maven-plugin-registry/2.0.8/maven-plugin-registry-2.0.8.jar" sourcepath="M2_REPO/org/apache/maven/maven-plugin-registry/2.0.8/maven-plugin-registry-2.0.8-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/commons-io/commons-io/1.4/commons-io-1.4.jar" sourcepath="M2_REPO/commons-io/commons-io/1.4/commons-io-1.4-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/springframework/spring-core/3.1.2.RELEASE/spring-core-3.1.2.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-core/3.1.2.RELEASE/spring-core-3.1.2.RELEASE-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/springframework/spring-asm/3.1.2.RELEASE/spring-asm-3.1.2.RELEASE.jar" sourcepath="M2_REPO/org/springframework/spring-asm/3.1.2.RELEASE/spring-asm-3.1.2.RELEASE-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar" sourcepath="M2_REPO/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1-sources.jar">
@@ -146,14 +150,42 @@
     </attributes>
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/taglibs/standard/1.1.2/standard-1.1.2.jar" sourcepath="M2_REPO/taglibs/standard/1.1.2/standard-1.1.2-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/com/sun/jersey/contribs/jersey-spring/1.13/jersey-spring-1.13.jar" sourcepath="M2_REPO/com/sun/jersey/contribs/jersey-spring/1.13/jersey-spring-1.13-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-servlet/1.13/jersey-servlet-1.13.jar" sourcepath="M2_REPO/com/sun/jersey/jersey-servlet/1.13/jersey-servlet-1.13-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-server/1.13/jersey-server-1.13.jar" sourcepath="M2_REPO/com/sun/jersey/jersey-server/1.13/jersey-server-1.13-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/sun/jersey/contribs/jersey-spring/1.13/jersey-spring-1.13.jar" sourcepath="M2_REPO/com/sun/jersey/contribs/jersey-spring/1.13/jersey-spring-1.13-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/home/sterwill/.m2/repository/com/sun/jersey/contribs/jersey-spring/1.13/jersey-spring-1.13-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-servlet/1.13/jersey-servlet-1.13.jar" sourcepath="M2_REPO/com/sun/jersey/jersey-servlet/1.13/jersey-servlet-1.13-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/home/sterwill/.m2/repository/com/sun/jersey/jersey-servlet/1.13/jersey-servlet-1.13-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-server/1.13/jersey-server-1.13.jar" sourcepath="M2_REPO/com/sun/jersey/jersey-server/1.13/jersey-server-1.13-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/home/sterwill/.m2/repository/com/sun/jersey/jersey-server/1.13/jersey-server-1.13-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
   <classpathentry kind="var" path="M2_REPO/asm/asm/3.1/asm-3.1.jar" sourcepath="M2_REPO/asm/asm/3.1/asm-3.1-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-core/1.13/jersey-core-1.13.jar" sourcepath="M2_REPO/com/sun/jersey/jersey-core/1.13/jersey-core-1.13-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-bundle/1.13/jersey-bundle-1.13.jar" sourcepath="M2_REPO/com/sun/jersey/jersey-bundle/1.13/jersey-bundle-1.13-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-server-linking/1.13/jersey-server-linking-1.13.jar" sourcepath="M2_REPO/com/sun/jersey/jersey-server-linking/1.13/jersey-server-linking-1.13-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/glassfish/web/el-impl/2.2/el-impl-2.2.jar" sourcepath="M2_REPO/org/glassfish/web/el-impl/2.2/el-impl-2.2-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-core/1.13/jersey-core-1.13.jar" sourcepath="M2_REPO/com/sun/jersey/jersey-core/1.13/jersey-core-1.13-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/home/sterwill/.m2/repository/com/sun/jersey/jersey-core/1.13/jersey-core-1.13-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-bundle/1.13/jersey-bundle-1.13.jar" sourcepath="M2_REPO/com/sun/jersey/jersey-bundle/1.13/jersey-bundle-1.13-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/home/sterwill/.m2/repository/com/sun/jersey/jersey-bundle/1.13/jersey-bundle-1.13-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-server-linking/1.13/jersey-server-linking-1.13.jar" sourcepath="M2_REPO/com/sun/jersey/jersey-server-linking/1.13/jersey-server-linking-1.13-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/home/sterwill/.m2/repository/com/sun/jersey/jersey-server-linking/1.13/jersey-server-linking-1.13-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/org/glassfish/web/el-impl/2.2/el-impl-2.2.jar" sourcepath="M2_REPO/org/glassfish/web/el-impl/2.2/el-impl-2.2-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/home/sterwill/.m2/repository/org/glassfish/web/el-impl/2.2/el-impl-2.2-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
   <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-json/1.13/jersey-json-1.13.jar" sourcepath="M2_REPO/com/sun/jersey/jersey-json/1.13/jersey-json-1.13-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/codehaus/jettison/jettison/1.1/jettison-1.1.jar" sourcepath="M2_REPO/org/codehaus/jettison/jettison/1.1/jettison-1.1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/stax/stax-api/1.0.1/stax-api-1.0.1.jar"/>
@@ -164,24 +196,16 @@
   <classpathentry kind="var" path="M2_REPO/org/codehaus/jackson/jackson-xc/1.9.2/jackson-xc-1.9.2.jar" sourcepath="M2_REPO/org/codehaus/jackson/jackson-xc/1.9.2/jackson-xc-1.9.2-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/google/zxing/core/2.0/core-2.0.jar" sourcepath="M2_REPO/com/google/zxing/core/2.0/core-2.0-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/google/zxing/javase/2.0/javase-2.0.jar" sourcepath="M2_REPO/com/google/zxing/javase/2.0/javase-2.0-sources.jar"/>
-  <classpathentry kind="var" path="M2_REPO/commons-codec/commons-codec/1.6/commons-codec-1.6.jar" sourcepath="M2_REPO/commons-codec/commons-codec/1.6/commons-codec-1.6-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/commons-codec/commons-codec/1.6/commons-codec-1.6.jar" sourcepath="M2_REPO/commons-codec/commons-codec/1.6/commons-codec-1.6-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/home/sterwill/.m2/repository/commons-codec/commons-codec/1.6/commons-codec-1.6-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
   <classpathentry kind="var" path="M2_REPO/org/apache/httpcomponents/httpclient/4.2.1/httpclient-4.2.1.jar" sourcepath="M2_REPO/org/apache/httpcomponents/httpclient/4.2.1/httpclient-4.2.1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/httpcomponents/httpcore/4.2.1/httpcore-4.2.1.jar" sourcepath="M2_REPO/org/apache/httpcomponents/httpcore/4.2.1/httpcore-4.2.1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-client/1.13/jersey-client-1.13.jar" sourcepath="M2_REPO/com/sun/jersey/jersey-client/1.13/jersey-client-1.13-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/google/javacv/javacv/0.2/javacv-0.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/google/javacv/javacpp/0.2/javacpp-0.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/google/javacv/javacv-linux-x86_64/0.2/javacv-linux-x86_64-0.2.jar"/>
-  <classpathentry kind="var" path="M2_REPO/batik/batik-svggen/1.6-1/batik-svggen-1.6-1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/batik/batik-gvt/1.6-1/batik-gvt-1.6-1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/batik/batik-awt-util/1.6-1/batik-awt-util-1.6-1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/batik/batik-util/1.6-1/batik-util-1.6-1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/batik/batik-gui-util/1.6-1/batik-gui-util-1.6-1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/batik/batik-ext/1.6-1/batik-ext-1.6-1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/xml-apis/xmlParserAPIs/2.0.2/xmlParserAPIs-2.0.2.jar"/>
-  <classpathentry kind="var" path="M2_REPO/batik/batik-svg-dom/1.6-1/batik-svg-dom-1.6-1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/batik/batik-dom/1.6-1/batik-dom-1.6-1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/batik/batik-css/1.6-1/batik-css-1.6-1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/batik/batik-xml/1.6-1/batik-xml-1.6-1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/xerces/xercesImpl/2.5.0/xercesImpl-2.5.0.jar"/>
-  <classpathentry kind="var" path="M2_REPO/batik/batik-parser/1.6-1/batik-parser-1.6-1.jar"/>
+  <classpathentry kind="lib" path="/home/sterwill/java/jdk1.7.0_06/jre/lib/jfxrt.jar"/>
 </classpath>
