@@ -29,6 +29,10 @@ public interface CheckinRepository extends JpaRepository<Checkin, String> {
 	@OrderBy("time")
 	public Iterable<Checkin> findByLocation(Sort sort, String locationId);
 
+	@Query("SELECT c FROM Checkin c WHERE c.location.id = ?1 AND c.user.id = ?2")
+	@OrderBy("time")
+	public Iterable<Checkin> findByLocationAndUser(Sort sort, String locationId, String userId);
+
 	/* A custom query */
 	// @Query("SELECT p FROM Person p WHERE LOWER(p.lastName) = LOWER(:lastName)")
 	// public List<Person> find(@Param("lastName") String lastName);
