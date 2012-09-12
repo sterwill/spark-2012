@@ -50,6 +50,7 @@ public class FakeCheckin {
 
 		ServerUtils.postCheckin(user.getCheckinUri().toString(), checkin);
 
+		user = ServerUtils.getUser(user.getSelfUri().toString());
 		Acorn.printProgress(user);
 	}
 }
