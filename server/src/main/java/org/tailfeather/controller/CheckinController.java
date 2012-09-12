@@ -63,7 +63,7 @@ public class CheckinController {
 		checkin = checkinDao.create(checkin);
 
 		model.addAttribute("checkinId", checkin.getId());
-		model.addAttribute("instructions", "Instructions for the next step go here");
+		model.addAttribute("instructions", "Your location was successfully transmitted to the Tail Feather system.");
 		return "redirect:/checkin/badge-success";
 	}
 

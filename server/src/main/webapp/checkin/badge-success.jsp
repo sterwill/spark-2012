@@ -19,6 +19,6 @@
 		at <strong><fmt:formatDate pattern="yyyy-MM-dd hh:mm:ss"
 				value="${checkin.time}" /></strong>
 	</div>
-	<p style="">${instructions}</p>
+	<p style="font-size: larger;">${instructions}</p>
 </body>
 </html>

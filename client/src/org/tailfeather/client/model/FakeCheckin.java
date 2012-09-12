@@ -63,7 +63,7 @@ public class FakeCheckin {
 		ServerUtils.postCheckin(user.getCheckinUri().toString(), checkin);
 
 		Console.printLine();
-		Console.printRed(String.format("  >>> Checked into %s", locationName));
+		Console.printRedLine(String.format("  >>> Checked into %s", locationName));
 		Console.printLine();
 
 		acorn.printStatus();
