@@ -238,8 +238,7 @@ public class Acorn {
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(c.getTime());
 
-				Console.printLine(String.format("    %s (%s)", c.getLocation().getName(),
-						dateFormat.format(cal.getTime())));
+				Console.printLine(String.format("    %s (%s)", c.getLocationName(), dateFormat.format(cal.getTime())));
 			}
 			Console.printLine();
 		}

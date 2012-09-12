@@ -69,6 +69,8 @@ public class UserResource {
 		user.setBadgeUri(uriInfo.getAbsolutePathBuilder().replacePath("/checkin").path(user.getId()).build());
 
 		for (Checkin c : checkinDao.findByUser(user.getId())) {
+			// cheating to reduce a fetch from the client
+			c.setLocationName(c.getLocation().getName());
 			user.getCheckins().add(c);
 		}
 		return user;
