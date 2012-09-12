@@ -63,6 +63,9 @@ public class UserResource {
 	@Path("{id}")
 	public User get(@PathParam("id") String id, @Context UriInfo uriInfo) {
 		User user = userDao.findById(id);
+		if (user == null) {
+			return null;
+		}
 		user.setBadgeUri(uriInfo.getAbsolutePathBuilder().replacePath("/checkin").path(user.getId()).build());
 
 		for (Checkin c : checkinDao.findByUser(user.getId())) {

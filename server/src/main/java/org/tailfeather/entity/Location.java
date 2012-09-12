@@ -1,5 +1,7 @@
 package org.tailfeather.entity;
 
+import java.net.URI;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -12,6 +14,11 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.tailfeather.IdHelper;
+import org.tailfeather.resource.LocationResource;
+
+import com.sun.jersey.server.linking.Binding;
+import com.sun.jersey.server.linking.Ref;
+import com.sun.jersey.server.linking.Ref.Style;
 
 @XmlRootElement(name = "location")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -24,6 +31,10 @@ public class Location {
 	@Column(name = "id")
 	@XmlElement(name = "id")
 	private String id;
+
+	@XmlElement(name = "selfUri")
+	@Ref(style = Style.ABSOLUTE, resource = LocationResource.class, method = "get", bindings = { @Binding(name = "id", value = "${instance.id}") })
+	private URI selfUri;
 
 	@NotNull(message = "A location name is required")
 	@Size(min = 3, max = 80, message = "The location name must be 3-80 characters long")
@@ -41,6 +52,14 @@ public class Location {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public URI getSelfUri() {
+		return selfUri;
+	}
+
+	public void setSelfUri(URI selfUri) {
+		this.selfUri = selfUri;
 	}
 
 	public String getName() {

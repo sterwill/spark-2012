@@ -14,11 +14,12 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.tailfeather.IdHelper;
 import org.tailfeather.entity.xmladapter.DateAdapter;
+import org.tailfeather.entity.xmladapter.LocationAdapter;
+import org.tailfeather.entity.xmladapter.UserAdapter;
 
 @XmlRootElement(name = "checkin")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -33,13 +34,15 @@ public class Checkin {
 	@NotNull
 	@ManyToOne(cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
-	@XmlTransient
+	@XmlElement(name = "user")
+	@XmlJavaTypeAdapter(UserAdapter.class)
 	private User user;
 
 	@NotNull
 	@ManyToOne(cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "location_id", referencedColumnName = "id")
 	@XmlElement(name = "location")
+	@XmlJavaTypeAdapter(LocationAdapter.class)
 	private Location location;
 
 	@NotNull
