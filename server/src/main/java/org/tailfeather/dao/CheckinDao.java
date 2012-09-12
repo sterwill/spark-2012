@@ -24,7 +24,8 @@ public class CheckinDao {
 	@Transactional
 	public Checkin create(Checkin newObject) {
 		// hack: don't allow multiple checkins for same location
-		Iterable<Checkin> old = checkinRepository.findByLocation(SORT_BY_TIME_DESC, newObject.getLocation().getId());
+		Iterable<Checkin> old = checkinRepository.findByLocationAndUser(SORT_BY_TIME_DESC, newObject.getLocation()
+				.getId(), newObject.getUser().getId());
 		if (old.iterator().hasNext()) {
 			return old.iterator().next();
 		}
