@@ -35,6 +35,10 @@
 		<security:intercept-url pattern="/index.jsp" access="ROLE_ANONYMOUS,ROLE_ADMIN" />
 		<security:intercept-url pattern="/static/**" access="ROLE_ANONYMOUS,ROLE_ADMIN" />
 		<security:intercept-url pattern="/checkin/???????" access="ROLE_ANONYMOUS,ROLE_ADMIN" method="GET" />
+		<security:intercept-url pattern="/checkin/badge-success*" access="ROLE_ANONYMOUS,ROLE_ADMIN"
+			method="GET" />
+		<security:intercept-url pattern="/checkin/badge-failure*" access="ROLE_ANONYMOUS,ROLE_ADMIN"
+			method="GET" />
 		<security:intercept-url pattern="/checkin/curious-scan.jsp" access="ROLE_ANONYMOUS,ROLE_ADMIN"
 			method="GET" />
 		<security:intercept-url pattern="/location/cookie/**" access="ROLE_ANONYMOUS,ROLE_ADMIN" />
