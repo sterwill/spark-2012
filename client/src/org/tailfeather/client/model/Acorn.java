@@ -141,6 +141,7 @@ public class Acorn {
 							User user = scan.handleScan(((CodeScannedException) e).getCode());
 							if (user != null) {
 								activeUser = user;
+								promptTimeout = promptTimeoutSeconds;
 								printStatus();
 								// Back to prompt (with user info this time)
 								continue;
