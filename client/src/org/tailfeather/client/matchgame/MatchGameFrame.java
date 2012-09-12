@@ -34,6 +34,7 @@ public class MatchGameFrame {
 		try {
 			Media hit = new Media(new File("sounds/petrol.mp3").toURI().toString());
 			mediaPlayer = new MediaPlayer(hit);
+			mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
 			mediaPlayer.play();
 
 			frame.setVisible(true);
