@@ -166,8 +166,8 @@ public class Acorn {
 
 				commandTest: for (Command c : commands) {
 					for (String name : c.getNames()) {
+						c.setAcorn(this);
 						if (commandName.equalsIgnoreCase(name) && c.enabled()) {
-							c.setAcorn(this);
 							c.execute();
 							handled = true;
 
