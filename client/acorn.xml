@@ -1,5 +1,5 @@
 <acorn motd="text/main-motd.txt" prompt="text/main-prompt.txt" userPrompt="text/user-prompt.txt"
-	promptTimeoutSeconds="30" cps="200" camera="0" phaseThreeTriggerLocationId="8ed8d61" phaseTwoMessage="text/phase-two-message.txt"
+	promptTimeoutSeconds="60" cps="200" camera="0" phaseThreeTriggerLocationId="8ed8d61" phaseTwoMessage="text/phase-two-message.txt"
 	phaseThreeMessage="text/phase-three-message.txt">
 	<command>
 		<name>register</name>

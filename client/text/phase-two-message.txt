@@ -1,4 +1,5 @@
-
   PHASE TWO UNLOCKED
   
-  You have now unlocked phase two.
+  You have now unlocked phase two.  An important message will go
+  here telling you what to do.
+

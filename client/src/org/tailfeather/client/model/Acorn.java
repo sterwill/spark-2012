@@ -34,7 +34,7 @@ import org.tailfeather.entity.User;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Acorn {
 	private static final Logger LOGGER = Logger.getLogger(Acorn.class.getName());
-	private static final DateFormat DATE_FORMAT = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL);
+	private static final DateFormat DATE_FORMAT = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM);
 
 	@XmlAttribute(name = "motd")
 	private String motd;
@@ -247,17 +247,18 @@ public class Acorn {
 				Console.printLine();
 				Console.printLine("  You have checked in at 1 location:");
 			} else {
+				Console.printLine();
 				Console.printLine(MessageFormat.format("  You have checked in at {0} locations:", checkins.size()));
 			}
+			Console.printLine();
 
 			Collections.sort(checkins, new CheckinComparator());
-			Console.printLine();
+
 			for (Checkin c : checkins) {
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(c.getTime());
 
-				Console.printRedLine(String.format("    %s (%s)", c.getLocationName(),
-						DATE_FORMAT.format(cal.getTime())));
+				Console.printLine(String.format("  %20s @ %s", c.getLocationName(), DATE_FORMAT.format(cal.getTime())));
 			}
 			Console.printLine();
 
@@ -274,9 +275,9 @@ public class Acorn {
 			}
 
 			if (phaseThree) {
-				Console.print(FileUtils.getContents(phaseThreeMessage));
+				Console.printRed(FileUtils.getContents(phaseThreeMessage));
 			} else if (phaseTwo) {
-				Console.print(FileUtils.getContents(phaseTwoMessage));
+				Console.printRed(FileUtils.getContents(phaseTwoMessage));
 			}
 		}
 	}
