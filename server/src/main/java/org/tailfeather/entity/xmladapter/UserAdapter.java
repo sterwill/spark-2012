@@ -2,16 +2,17 @@ package org.tailfeather.entity.xmladapter;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.tailfeather.dao.UserDao;
 import org.tailfeather.entity.User;
 
 @Component
 public class UserAdapter extends XmlAdapter<String, User> {
-
-	@Autowired
 	private UserDao userDao;
+
+	public UserAdapter() {
+		this.userDao = XmlAdapterInjectionHelper.autowire(UserDao.class);
+	}
 
 	@Override
 	public User unmarshal(String v) throws Exception {

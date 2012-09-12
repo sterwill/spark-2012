@@ -2,7 +2,6 @@ package org.tailfeather.entity.xmladapter;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.tailfeather.dao.LocationDao;
 import org.tailfeather.entity.Location;
@@ -10,8 +9,11 @@ import org.tailfeather.entity.Location;
 @Component
 public class LocationAdapter extends XmlAdapter<String, Location> {
 
-	@Autowired
 	private LocationDao locationDao;
+
+	public LocationAdapter() {
+		this.locationDao = XmlAdapterInjectionHelper.autowire(LocationDao.class);
+	}
 
 	@Override
 	public Location unmarshal(String v) throws Exception {
