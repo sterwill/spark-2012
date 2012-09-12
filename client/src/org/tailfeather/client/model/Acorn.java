@@ -22,6 +22,7 @@ import org.tailfeather.client.CheckinComparator;
 import org.tailfeather.client.CodeScannerRunnable;
 import org.tailfeather.client.Console;
 import org.tailfeather.client.FileUtils;
+import org.tailfeather.client.ServerUtils;
 import org.tailfeather.client.TailfeatherServerException;
 import org.tailfeather.client.model.idle.CheckForScannedCodeIdleHandler;
 import org.tailfeather.client.model.idle.CodeScannedException;
@@ -33,6 +34,7 @@ import org.tailfeather.entity.User;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Acorn {
 	private static final Logger LOGGER = Logger.getLogger(Acorn.class.getName());
+	private static final DateFormat DATE_FORMAT = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL);
 
 	@XmlAttribute(name = "motd")
 	private String motd;
@@ -61,6 +63,15 @@ public class Acorn {
 	@XmlElement(name = "scan")
 	private Scan scan;
 
+	@XmlAttribute(name = "phaseThreeTriggerLocationId")
+	private String phaseThreeTriggerLocationId;
+
+	@XmlAttribute(name = "phaseThreeMessage")
+	private String phaseThreeMessage;
+
+	@XmlAttribute(name = "phaseTwoMessage")
+	private String phaseTwoMessage;
+
 	@XmlTransient
 	private CodeScannerRunnable scannerRunnable;
 
@@ -69,6 +80,9 @@ public class Acorn {
 
 	@XmlTransient
 	protected String code;
+
+	@XmlTransient
+	private User activeUser;
 
 	public int getPromptTimeoutSeconds() {
 		return promptTimeoutSeconds;
@@ -83,7 +97,6 @@ public class Acorn {
 
 		CheckForScannedCodeIdleHandler scannerIdleHandler = new CheckForScannedCodeIdleHandler(scannerRunnable);
 
-		User activeUser;
 		main: while (true) {
 			activeUser = null;
 			Console.clear();
@@ -123,9 +136,9 @@ public class Acorn {
 						if (scan != null) {
 							User user = scan.handleScan(((CodeScannedException) e).getCode());
 							if (user != null) {
-								printProgress(user);
-								// Back to prompt (with user info this time)
 								activeUser = user;
+								printStatus();
+								// Back to prompt (with user info this time)
 								continue;
 							}
 						}
@@ -216,9 +229,12 @@ public class Acorn {
 		Console.printRedLine(error);
 	}
 
-	public static void printProgress(User user) {
+	public void printStatus() {
+		if (activeUser == null) {
+			return;
+		}
+		User user = ServerUtils.getUser(activeUser.getSelfUri().toString());
 		List<Checkin> checkins = user.getCheckins();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.FULL);
 
 		if (checkins == null || checkins.size() == 0) {
 			Console.printLine();
@@ -226,7 +242,9 @@ public class Acorn {
 			Console.printLine("  Show your badge to a Tail Feather agent to check in.");
 			Console.printLine();
 		} else {
+
 			if (checkins.size() == 1) {
+				Console.printLine();
 				Console.printLine("  You have checked in at 1 location:");
 			} else {
 				Console.printLine(MessageFormat.format("  You have checked in at {0} locations:", checkins.size()));
@@ -238,9 +256,32 @@ public class Acorn {
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(c.getTime());
 
-				Console.printLine(String.format("    %s (%s)", c.getLocationName(), dateFormat.format(cal.getTime())));
+				Console.printRedLine(String.format("    %s (%s)", c.getLocationName(),
+						DATE_FORMAT.format(cal.getTime())));
 			}
 			Console.printLine();
+
+			// Detect phase 2
+			boolean phaseTwo = checkins.size() > 5;
+
+			// Detect phase 3
+			boolean phaseThree = false;
+			for (Checkin c : checkins) {
+				if (phaseThreeTriggerLocationId.equals(c.getId())) {
+					phaseThree = true;
+					break;
+				}
+			}
+
+			if (phaseThree) {
+				Console.print(FileUtils.getContents(phaseThreeMessage));
+			} else if (phaseTwo) {
+				Console.print(FileUtils.getContents(phaseTwoMessage));
+			}
 		}
+	}
+
+	public boolean hasActiveUser() {
+		return activeUser != null;
 	}
 }

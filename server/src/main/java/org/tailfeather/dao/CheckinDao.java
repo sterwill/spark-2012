@@ -26,7 +26,7 @@ public class CheckinDao {
 		// hack: don't allow multiple checkins for same location
 		Iterable<Checkin> old = checkinRepository.findByLocation(SORT_BY_TIME_DESC, newObject.getLocation().getId());
 		if (old.iterator().hasNext()) {
-			return newObject;
+			return old.iterator().next();
 		}
 
 		return checkinRepository.save(newObject);

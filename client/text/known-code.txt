@@ -2,4 +2,3 @@
   BADGE RECOGNIZED
   
   Welcome back, {0}.
-

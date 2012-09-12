@@ -1,5 +1,6 @@
 <acorn motd="text/main-motd.txt" prompt="text/main-prompt.txt" userPrompt="text/user-prompt.txt"
-	promptTimeoutSeconds="30" cps="200" camera="0">
+	promptTimeoutSeconds="30" cps="200" camera="0" phaseThreeTriggerLocationId="8ed8d61" phaseTwoMessage="text/phase-two-message.txt"
+	phaseThreeMessage="text/phase-three-message.txt">
 	<command>
 		<name>register</name>
 		<register post="http://tailfeather.org/api/user" instructions="text/register-instructions.txt" success="text/register-success.txt"
@@ -26,10 +27,14 @@
 		<echo file="text/help.txt" />
 	</command>
 	<command>
+		<name>status</name>
+		<printStatus />
+	</command>
+	<command>
 		<name>secretgame</name>
 		<exit />
 	</command>
-	<fakeCheckin value="mishfarket" locationId="ec09dea" />
+	<fakeCheckin value="mishfarket" locationId="ec09dea" locationName="Mish Farket" />
 	<scan knownSound="sounds/sweet.wav" knownFile="text/known-code.txt" unknownSound="sounds/sour.wav" unknownFile="text/unknown-code.txt"
 		pattern="http://(.*)/checkin/(.*)" />
 </acorn>

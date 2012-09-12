@@ -2,5 +2,5 @@
   HELP
 
   register	Register as a new employee
+  status	See which locations and agents you have contacted
   exit		End your session
-

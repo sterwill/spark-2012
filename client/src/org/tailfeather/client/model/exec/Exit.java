@@ -9,6 +9,7 @@ import org.tailfeather.client.model.Command;
 @XmlRootElement(name = "exit")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Exit extends Executable {
+
 	@Override
 	public void execute(Command command) {
 		command.setExit(true);

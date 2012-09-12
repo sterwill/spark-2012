@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.tailfeather.client.Console;
 import org.tailfeather.client.ServerUtils;
 import org.tailfeather.client.TailfeatherServerException;
 import org.tailfeather.entity.Checkin;
@@ -22,6 +23,9 @@ public class FakeCheckin {
 
 	@XmlAttribute(name = "locationId")
 	private String locationId;
+
+	@XmlAttribute(name = "locationName")
+	private String locationName;
 
 	public String getValue() {
 		return value;
@@ -39,6 +43,14 @@ public class FakeCheckin {
 		this.locationId = locationId;
 	}
 
+	public String getLocationName() {
+		return locationName;
+	}
+
+	public void setLocationName(String locationName) {
+		this.locationName = locationName;
+	}
+
 	public void report(User user, Acorn acorn) throws TailfeatherServerException {
 		Location location = new Location();
 		location.setId(locationId);
@@ -50,7 +62,10 @@ public class FakeCheckin {
 
 		ServerUtils.postCheckin(user.getCheckinUri().toString(), checkin);
 
-		user = ServerUtils.getUser(user.getSelfUri().toString());
-		Acorn.printProgress(user);
+		Console.printLine();
+		Console.printRed(String.format("  >>> Checked into %s", locationName));
+		Console.printLine();
+
+		acorn.printStatus();
 	}
 }
