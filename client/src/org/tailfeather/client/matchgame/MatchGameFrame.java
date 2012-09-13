@@ -49,20 +49,20 @@ public class MatchGameFrame {
 		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
 		frame.setUndecorated(true);
 
-		images.put(GameImage.Cat, ImageIO.read(new File("images/x.png")));
-		images.put(GameImage.Fish, ImageIO.read(new File("images/x.png")));
-		images.put(GameImage.Pear, ImageIO.read(new File("images/x.png")));
-		images.put(GameImage.Airplane, ImageIO.read(new File("images/x.png")));
-		images.put(GameImage.Banana, ImageIO.read(new File("images/x.png")));
-		images.put(GameImage.Car, ImageIO.read(new File("images/x.png")));
-		images.put(GameImage.Dog, ImageIO.read(new File("images/x.png")));
-		images.put(GameImage.Heart, ImageIO.read(new File("images/x.png")));
-		images.put(GameImage.Square, ImageIO.read(new File("images/x.png")));
-		images.put(GameImage.Monkey, ImageIO.read(new File("images/x.png")));
-		images.put(GameImage.Star, ImageIO.read(new File("images/x.png")));
-		images.put(GameImage.Phone, ImageIO.read(new File("images/x.png")));
-		images.put(GameImage.Hand, ImageIO.read(new File("images/x.png")));
-		images.put(GameImage.Turtle, ImageIO.read(new File("images/x.png")));
+		images.put(GameImage.Cat, ImageIO.read(new File("images/match/cat.png")));
+		images.put(GameImage.Fish, ImageIO.read(new File("images/match/fish.png")));
+		images.put(GameImage.Pear, ImageIO.read(new File("images/match/pear.png")));
+		images.put(GameImage.Airplane, ImageIO.read(new File("images/match/airplane.png")));
+		images.put(GameImage.Banana, ImageIO.read(new File("images/match/banana.png")));
+		images.put(GameImage.Car, ImageIO.read(new File("images/match/car.png")));
+		images.put(GameImage.Dog, ImageIO.read(new File("images/match/dog.png")));
+		images.put(GameImage.Heart, ImageIO.read(new File("images/match/heart.png")));
+		images.put(GameImage.Square, ImageIO.read(new File("images/match/square.png")));
+		images.put(GameImage.Monkey, ImageIO.read(new File("images/match/monkey.png")));
+		images.put(GameImage.Star, ImageIO.read(new File("images/match/star.png")));
+		images.put(GameImage.Phone, ImageIO.read(new File("images/match/phone.png")));
+		images.put(GameImage.Hand, ImageIO.read(new File("images/match/hand.png")));
+		images.put(GameImage.Turtle, ImageIO.read(new File("images/match/turtle.png")));
 
 		matches.put(GameImage.Cat, GameImage.Fish);
 		matches.put(GameImage.Pear, GameImage.Airplane);
@@ -172,16 +172,12 @@ public class MatchGameFrame {
 			frame.getContentPane().setBackground(Color.BLACK);
 			frame.setVisible(true);
 
-			for (GameImage i : matches.keySet()) {
-				// GameImage match = matches.get(i);
-				GameImage[] choices = getChoices(i);
+			for (GameImage target : matches.keySet()) {
+				GameImage match = matches.get(target);
+				GameImage[] choices = getChoices(target);
+				show(target, choices);
 
-				show(i, choices);
-
-				for (int x = 100; x > 0; x--) {
-					frame.setOpacity(1f / x);
-					Thread.sleep(10);
-				}
+				Thread.sleep(1000);
 			}
 
 			frame.setVisible(false);
