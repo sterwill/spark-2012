@@ -1,6 +1,5 @@
 package org.tailfeather.client.model.exec;
 
-import java.io.IOException;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -22,14 +21,15 @@ public class MatchGame extends Executable {
 
 	@Override
 	public boolean enabled(Command command) {
-		return command.getAcorn().hasActiveUser();
+		return true;
+		// return command.getAcorn().hasActiveUser();
 	}
 
 	@Override
 	public void execute(Command command) {
 		try {
 			new MatchGameFrame().run();
-		} catch (IOException e) {
+		} catch (Exception e) {
 		}
 	}
 
