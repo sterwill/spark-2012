@@ -32,7 +32,8 @@ public class MatchGameFrame {
 	private final static Logger LOGGER = Logger.getLogger(MatchGameFrame.class.getName());
 
 	private final static int CHOICES = 4;
-	private final static Font FONT = new Font(null, Font.BOLD, 60);
+	private final static Font SCORE_FONT = new Font(null, Font.BOLD, 30);
+	private final static Font CHOICE_FONT = new Font(null, Font.BOLD, 60);
 
 	private final Random random = new Random();
 	private final JFrame frame;
@@ -44,10 +45,16 @@ public class MatchGameFrame {
 	private final Map<GameImage, Image> images = new HashMap<GameImage, Image>();
 	private final Map<GameImage, GameImage> matches = new HashMap<GameImage, GameImage>();
 
+	private final Image blankImage;
+	private final ImageIcon targetImageIcon;
+	private final ImageIcon[] choiceImageIcons = new ImageIcon[CHOICES];
+
 	public MatchGameFrame() throws IOException {
 		frame = new JFrame("Tail Feather Authorization Challenge");
-		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
 		frame.setUndecorated(true);
+		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+
+		blankImage = ImageIO.read(new File("images/match/_blank.png"));
 
 		images.put(GameImage.Cat, ImageIO.read(new File("images/match/cat.png")));
 		images.put(GameImage.Fish, ImageIO.read(new File("images/match/fish.png")));
@@ -72,23 +79,33 @@ public class MatchGameFrame {
 		matches.put(GameImage.Star, GameImage.Phone);
 		matches.put(GameImage.Hand, GameImage.Turtle);
 
-		BoxLayout vBox = new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS);
+		final BoxLayout vBox = new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS);
 		frame.getContentPane().setLayout(vBox);
-	}
-
-	private void show(GameImage targetImage, GameImage[] choices) {
-		frame.getContentPane().removeAll();
-		frame.getContentPane().revalidate();
 
 		JPanel targetImagePanel = new JPanel();
 		targetImagePanel.setOpaque(false);
-		targetImagePanel.setSize(512, 512);
 
+		JPanel scorePanel = new JPanel();
+		scorePanel.setOpaque(false);
+		BoxLayout scoreBox = new BoxLayout(scorePanel, BoxLayout.X_AXIS);
+		scorePanel.setLayout(scoreBox);
+
+		JLabel scoreLabel = new JLabel("Foo");
+		scoreLabel.setAlignmentX(0);
+		scoreLabel.setForeground(Color.GREEN);
+		scoreLabel.setOpaque(false);
+		scoreLabel.setFont(SCORE_FONT);
+
+		scorePanel.add(scoreLabel);
+		scorePanel.add(Box.createHorizontalGlue());
+
+		frame.getContentPane().add(scorePanel);
 		frame.getContentPane().add(Box.createVerticalGlue());
 		frame.getContentPane().add(targetImagePanel);
 		frame.getContentPane().add(Box.createVerticalGlue());
 
-		ImageIcon targetImageIcon = new ImageIcon();
+		// Target image
+		targetImageIcon = new ImageIcon(blankImage);
 		JLabel targetLabel = new JLabel(targetImageIcon);
 		targetImagePanel.add(targetLabel);
 
@@ -96,37 +113,30 @@ public class MatchGameFrame {
 
 		JPanel choicePanel = new JPanel();
 		choicePanel.setOpaque(false);
-		choicePanel.setBackground(Color.RED);
 		BoxLayout hBox = new BoxLayout(choicePanel, BoxLayout.X_AXIS);
 		choicePanel.setLayout(hBox);
 		frame.getContentPane().add(choicePanel);
 
-		// Target image
-		targetImageIcon.setImage(images.get(targetImage));
-
 		// Choices
 		choicePanel.add(Box.createHorizontalGlue());
-		choicePanel.setBackground(Color.RED);
-
-		int choiceNumber = 1;
-		for (GameImage c : choices) {
-			Image i = images.get(c);
+		for (int i = 0; i < choiceImageIcons.length; i++) {
+			choiceImageIcons[i] = new ImageIcon(blankImage);
 
 			JPanel thisChoicePanel = new JPanel();
 			thisChoicePanel.setOpaque(false);
 
-			BoxLayout vBox = new BoxLayout(thisChoicePanel, BoxLayout.Y_AXIS);
-			thisChoicePanel.setLayout(vBox);
+			BoxLayout vChoiceBox = new BoxLayout(thisChoicePanel, BoxLayout.Y_AXIS);
+			thisChoicePanel.setLayout(vChoiceBox);
 
-			JLabel imageLabel = new JLabel(new ImageIcon(i));
+			JLabel imageLabel = new JLabel(choiceImageIcons[i]);
 			imageLabel.setAlignmentX(.5f);
 			imageLabel.setAlignmentY(.5f);
 			thisChoicePanel.add(imageLabel);
 
 			thisChoicePanel.add(Box.createVerticalGlue());
 
-			Label numberLabel = new Label(Integer.toString(choiceNumber++));
-			numberLabel.setFont(FONT);
+			Label numberLabel = new Label(Integer.toString(i));
+			numberLabel.setFont(CHOICE_FONT);
 			numberLabel.setBackground(Color.BLACK);
 			numberLabel.setForeground(Color.YELLOW);
 			numberLabel.setAlignment(Label.CENTER);
@@ -136,7 +146,8 @@ public class MatchGameFrame {
 
 			choicePanel.add(Box.createHorizontalGlue());
 		}
-		frame.getContentPane().revalidate();
+
+		frame.getContentPane().doLayout();
 	}
 
 	private GameImage[] getChoices(GameImage image) {
@@ -172,12 +183,14 @@ public class MatchGameFrame {
 			frame.getContentPane().setBackground(Color.BLACK);
 			frame.setVisible(true);
 
-			for (GameImage target : matches.keySet()) {
-				GameImage match = matches.get(target);
-				GameImage[] choices = getChoices(target);
-				show(target, choices);
-
-				Thread.sleep(1000);
+			boolean i = true;
+			while (i) {
+				for (GameImage target : matches.keySet()) {
+					GameImage match = matches.get(target);
+					GameImage[] choices = getChoices(target);
+					setIcons(target, choices);
+					Thread.sleep(500);
+				}
 			}
 
 			frame.setVisible(false);
@@ -189,5 +202,13 @@ public class MatchGameFrame {
 				mediaPlayer.stop();
 			}
 		}
+	}
+
+	private void setIcons(GameImage target, GameImage[] choices) {
+		targetImageIcon.setImage(images.get(target));
+		for (int i = 0; i < choiceImageIcons.length; i++) {
+			choiceImageIcons[i].setImage(images.get(choices[i]));
+		}
+		frame.repaint();
 	}
 }

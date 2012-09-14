@@ -1,6 +1,8 @@
 package org.tailfeather.client.model.exec;
 
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -18,6 +20,7 @@ import org.tailfeather.entity.User;
 @XmlRootElement(name = "matchgame")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class MatchGame extends Executable {
+	private final static Logger LOGGER = Logger.getLogger(MatchGame.class.getName());
 
 	@Override
 	public boolean enabled(Command command) {
@@ -30,6 +33,7 @@ public class MatchGame extends Executable {
 		try {
 			new MatchGameFrame().run();
 		} catch (Exception e) {
+			LOGGER.log(Level.SEVERE, "Game error", e);
 		}
 	}
 
