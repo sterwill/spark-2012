@@ -14,8 +14,6 @@ stty intr ""
 # unset ^\
 stty quit ""
 
-CLASSPATH="bin:./lib/commons-codec-1.6.jar:./lib/fluent-hc-4.2.1.jar:./lib/httpclient-cache-4.2.1.jar:./lib/httpmime-4.2.1.jar:./lib/commons-logging-1.1.1.jar:./lib/httpclient-4.2.1.jar:./lib/httpcore-4.2.1.jar:./lib/javacv-0.2-bin/javacv.jar:./lib/javacv-0.2-bin/javacv-linux-x86_64.jar"
-
-java -cp $CLASSPATH org.tailfeather.acorn.Main acorn.xml
+mvn -e compile exec:java
 
 stty $OLD_STTY
