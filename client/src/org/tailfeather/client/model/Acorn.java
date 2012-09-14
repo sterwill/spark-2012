@@ -165,18 +165,38 @@ public class Acorn {
 
 				boolean handled = false;
 
-				commandTest: for (Command c : commands) {
-					for (String name : c.getNames()) {
-						c.setAcorn(this);
-						if (commandName.equalsIgnoreCase(name) && c.enabled()) {
-							c.execute();
+				if (activeUser != null) {
+					try {
+						int number = Integer.parseInt(commandName);
+
+						if (number > 0 && number <= activeUser.getCheckins().size()) {
+							Checkin c = activeUser.getCheckins().get(number - 1);
+
+							Console.printLine();
+							Console.printLine(FileUtils.getContents("text/message-" + c.getLocation().getId()));
+							Console.printLine();
+
 							handled = true;
+						}
+					} catch (NumberFormatException e) {
+						// Ignore
+					}
+				}
 
-							if (c.isExit()) {
-								continue main;
+				if (!handled) {
+					commandTest: for (Command c : commands) {
+						for (String name : c.getNames()) {
+							c.setAcorn(this);
+							if (commandName.equalsIgnoreCase(name) && c.enabled()) {
+								c.execute();
+								handled = true;
+
+								if (c.isExit()) {
+									continue main;
+								}
+
+								break commandTest;
 							}
-
-							break commandTest;
 						}
 					}
 				}
@@ -249,6 +269,9 @@ public class Acorn {
 			return;
 		}
 
+		// Update active user
+		activeUser = user;
+
 		List<Checkin> checkins = user.getCheckins();
 
 		if (checkins == null || checkins.size() == 0) {
@@ -268,13 +291,20 @@ public class Acorn {
 			Console.printLine();
 
 			Collections.sort(checkins, new CheckinComparator());
+			Console.printLine("   #  Location              Time");
+			Console.printLine("   -- --------------------- -------------------------");
 
+			int i = 1;
 			for (Checkin c : checkins) {
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(c.getTime());
 
-				Console.printLine(String.format("  %20s @ %s", c.getLocationName(), DATE_FORMAT.format(cal.getTime())));
+				Console.printLine(String.format("  %2d  %-20s  %s", i, c.getLocationName(),
+						DATE_FORMAT.format(cal.getTime())));
+				i++;
 			}
+			Console.printLine();
+			Console.printRedLine("  Type the # of the location to see your message.");
 			Console.printLine();
 
 			// Detect phase 2

@@ -71,6 +71,7 @@ public class UserResource {
 		for (Checkin c : checkinDao.findByUser(user.getId())) {
 			// cheating to reduce a fetch from the client
 			c.setLocationName(c.getLocation().getName());
+			c.setLocationId(c.getLocation().getId());
 			user.getCheckins().add(c);
 		}
 		return user;

@@ -55,6 +55,10 @@ public class Checkin {
 	@XmlElement(name = "locationName")
 	private String locationName;
 
+	@Transient
+	@XmlElement(name = "locationId")
+	private String locationId;
+
 	public Checkin() {
 		this.id = IdHelper.newLongId();
 	}
@@ -97,5 +101,13 @@ public class Checkin {
 
 	public void setLocationName(String locationName) {
 		this.locationName = locationName;
+	}
+
+	public String getLocationId() {
+		return locationId;
+	}
+
+	public void setLocationId(String locationId) {
+		this.locationId = locationId;
 	}
 }
