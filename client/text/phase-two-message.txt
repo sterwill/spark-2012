@@ -18,4 +18,4 @@ field agents test their mental state. The challenges reveal a pair of shapes.
 We can use those shape pairs to crack the encryption on the database. Once you
 break the shell, I'll ruin the nest.
 
--tMO {D 
+-tMO {D           P.S.  When you're ready, run "project orchard".
