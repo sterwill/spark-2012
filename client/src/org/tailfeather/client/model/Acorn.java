@@ -173,7 +173,7 @@ public class Acorn {
 							Checkin c = activeUser.getCheckins().get(number - 1);
 
 							Console.printLine();
-							Console.printLine(FileUtils.getContents("text/message-" + c.getLocation().getId()));
+							Console.printLine(FileUtils.getContents("text/message-" + c.getLocationId() + ".txt"));
 							Console.printLine();
 
 							handled = true;
