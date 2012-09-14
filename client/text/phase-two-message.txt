@@ -1,16 +1,21 @@
-
 From: The Mighty Oak
-
 Subject: Gardedenol
 
 Got into the MKBD files and looked around. Found out about Gardedenol. It's a 
 steroid. Works through your skin on contact. Lowers your inhibition to 
-suggestion. One touch, and you're a robot waiting for orders. It stimulates 
-the brain toward feelings of confidence and safety and trust. The subject will 
+suggestion. One touch, and you're a robot waiting for orders. The subject will
 be more apt to believe what they're being told. An untruth serum. Mockingbird 
-wants to sell it to marketing teams. Make people buy things just by touching them. Seen anything cool today? Anything you had a sudden urge to buy? LiveCanary is out of its cage. Mockingbird is pushing the envelope to get this out the door.
+wants to use it to make people buy things just by touching them. Anything you 
+had a sudden urge to buy? LiveCanary is out of its cage. Mockingbird is pushing 
+the envelope to get this out the door.
 
-We've got to stop them. I have access to the MKBD database and backups. I just need to crack the code. I can delete all their data. No more Gardedenol. No more snake in your ear. Stop MKBD, stop their Mockingbird masters, save the city. I can't do this out in the open. They've got some investigator looking for me. I need you to crack it, I'll do the rest. You've got to help.
+We've got to stop them. I have access to the MKBD database and backups. I just 
+need to crack the code. I can delete all their data. No more Gardedenol. Stop 
+MKBD, stop their Mockingbird masters, save the city. I can't do this out in the
+open. They've got someone looking for me. I need you to crack it, I'll do the 
+rest. Go back to your LiveCanary test sites. Each one has a challenge to help 
+field agents test their mental state. The challenges reveal a pair of shapes.
+We can use those shape pairs to crack the encryption on the database. Once you
+break the shell, I'll ruin the nest.
 
-Go back to your LiveCanary test sites. Each one has a challenge to help field agents test their mental state. Helps make sure you didn't accidentally dose yourself. The challenges reveal a pair of shapes. We can use those shape pairs to crack the encryption on the database. Once you break the shell, I'll ruin the nest. 
-
+-tMO {D 
