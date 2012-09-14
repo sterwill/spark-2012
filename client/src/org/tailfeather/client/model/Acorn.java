@@ -1,5 +1,6 @@
 package org.tailfeather.client.model;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import org.tailfeather.client.CodeScannerRunnable;
 import org.tailfeather.client.Console;
 import org.tailfeather.client.FileUtils;
 import org.tailfeather.client.ServerUtils;
+import org.tailfeather.client.SoundUtils;
 import org.tailfeather.client.TailfeatherServerException;
 import org.tailfeather.client.model.idle.CheckForScannedCodeIdleHandler;
 import org.tailfeather.client.model.idle.CodeScannedException;
@@ -172,9 +174,12 @@ public class Acorn {
 						if (number > 0 && number <= activeUser.getCheckins().size()) {
 							Checkin c = activeUser.getCheckins().get(number - 1);
 
-							Console.printLine();
+							File sound = new File("sounds/message-" + c.getLocationId() + ".wav");
+							if (sound.exists()) {
+								SoundUtils.playSound(sound.toString());
+							}
+
 							Console.printLine(FileUtils.getContents("text/message-" + c.getLocationId() + ".txt"));
-							Console.printLine();
 
 							handled = true;
 						}
