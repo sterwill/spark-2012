@@ -7,7 +7,7 @@ import org.tailfeather.client.CodeScannerRunnable;
 
 public class CheckForScannedCodeIdleHandler implements PromptIdleHandler {
 	private static final Logger LOGGER = Logger.getLogger(CheckForScannedCodeIdleHandler.class.getName());
-	private static final int LOCKOUT_SECONDS = 10;
+	private static final int LOCKOUT_SECONDS = 2;
 
 	private final CodeScannerRunnable scanner;
 	private long lastFound = -1;
