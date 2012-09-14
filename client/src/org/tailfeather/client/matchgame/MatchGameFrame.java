@@ -4,7 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Image;
-import java.awt.Label;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 public class MatchGameFrame {
 	private final static Logger LOGGER = Logger.getLogger(MatchGameFrame.class.getName());
@@ -48,6 +50,8 @@ public class MatchGameFrame {
 	private final Image blankImage;
 	private final ImageIcon targetImageIcon;
 	private final ImageIcon[] choiceImageIcons = new ImageIcon[CHOICES];
+
+	private GamePanel gamePanel;
 
 	public MatchGameFrame() throws IOException {
 		frame = new JFrame("Tail Feather Authorization Challenge");
@@ -79,8 +83,12 @@ public class MatchGameFrame {
 		matches.put(GameImage.Star, GameImage.Phone);
 		matches.put(GameImage.Hand, GameImage.Turtle);
 
-		final BoxLayout vBox = new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS);
-		frame.getContentPane().setLayout(vBox);
+		gamePanel = new GamePanel();
+		gamePanel.setOpaque(false);
+		frame.getContentPane().add(gamePanel);
+
+		final BoxLayout vBox = new BoxLayout(gamePanel, BoxLayout.Y_AXIS);
+		gamePanel.setLayout(vBox);
 
 		JPanel targetImagePanel = new JPanel();
 		targetImagePanel.setOpaque(false);
@@ -92,30 +100,37 @@ public class MatchGameFrame {
 
 		JLabel scoreLabel = new JLabel("Foo");
 		scoreLabel.setAlignmentX(0);
-		scoreLabel.setForeground(Color.GREEN);
+		scoreLabel.setForeground(Color.RED);
 		scoreLabel.setOpaque(false);
 		scoreLabel.setFont(SCORE_FONT);
 
+		JLabel instructionsLabel = new JLabel("Instructions here");
+		instructionsLabel.setAlignmentX(1);
+		instructionsLabel.setForeground(Color.WHITE);
+		instructionsLabel.setOpaque(false);
+		instructionsLabel.setFont(SCORE_FONT);
+
 		scorePanel.add(scoreLabel);
 		scorePanel.add(Box.createHorizontalGlue());
+		scorePanel.add(instructionsLabel);
 
-		frame.getContentPane().add(scorePanel);
-		frame.getContentPane().add(Box.createVerticalGlue());
-		frame.getContentPane().add(targetImagePanel);
-		frame.getContentPane().add(Box.createVerticalGlue());
+		gamePanel.add(scorePanel);
+		gamePanel.add(Box.createVerticalGlue());
+		gamePanel.add(targetImagePanel);
+		gamePanel.add(Box.createVerticalGlue());
 
 		// Target image
 		targetImageIcon = new ImageIcon(blankImage);
 		JLabel targetLabel = new JLabel(targetImageIcon);
 		targetImagePanel.add(targetLabel);
 
-		frame.getContentPane().add(Box.createVerticalGlue());
+		gamePanel.add(Box.createVerticalGlue());
 
 		JPanel choicePanel = new JPanel();
 		choicePanel.setOpaque(false);
 		BoxLayout hBox = new BoxLayout(choicePanel, BoxLayout.X_AXIS);
 		choicePanel.setLayout(hBox);
-		frame.getContentPane().add(choicePanel);
+		gamePanel.add(choicePanel);
 
 		// Choices
 		choicePanel.add(Box.createHorizontalGlue());
@@ -135,11 +150,12 @@ public class MatchGameFrame {
 
 			thisChoicePanel.add(Box.createVerticalGlue());
 
-			Label numberLabel = new Label(Integer.toString(i));
+			JLabel numberLabel = new JLabel(Integer.toString(i));
 			numberLabel.setFont(CHOICE_FONT);
-			numberLabel.setBackground(Color.BLACK);
 			numberLabel.setForeground(Color.YELLOW);
-			numberLabel.setAlignment(Label.CENTER);
+			numberLabel.setOpaque(false);
+			numberLabel.setAlignmentX(.5f);
+			numberLabel.setAlignmentY(.5f);
 			thisChoicePanel.add(numberLabel);
 
 			choicePanel.add(thisChoicePanel);
@@ -147,7 +163,7 @@ public class MatchGameFrame {
 			choicePanel.add(Box.createHorizontalGlue());
 		}
 
-		frame.getContentPane().doLayout();
+		gamePanel.doLayout();
 	}
 
 	private GameImage[] getChoices(GameImage image) {
@@ -180,8 +196,15 @@ public class MatchGameFrame {
 			mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
 			mediaPlayer.play();
 
-			frame.getContentPane().setBackground(Color.BLACK);
 			frame.setVisible(true);
+
+			Timer timer = new Timer(100, new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					gamePanel.repaint();
+				}
+			});
+			timer.start();
 
 			boolean i = true;
 			while (i) {
@@ -189,7 +212,10 @@ public class MatchGameFrame {
 					GameImage match = matches.get(target);
 					GameImage[] choices = getChoices(target);
 					setIcons(target, choices);
-					Thread.sleep(500);
+
+					gamePanel.start();
+
+					Thread.sleep(10000);
 				}
 			}
 

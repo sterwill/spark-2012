@@ -1,5 +1,6 @@
 package org.tailfeather.client.model.exec;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,6 +27,10 @@ public class MatchGame extends Executable {
 	public boolean enabled(Command command) {
 		return true;
 		// return command.getAcorn().hasActiveUser();
+	}
+
+	public static void main(String[] args) throws IOException {
+		new MatchGameFrame().run();
 	}
 
 	@Override
