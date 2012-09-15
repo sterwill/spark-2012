@@ -108,20 +108,28 @@ public class MatchGame {
 			if (choiceSymbols != null && choice >= 0 && choice <= CHOICES - 1) {
 				if (choiceSymbols[choice] == matches.get(getQuizSymbol())) {
 					// Correct choice
-					endMillis = System.currentTimeMillis() + roundDurationSeconds * 1000;
-					quizSymbolIndex++;
 					numCorrect++;
+					endMillis = System.currentTimeMillis() + roundDurationSeconds * 1000;
 
-					if (quizSymbolIndex == quizSymbols.size()) {
-						// Win!
-						setStatus(GameStatus.WIN);
-					}
+					goToNextQuizSymbol();
+
 					fireChoiceEvent(true);
 				} else {
 					endMillis -= incorrectChoiceSecondsPenalty * 1000;
 					fireChoiceEvent(false);
 				}
 			}
+		}
+	}
+
+	private void goToNextQuizSymbol() {
+		quizSymbolIndex++;
+		if (quizSymbolIndex == quizSymbols.size()) {
+			// Win!
+			quizSymbolIndex = quizSymbols.size() - 1;
+			setStatus(GameStatus.WIN);
+		} else {
+			calculateChoiceSymbols(getQuizSymbol());
 		}
 	}
 

@@ -217,19 +217,12 @@ public class MatchGameFrame {
 			GameStatusChangedListener statusListener = new GameStatusChangedListener() {
 				@Override
 				public void onGameStatusChanged(GameStatus oldStatus, GameStatus newStatus) {
-					quizImageIcon.setImage(images.get(game.getQuizSymbol()));
-
-					Symbol[] choiceSymbols = game.getChoiceSymbols();
-					for (int i = 0; i < choiceSymbols.length; i++) {
-						choiceImageIcons[i].setImage(images.get(choiceSymbols[i]));
-					}
-					frame.getContentPane().repaint();
+					updateIcons();
 				}
 			};
 			game.addStatusChangedListener(statusListener);
 
 			ChoiceListener choiceListener = new ChoiceListener() {
-
 				@Override
 				public void onChoice(boolean correct) {
 					updateScore();
@@ -245,6 +238,9 @@ public class MatchGameFrame {
 					} else if (game.getStatus() == GameStatus.WIN) {
 						SoundUtils.playSound("sounds/electric-sweep.mp3");
 					}
+
+					updateIcons();
+					frame.getContentPane().repaint();
 				}
 			};
 			game.addChoiceListener(choiceListener);
@@ -276,6 +272,18 @@ public class MatchGameFrame {
 		}
 
 		return game.getStatus() == GameStatus.WIN;
+	}
+
+	protected void updateIcons() {
+		Symbol quizSymbol = game.getQuizSymbol();
+		Symbol[] choiceSymbols = game.getChoiceSymbols();
+
+		quizImageIcon.setImage(images.get(quizSymbol));
+
+		for (int i = 0; i < choiceSymbols.length; i++) {
+			choiceImageIcons[i].setImage(images.get(choiceSymbols[i]));
+		}
+		frame.getContentPane().repaint();
 	}
 
 	protected void updateScore() {
