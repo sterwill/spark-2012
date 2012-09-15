@@ -179,6 +179,7 @@ public class Acorn {
 								SoundUtils.playSound(sound.toString());
 							}
 
+							Console.printRedLine(String.format("Showing message %d:", number));
 							Console.printLine(FileUtils.getContents("text/message-" + c.getLocationId() + ".txt"));
 
 							handled = true;
