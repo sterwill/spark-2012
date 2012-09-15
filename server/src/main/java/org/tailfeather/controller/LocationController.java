@@ -106,6 +106,7 @@ public class LocationController {
 	private Cookie createLocationCookie(String locationId) {
 		Cookie cookie = new Cookie(Location.ID_COOKIE_NAME, locationId.trim());
 		cookie.setMaxAge(Integer.MAX_VALUE);
+		cookie.setDomain(".tailfeather.org");
 		cookie.setPath("/");
 		return cookie;
 	}
@@ -113,6 +114,7 @@ public class LocationController {
 	private Cookie createLocationUncookie(String locationId) {
 		Cookie cookie = new Cookie(Location.ID_COOKIE_NAME, locationId.trim());
 		cookie.setMaxAge(0);
+		cookie.setDomain(".tailfeather.org");
 		cookie.setPath("/");
 		return cookie;
 	}
