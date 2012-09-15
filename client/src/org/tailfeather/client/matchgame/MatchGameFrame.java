@@ -81,9 +81,9 @@ public class MatchGameFrame {
 
 		game = new MatchGame(ROUND_DURATION_SECONDS, INCORRECT_CHOICE_PENALTY_SECONDS);
 
-		gamePanel = new GamePanel(game, WIN_COLOR, LOSE_COLOR);
+		gamePanel = new GamePanel(game, Color.BLACK, WIN_COLOR, LOSE_COLOR);
 		gamePanel.setBackground(Color.BLACK);
-		gamePanel.setOpaque(true);
+		gamePanel.setOpaque(false);
 		frame.getContentPane().add(gamePanel);
 
 		final BoxLayout vBox = new BoxLayout(gamePanel, BoxLayout.Y_AXIS);

@@ -16,26 +16,27 @@ public class GamePanel extends JPanel {
 	private static final Font WIN_LOSE_FONT = new Font(null, Font.BOLD, 120);
 
 	private final MatchGame game;
+	private final Color bgColor;
 	private final Color loseColor;
 	private final Color winColor;
 
-	public GamePanel(MatchGame game, Color winColor, Color loseColor) {
+	public GamePanel(MatchGame game, Color bgColor, Color winColor, Color loseColor) {
 		this.game = game;
+		this.bgColor = bgColor;
 		this.winColor = winColor;
 		this.loseColor = loseColor;
 	}
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+
+		Rectangle clipBounds = g.getClipBounds();
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-		Rectangle clipBounds = g.getClipBounds();
+		paintBackground(g2, clipBounds);
 
 		switch (game.getStatus()) {
-		case PLAYING:
-			paintBackground(g2, clipBounds);
-			break;
 		case LOSE:
 		case WIN:
 			paintWinLoseText(g2, clipBounds);
@@ -62,12 +63,19 @@ public class GamePanel extends JPanel {
 		x -= stringBounds.getWidth() / 2;
 		y += stringBounds.getHeight() / 2;
 
+		// Hack: drawing order wrong, so move it up so it doesn't hit the
+		// choices
+		y -= 30;
+
 		g2.setColor(c);
 		g2.setFont(WIN_LOSE_FONT);
 		g2.drawString(s, x, y);
 	}
 
 	private void paintBackground(Graphics2D g2, Rectangle clipBounds) {
+		g2.setColor(bgColor);
+		g2.fillRect(0, 0, clipBounds.width, clipBounds.height);
+
 		long remaining = game.getTimeRemainingMillis();
 
 		if (remaining >= 0) {

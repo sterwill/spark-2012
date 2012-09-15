@@ -47,6 +47,7 @@ public class MatchGame {
 		for (Symbol s : Symbol.values()) {
 			allSymbols.add(s);
 		}
+		System.out.println(allSymbols);
 
 		matches.put(Symbol.Cat, Symbol.Fish);
 		matches.put(Symbol.Pear, Symbol.Airplane);
@@ -77,8 +78,8 @@ public class MatchGame {
 	}
 
 	public void start() {
-		quizSymbolIndex = 0;
-		calculateChoiceSymbols(quizSymbols.get(quizSymbolIndex));
+		quizSymbolIndex = -1;
+		goToNextQuizSymbol();
 		endMillis = System.currentTimeMillis() + (roundDurationSeconds * 1000);
 		setStatus(GameStatus.PLAYING);
 	}
@@ -139,12 +140,17 @@ public class MatchGame {
 	}
 
 	private void calculateChoiceSymbols(Symbol quizSymbol) {
-		int num = CHOICES;
 		List<Symbol> choices = new ArrayList<Symbol>();
+		int num = CHOICES;
+
+		// The quiz symbol must always be a choice
 		choices.add(matches.get(quizSymbol));
 		num--;
 
+		// Start with all the possible symbols
 		List<Symbol> allSymbolsCopy = new ArrayList<Symbol>(allSymbols);
+
+		// Remove the quiz symbol
 		allSymbolsCopy.remove(quizSymbol);
 		Collections.shuffle(allSymbolsCopy, random);
 
@@ -154,6 +160,12 @@ public class MatchGame {
 
 		Collections.shuffle(choices, random);
 		choiceSymbols = (Symbol[]) choices.toArray(new Symbol[choices.size()]);
+
+		System.out.print(quizSymbol + ": ");
+		for (Symbol s : choiceSymbols) {
+			System.out.print(s + " ");
+		}
+		System.out.println();
 	}
 
 	public void addStatusChangedListener(GameStatusChangedListener listener) {
