@@ -15,7 +15,8 @@ public class MatchGame {
 
 	public final static int CHOICES = 4;
 
-	private final Random random = new Random(1234);
+	// Cheat code: 3 1 4 2 4 3 3
+	private final Random random = new Random(1235);
 
 	private final List<Symbol> allSymbols = new ArrayList<Symbol>();
 	private final Map<Symbol, Symbol> matches = new HashMap<Symbol, Symbol>();
@@ -139,19 +140,21 @@ public class MatchGame {
 		return endMillis - System.currentTimeMillis();
 	}
 
-	private void calculateChoiceSymbols(Symbol quizSymbol) {
+	private void calculateChoiceSymbols(final Symbol quizSymbol) {
+		final Symbol match = matches.get(quizSymbol);
 		List<Symbol> choices = new ArrayList<Symbol>();
 		int num = CHOICES;
 
-		// The quiz symbol must always be a choice
-		choices.add(matches.get(quizSymbol));
+		// The correct match must always be a choice
+		choices.add(match);
 		num--;
 
 		// Start with all the possible symbols
 		List<Symbol> allSymbolsCopy = new ArrayList<Symbol>(allSymbols);
 
-		// Remove the quiz symbol
+		// Remove the quiz symbol and match
 		allSymbolsCopy.remove(quizSymbol);
+		allSymbolsCopy.remove(match);
 		Collections.shuffle(allSymbolsCopy, random);
 
 		while (num-- > 0) {
