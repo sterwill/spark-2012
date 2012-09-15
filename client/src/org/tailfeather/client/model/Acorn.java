@@ -174,7 +174,7 @@ public class Acorn {
 						if (number > 0 && number <= activeUser.getCheckins().size()) {
 							Checkin c = activeUser.getCheckins().get(number - 1);
 
-							File sound = new File("sounds/message-" + c.getLocationId() + ".wav");
+							File sound = new File("sounds/message-" + c.getLocationId() + ".mp3");
 							if (sound.exists()) {
 								SoundUtils.playSound(sound.toString());
 							}

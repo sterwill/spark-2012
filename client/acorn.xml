@@ -45,6 +45,6 @@
 	<fakeCheckin locationId="248a525" value="drivingup" locationName="Shana Gar Exhibit" />
 	<fakeCheckin locationId="219f028" value="citylove" locationName="Kindred" />
 
-	<scan knownSound="sounds/sweet.wav" knownFile="text/known-code.txt" unknownSound="sounds/sour.wav" unknownFile="text/unknown-code.txt"
+	<scan knownSound="sounds/sweet.mp3" knownFile="text/known-code.txt" unknownSound="sounds/sour.mp3" unknownFile="text/unknown-code.txt"
 		pattern="http://(.*)/checkin/(.*)" />
 </acorn>

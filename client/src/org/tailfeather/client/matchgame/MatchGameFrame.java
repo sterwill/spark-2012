@@ -5,53 +5,51 @@ import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 import javax.imageio.ImageIO;
+import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.Timer;
+import javax.swing.KeyStroke;
+
+import org.tailfeather.client.SoundUtils;
+import org.tailfeather.client.matchgame.MatchGame.Symbol;
 
 public class MatchGameFrame {
 	private final static Logger LOGGER = Logger.getLogger(MatchGameFrame.class.getName());
 
-	private final static int CHOICES = 4;
 	private final static Font SCORE_FONT = new Font(null, Font.BOLD, 30);
 	private final static Font CHOICE_FONT = new Font(null, Font.BOLD, 60);
 
-	private final Random random = new Random();
+	private static final int GAME_DURATION_SECONDS = 30;
+	private static final int GAME_CORRECT_CHOICE_BONUS_SECONDS = 10;
+	private static final int GAME_INCORRECT_PENALTY_SECONDS = 10;
+
 	private final JFrame frame;
 
-	private static enum GameImage {
-		Cat, Fish, Pear, Airplane, Banana, Car, Dog, Heart, Square, Monkey, Star, Phone, Hand, Turtle
-	}
-
-	private final Map<GameImage, Image> images = new HashMap<GameImage, Image>();
-	private final Map<GameImage, GameImage> matches = new HashMap<GameImage, GameImage>();
+	private final Map<Symbol, Image> images = new HashMap<Symbol, Image>();
 
 	private final Image blankImage;
-	private final ImageIcon targetImageIcon;
-	private final ImageIcon[] choiceImageIcons = new ImageIcon[CHOICES];
+	private final ImageIcon quizImageIcon;
+	private final ImageIcon[] choiceImageIcons = new ImageIcon[MatchGame.CHOICES];
 
+	private MatchGame game;
 	private GamePanel gamePanel;
+
+	private JLabel scoreLabel;
 
 	public MatchGameFrame() throws IOException {
 		frame = new JFrame("Tail Feather Authorization Challenge");
@@ -60,45 +58,39 @@ public class MatchGameFrame {
 
 		blankImage = ImageIO.read(new File("images/match/_blank.png"));
 
-		images.put(GameImage.Cat, ImageIO.read(new File("images/match/cat.png")));
-		images.put(GameImage.Fish, ImageIO.read(new File("images/match/fish.png")));
-		images.put(GameImage.Pear, ImageIO.read(new File("images/match/pear.png")));
-		images.put(GameImage.Airplane, ImageIO.read(new File("images/match/airplane.png")));
-		images.put(GameImage.Banana, ImageIO.read(new File("images/match/banana.png")));
-		images.put(GameImage.Car, ImageIO.read(new File("images/match/car.png")));
-		images.put(GameImage.Dog, ImageIO.read(new File("images/match/dog.png")));
-		images.put(GameImage.Heart, ImageIO.read(new File("images/match/heart.png")));
-		images.put(GameImage.Square, ImageIO.read(new File("images/match/square.png")));
-		images.put(GameImage.Monkey, ImageIO.read(new File("images/match/monkey.png")));
-		images.put(GameImage.Star, ImageIO.read(new File("images/match/star.png")));
-		images.put(GameImage.Phone, ImageIO.read(new File("images/match/phone.png")));
-		images.put(GameImage.Hand, ImageIO.read(new File("images/match/hand.png")));
-		images.put(GameImage.Turtle, ImageIO.read(new File("images/match/turtle.png")));
+		images.put(Symbol.Cat, ImageIO.read(new File("images/match/cat.png")));
+		images.put(Symbol.Fish, ImageIO.read(new File("images/match/fish.png")));
+		images.put(Symbol.Pear, ImageIO.read(new File("images/match/pear.png")));
+		images.put(Symbol.Airplane, ImageIO.read(new File("images/match/airplane.png")));
+		images.put(Symbol.Banana, ImageIO.read(new File("images/match/banana.png")));
+		images.put(Symbol.Car, ImageIO.read(new File("images/match/car.png")));
+		images.put(Symbol.Dog, ImageIO.read(new File("images/match/dog.png")));
+		images.put(Symbol.Heart, ImageIO.read(new File("images/match/heart.png")));
+		images.put(Symbol.Square, ImageIO.read(new File("images/match/square.png")));
+		images.put(Symbol.Monkey, ImageIO.read(new File("images/match/monkey.png")));
+		images.put(Symbol.Star, ImageIO.read(new File("images/match/star.png")));
+		images.put(Symbol.Phone, ImageIO.read(new File("images/match/phone.png")));
+		images.put(Symbol.Hand, ImageIO.read(new File("images/match/hand.png")));
+		images.put(Symbol.Turtle, ImageIO.read(new File("images/match/turtle.png")));
 
-		matches.put(GameImage.Cat, GameImage.Fish);
-		matches.put(GameImage.Pear, GameImage.Airplane);
-		matches.put(GameImage.Banana, GameImage.Car);
-		matches.put(GameImage.Dog, GameImage.Heart);
-		matches.put(GameImage.Square, GameImage.Monkey);
-		matches.put(GameImage.Star, GameImage.Phone);
-		matches.put(GameImage.Hand, GameImage.Turtle);
+		game = new MatchGame(GAME_DURATION_SECONDS, GAME_INCORRECT_PENALTY_SECONDS);
 
-		gamePanel = new GamePanel();
+		gamePanel = new GamePanel(game, Color.GREEN, Color.RED);
 		gamePanel.setOpaque(false);
 		frame.getContentPane().add(gamePanel);
 
 		final BoxLayout vBox = new BoxLayout(gamePanel, BoxLayout.Y_AXIS);
 		gamePanel.setLayout(vBox);
 
-		JPanel targetImagePanel = new JPanel();
-		targetImagePanel.setOpaque(false);
+		JPanel quizImagePanel = new JPanel();
+		quizImagePanel.setOpaque(false);
 
 		JPanel scorePanel = new JPanel();
 		scorePanel.setOpaque(false);
 		BoxLayout scoreBox = new BoxLayout(scorePanel, BoxLayout.X_AXIS);
 		scorePanel.setLayout(scoreBox);
 
-		JLabel scoreLabel = new JLabel("Foo");
+		scoreLabel = new JLabel();
 		scoreLabel.setAlignmentX(0);
 		scoreLabel.setForeground(Color.RED);
 		scoreLabel.setOpaque(false);
@@ -116,13 +108,13 @@ public class MatchGameFrame {
 
 		gamePanel.add(scorePanel);
 		gamePanel.add(Box.createVerticalGlue());
-		gamePanel.add(targetImagePanel);
+		gamePanel.add(quizImagePanel);
 		gamePanel.add(Box.createVerticalGlue());
 
 		// Target image
-		targetImageIcon = new ImageIcon(blankImage);
-		JLabel targetLabel = new JLabel(targetImageIcon);
-		targetImagePanel.add(targetLabel);
+		quizImageIcon = new ImageIcon(blankImage);
+		JLabel quizLabel = new JLabel(quizImageIcon);
+		quizImagePanel.add(quizLabel);
 
 		gamePanel.add(Box.createVerticalGlue());
 
@@ -150,7 +142,7 @@ public class MatchGameFrame {
 
 			thisChoicePanel.add(Box.createVerticalGlue());
 
-			JLabel numberLabel = new JLabel(Integer.toString(i));
+			JLabel numberLabel = new JLabel(Integer.toString(i + 1));
 			numberLabel.setFont(CHOICE_FONT);
 			numberLabel.setForeground(Color.YELLOW);
 			numberLabel.setOpaque(false);
@@ -164,77 +156,110 @@ public class MatchGameFrame {
 		}
 
 		gamePanel.doLayout();
-	}
 
-	private GameImage[] getChoices(GameImage image) {
-		int num = CHOICES;
-		List<GameImage> choices = new ArrayList<GameImage>();
-		choices.add(matches.get(image));
-		num--;
+		// Keys
 
-		List<GameImage> allImages = new ArrayList<GameImage>(images.keySet());
-		allImages.remove(image);
-		Collections.shuffle(allImages, random);
+		gamePanel.getInputMap().put(KeyStroke.getKeyStroke("1"), "choose1");
+		gamePanel.getInputMap().put(KeyStroke.getKeyStroke("2"), "choose2");
+		gamePanel.getInputMap().put(KeyStroke.getKeyStroke("3"), "choose3");
+		gamePanel.getInputMap().put(KeyStroke.getKeyStroke("4"), "choose4");
 
-		while (num-- > 0) {
-			choices.add(allImages.remove(0));
-		}
-
-		Collections.shuffle(choices, random);
-		return (GameImage[]) choices.toArray(new GameImage[choices.size()]);
+		gamePanel.getActionMap().put("choose1", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				game.choose(1);
+			}
+		});
+		gamePanel.getActionMap().put("choose2", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				game.choose(2);
+			}
+		});
+		gamePanel.getActionMap().put("choose3", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				game.choose(3);
+			}
+		});
+		gamePanel.getActionMap().put("choose4", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				game.choose(4);
+			}
+		});
 	}
 
 	public void run() {
-		// Initializes toolkit for sounds
-		new JFXPanel();
-
 		MediaPlayer mediaPlayer = null;
 		try {
-			Media hit = new Media(new File("sounds/petrol.mp3").toURI().toString());
-			mediaPlayer = new MediaPlayer(hit);
+			Media song = new Media(new File("sounds/petrol.mp3").toURI().toString());
+			mediaPlayer = new MediaPlayer(song);
 			mediaPlayer.setVolume(.8f);
 			mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
 			mediaPlayer.play();
 
 			frame.setVisible(true);
 
-			Timer timer = new Timer(100, new ActionListener() {
+			GameStatusChangedListener statusListener = new GameStatusChangedListener() {
 				@Override
-				public void actionPerformed(ActionEvent e) {
-					gamePanel.repaint();
+				public void onGameStatusChanged(GameStatus oldStatus, GameStatus newStatus) {
+					quizImageIcon.setImage(images.get(game.getQuizSymbol()));
+
+					Symbol[] choiceSymbols = game.getChoiceSymbols();
+					for (int i = 0; i < choiceSymbols.length; i++) {
+						choiceImageIcons[i].setImage(images.get(choiceSymbols[i]));
+					}
 				}
-			});
-			timer.start();
+			};
+			game.addStatusChangedListener(statusListener);
 
-			boolean i = true;
-			while (i) {
-				for (GameImage target : matches.keySet()) {
-					GameImage match = matches.get(target);
-					GameImage[] choices = getChoices(target);
-					setIcons(target, choices);
+			ChoiceListener choiceListener = new ChoiceListener() {
 
-					gamePanel.start();
+				@Override
+				public void onChoice(boolean correct) {
+					scoreLabel.setText(String.format("Correct: %d / %d", game.getNumCorrect(),
+							game.getQuizSymbolCount()));
 
-					Thread.sleep(10000);
+					if (game.getStatus() == GameStatus.PLAYING) {
+						if (correct) {
+							SoundUtils.playSound("sounds/correct.mp3");
+						} else {
+							SoundUtils.playSound("sounds/buzzer.mp3");
+						}
+					} else if (game.getStatus() == GameStatus.LOSE) {
+						SoundUtils.playSound("sounds/buzzer.mp3");
+					} else if (game.getStatus() == GameStatus.WIN) {
+						SoundUtils.playSound("sounds/electric-sweep.mp3");
+					}
 				}
+			};
+			game.addChoiceListener(choiceListener);
+
+			game.start();
+
+			while (game.getStatus() == GameStatus.PLAYING) {
+				game.tick();
+				frame.getContentPane().repaint();
+				Thread.sleep(20);
 			}
 
+			frame.getContentPane().repaint();
+			Thread.sleep(3000);
+
+			game.removeChoiceListener(choiceListener);
+			game.removeStatusChangedListener(statusListener);
+			game.stop();
+
 			frame.setVisible(false);
+
 		} catch (Throwable t) {
-			LOGGER.log(Level.SEVERE, "Error doing game", t);
+			LOGGER.log(Level.SEVERE, "Error in match game", t);
 		} finally {
 			frame.setVisible(false);
 			if (mediaPlayer != null) {
 				mediaPlayer.stop();
 			}
 		}
-	}
-
-	private void setIcons(GameImage target, GameImage[] choices) {
-		targetImageIcon.setImage(images.get(target));
-		for (int i = 0; i < choiceImageIcons.length; i++) {
-			choiceImageIcons[i].setImage(images.get(choices[i]));
-		}
-		frame.repaint();
 	}
 }
