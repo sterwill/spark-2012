@@ -27,7 +27,7 @@ public class ServerUtils {
 		ClientResponse response;
 
 		// hack
-		user.setEmail("fake@example.com");
+		user.setEmail(Long.toString(System.currentTimeMillis()) + "@example.com");
 
 		try {
 			userResource = getClient().resource(resourceUri);
