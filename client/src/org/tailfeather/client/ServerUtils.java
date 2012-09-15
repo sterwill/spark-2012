@@ -26,6 +26,9 @@ public class ServerUtils {
 		WebResource userResource;
 		ClientResponse response;
 
+		// hack
+		user.setEmail("fake@example.com");
+
 		try {
 			userResource = getClient().resource(resourceUri);
 			response = userResource.type(MediaType.APPLICATION_JSON_TYPE).post(ClientResponse.class, user);

@@ -1,10 +1,7 @@
 
   REGISTRATION INSTRUCTIONS
 
-  Provide the name you want to be called and and e-mail address
-  where you can be contacted.  This address will only be used
-  to contact you during your employment and will never be shared
-  with any other party.
+  Type the name you want to be called.
   
   When you submit your information you will be assigned a unique
   ID by the system.  This ID is encoded in a badge that you are 

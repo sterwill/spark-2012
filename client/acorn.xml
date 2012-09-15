@@ -6,7 +6,7 @@
 		<register post="http://tailfeather.org/api/user" instructions="text/register-instructions.txt" success="text/register-success.txt"
 			badgeTemplate="images/badge.svg" print="true">
 			<text name="name" prompt="  Name: " />
-			<email name="email" prompt="  E-mail Address: " />
+			<!-- <email name="email" prompt=" E-mail Address: " /> -->
 		</register>
 	</command>
 	<command>
