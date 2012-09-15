@@ -217,6 +217,7 @@ public class MatchGameFrame {
 			GameStatusChangedListener statusListener = new GameStatusChangedListener() {
 				@Override
 				public void onGameStatusChanged(GameStatus oldStatus, GameStatus newStatus) {
+					updateScore();
 					updateIcons();
 				}
 			};
