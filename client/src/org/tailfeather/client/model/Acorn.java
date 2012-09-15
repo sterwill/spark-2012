@@ -309,27 +309,40 @@ public class Acorn {
 				i++;
 			}
 			Console.printLine();
-			Console.printRedLine("  Type the # of the location to see your message.");
+			Console.printRedLine("  THERE ARE MESSAGES FOR YOU TO READ");
+			Console.printRedLine("  Type the # of the location to see your message");
 			Console.printLine();
 
 			// Detect phase 2
-			boolean phaseTwo = checkins.size() > 5;
+			boolean phaseTwo = reachedPhaseTwo();
 
 			// Detect phase 3
 			boolean phaseThree = false;
 			for (Checkin c : checkins) {
-				if (phaseThreeTriggerLocationId.equals(c.getId())) {
+				if (phaseThreeTriggerLocationId.equals(c.getLocationId())) {
 					phaseThree = true;
 					break;
 				}
 			}
 
 			if (phaseThree) {
-				Console.printRed(FileUtils.getContents(phaseThreeMessage));
+				printPhaseThreeMessage();
 			} else if (phaseTwo) {
-				Console.printRed(FileUtils.getContents(phaseTwoMessage));
+				printPhaseTwoMessage();
 			}
 		}
+	}
+
+	public boolean reachedPhaseTwo() {
+		return activeUser != null && activeUser.getCheckins().size() > 5;
+	}
+
+	public void printPhaseTwoMessage() {
+		Console.printRed(FileUtils.getContents(phaseTwoMessage));
+	}
+
+	public void printPhaseThreeMessage() {
+		Console.printRed(FileUtils.getContents(phaseThreeMessage));
 	}
 
 	public boolean hasActiveUser() {

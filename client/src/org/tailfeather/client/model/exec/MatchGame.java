@@ -29,8 +29,7 @@ public class MatchGame extends Executable {
 
 	@Override
 	public boolean enabled(Command command) {
-		return true;
-		// return command.getAcorn().hasActiveUser();
+		return command.getAcorn().reachedPhaseTwo();
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -50,6 +49,10 @@ public class MatchGame extends Executable {
 				checkin.setTime(new Date());
 
 				ServerUtils.postCheckin(command.getAcorn().getActiveUser().getCheckinUri().toString(), checkin);
+
+				// Print it directly
+				Console.printLine();
+				command.getAcorn().printPhaseThreeMessage();
 			}
 		} catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "Game error", e);

@@ -26,7 +26,7 @@ public class MatchGame {
 	private final int roundDurationSeconds;
 	private final int incorrectChoiceSecondsPenalty;
 
-	private GameStatus status = GameStatus.STOPPED;
+	private GameStatus status = GameStatus.INITIALIZED;
 	private long endMillis = -1;
 
 	// Symbols that appear on the top
@@ -91,13 +91,6 @@ public class MatchGame {
 			}
 			break;
 		}
-	}
-
-	public void stop() {
-		endMillis = -1;
-		quizSymbolIndex = -1;
-		choiceSymbols = null;
-		setStatus(GameStatus.STOPPED);
 	}
 
 	public void choose(int choice) {

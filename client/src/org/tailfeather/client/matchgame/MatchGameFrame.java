@@ -40,8 +40,8 @@ public class MatchGameFrame {
 	private final static Font SCORE_AND_INSTRUCTIONS_FONT = new Font("Monospaced", Font.BOLD, 30);
 	private final static Font CHOICE_FONT = new Font("Monospaced", Font.BOLD, 70);
 
-	private static final int GAME_DURATION_SECONDS = 30;
-	private static final int GAME_INCORRECT_PENALTY_SECONDS = 10;
+	private static final int ROUND_DURATION_SECONDS = 8;
+	private static final int INCORRECT_CHOICE_PENALTY_SECONDS = 3;
 
 	private final JFrame frame;
 
@@ -79,7 +79,7 @@ public class MatchGameFrame {
 		images.put(Symbol.Hand, ImageIO.read(new File("images/match/hand.png")));
 		images.put(Symbol.Turtle, ImageIO.read(new File("images/match/turtle.png")));
 
-		game = new MatchGame(GAME_DURATION_SECONDS, GAME_INCORRECT_PENALTY_SECONDS);
+		game = new MatchGame(ROUND_DURATION_SECONDS, INCORRECT_CHOICE_PENALTY_SECONDS);
 
 		gamePanel = new GamePanel(game, WIN_COLOR, LOSE_COLOR);
 		gamePanel.setBackground(Color.BLACK);
@@ -259,7 +259,6 @@ public class MatchGameFrame {
 
 			game.removeChoiceListener(choiceListener);
 			game.removeStatusChangedListener(statusListener);
-			game.stop();
 
 			frame.setVisible(false);
 

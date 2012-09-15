@@ -1,5 +1,3 @@
 
-  PHASE THREE UNLOCKED
-  
-  You have now unlocked phase three.
+An important phase three message goes here.
 
