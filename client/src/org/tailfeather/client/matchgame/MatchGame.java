@@ -48,7 +48,6 @@ public class MatchGame {
 		for (Symbol s : Symbol.values()) {
 			allSymbols.add(s);
 		}
-		System.out.println(allSymbols);
 
 		matches.put(Symbol.Cat, Symbol.Fish);
 		matches.put(Symbol.Pear, Symbol.Airplane);
@@ -163,12 +162,6 @@ public class MatchGame {
 
 		Collections.shuffle(choices, random);
 		choiceSymbols = (Symbol[]) choices.toArray(new Symbol[choices.size()]);
-
-		System.out.print(quizSymbol + ": ");
-		for (Symbol s : choiceSymbols) {
-			System.out.print(s + " ");
-		}
-		System.out.println();
 	}
 
 	public void addStatusChangedListener(GameStatusChangedListener listener) {

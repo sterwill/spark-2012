@@ -29,7 +29,7 @@ public class MatchGame extends Executable {
 
 	@Override
 	public boolean enabled(Command command) {
-		return command.getAcorn().reachedPhaseTwo();
+		return command.getAcorn().isInPhaseTwo();
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -51,6 +51,8 @@ public class MatchGame extends Executable {
 				ServerUtils.postCheckin(command.getAcorn().getActiveUser().getCheckinUri().toString(), checkin);
 
 				// Print it directly
+				Console.printLine();
+				Console.printRedLine(">>> A SPECIAL MESSAGE HAS JUST ARRIVED <<<");
 				Console.printLine();
 				command.getAcorn().printPhaseThreeMessage();
 			}

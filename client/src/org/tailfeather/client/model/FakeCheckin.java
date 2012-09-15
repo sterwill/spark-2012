@@ -65,6 +65,8 @@ public class FakeCheckin {
 		Console.printLine();
 		Console.printRedLine(String.format("  >>> Checked into %s", locationName));
 
-		acorn.printStatus();
+		if (!acorn.checkForEnterPhaseTwo()) {
+			acorn.printStatus();
+		}
 	}
 }

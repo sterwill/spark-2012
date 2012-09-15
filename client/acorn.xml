@@ -1,6 +1,6 @@
 <acorn motd="text/main-motd.txt" prompt="text/main-prompt.txt" userPrompt="text/user-prompt.txt"
-	promptTimeoutSeconds="60" cps="200" camera="0" phaseThreeTriggerLocationId="8ed8d61" phaseTwoMessage="text/phase-two-message.txt"
-	phaseThreeMessage="text/phase-three-message.txt">
+	promptTimeoutSeconds="60" cps="200" camera="0" phaseThreeTriggerLocationId="8ed8d61" phaseThreeMessage="text/phase-three-message.txt"
+	phaseTwoTriggerLocationId="29bcf3b" phaseTwoMessage="text/phase-two-message.txt">
 	<command>
 		<name>register</name>
 		<register post="http://tailfeather.org/api/user" instructions="text/register-instructions.txt" success="text/register-success.txt"

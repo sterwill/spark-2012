@@ -1,2 +1,2 @@
-:: >> Logged in as ''{0}'' ({1})
-USER '{') 
+[ Logged in as ''{0}'' ]
+>> 

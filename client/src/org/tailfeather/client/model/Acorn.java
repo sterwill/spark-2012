@@ -6,6 +6,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -30,6 +31,7 @@ import org.tailfeather.client.model.idle.CheckForScannedCodeIdleHandler;
 import org.tailfeather.client.model.idle.CodeScannedException;
 import org.tailfeather.client.model.idle.PromptIdleHandlerException;
 import org.tailfeather.entity.Checkin;
+import org.tailfeather.entity.Location;
 import org.tailfeather.entity.User;
 
 @XmlRootElement(name = "acorn")
@@ -70,6 +72,9 @@ public class Acorn {
 
 	@XmlAttribute(name = "phaseThreeMessage")
 	private String phaseThreeMessage;
+
+	@XmlAttribute(name = "phaseTwoTriggerLocationId")
+	private String phaseTwoTriggerLocationId;
 
 	@XmlAttribute(name = "phaseTwoMessage")
 	private String phaseTwoMessage;
@@ -144,7 +149,10 @@ public class Acorn {
 							if (user != null) {
 								activeUser = user;
 								promptTimeout = promptTimeoutSeconds;
-								printStatus();
+
+								if (!checkForEnterPhaseTwo()) {
+									printStatus();
+								}
 								// Back to prompt (with user info this time)
 								continue;
 							}
@@ -259,9 +267,9 @@ public class Acorn {
 		Console.printRedLine(error);
 	}
 
-	public void printStatus() {
+	public boolean updateUser() {
 		if (activeUser == null) {
-			return;
+			return false;
 		}
 
 		User user;
@@ -272,13 +280,20 @@ public class Acorn {
 			Console.printRedLine("There was an error getting your information from the server.");
 			Console.printRedLine("Please contact a Tail Feather administrator.");
 			Console.printLine();
-			return;
+			return false;
 		}
 
 		// Update active user
 		activeUser = user;
+		return true;
+	}
 
-		List<Checkin> checkins = user.getCheckins();
+	public void printStatus() {
+		if (!updateUser()) {
+			return;
+		}
+
+		List<Checkin> checkins = activeUser.getCheckins();
 
 		if (checkins == null || checkins.size() == 0) {
 			Console.printLine();
@@ -313,29 +328,57 @@ public class Acorn {
 			Console.printRedLine("  THERE ARE MESSAGES FOR YOU TO READ");
 			Console.printRedLine("  Type the # of the location to see your message");
 			Console.printLine();
-
-			// Detect phase 2
-			boolean phaseTwo = reachedPhaseTwo();
-
-			// Detect phase 3
-			boolean phaseThree = false;
-			for (Checkin c : checkins) {
-				if (phaseThreeTriggerLocationId.equals(c.getLocationId())) {
-					phaseThree = true;
-					break;
-				}
-			}
-
-			if (phaseThree) {
-				printPhaseThreeMessage();
-			} else if (phaseTwo) {
-				printPhaseTwoMessage();
-			}
 		}
 	}
 
-	public boolean reachedPhaseTwo() {
+	public boolean isInPhaseTwo() {
 		return activeUser != null && activeUser.getCheckins().size() > 5;
+	}
+
+	public boolean checkForEnterPhaseTwo() {
+		updateUser();
+		if (isInPhaseTwo() && !hasCheckinForLocationId(phaseTwoTriggerLocationId)) {
+			Location location = new Location();
+			location.setId(phaseTwoTriggerLocationId);
+
+			Checkin checkin = new Checkin();
+			checkin.setLocation(location);
+			checkin.setUser(activeUser);
+			checkin.setTime(new Date());
+
+			try {
+				ServerUtils.postCheckin(activeUser.getCheckinUri().toString(), checkin);
+
+				// Print it directly
+				Console.printLine();
+				Console.printRedLine(">>> A SPECIAL MESSAGE HAS JUST ARRIVED <<<");
+				Console.printLine();
+
+				printPhaseTwoMessage();
+				return true;
+			} catch (TailfeatherServerException e) {
+				LOGGER.log(Level.SEVERE, "Error sending location code", e);
+				Console.printRedLine("There was an error contacting the server, please try again:");
+				Console.printLine();
+				Console.printRedLine(MessageFormat.format("{0}", e.getMessage()));
+				Console.printLine();
+				return false;
+			}
+		}
+
+		return false;
+	}
+
+	private boolean hasCheckinForLocationId(String locationId) {
+		if (activeUser == null) {
+			return false;
+		}
+		for (Checkin c : activeUser.getCheckins()) {
+			if (locationId.equals(c.getLocationId())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void printPhaseTwoMessage() {
