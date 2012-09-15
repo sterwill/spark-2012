@@ -47,11 +47,14 @@ public class GamePanel extends JPanel {
 		int x = clipBounds.width / 2;
 		int y = clipBounds.height / 2;
 
-		String s = "";
+		String s;
+		Color c;
 		if (game.getStatus() == GameStatus.LOSE) {
 			s = "Access Denied";
+			c = Color.RED;
 		} else {
 			s = "Access Granted";
+			c = Color.GREEN;
 		}
 
 		Rectangle2D stringBounds = WIN_LOSE_FONT.getStringBounds(s, g2.getFontRenderContext());
@@ -59,6 +62,7 @@ public class GamePanel extends JPanel {
 		x -= stringBounds.getWidth() / 2;
 		y += stringBounds.getHeight() / 2;
 
+		g2.setColor(c);
 		g2.setFont(WIN_LOSE_FONT);
 		g2.drawString(s, x, y);
 	}

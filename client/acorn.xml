@@ -33,7 +33,7 @@
 	<command>
 		<name>project orchard</name>
 		<name>projectorchard</name>
-		<matchgame />
+		<matchgame locationId="8ed8d61" />
 	</command>
 
 	<fakeCheckin locationId="8f06217" value="hammertime" locationName="Shadow Puppets" />

@@ -186,7 +186,9 @@ public class MatchGame {
 	private void setStatus(GameStatus newStatus) {
 		final GameStatus oldStatus = status;
 		status = newStatus;
-		fireStatusChangedEvent(oldStatus, newStatus);
+		if (oldStatus != newStatus) {
+			fireStatusChangedEvent(oldStatus, newStatus);
+		}
 	}
 
 	public float getRoundDurationSeconds() {

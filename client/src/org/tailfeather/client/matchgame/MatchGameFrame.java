@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.embed.swing.JFXPanel;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -24,6 +25,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
+import javax.swing.WindowConstants;
+import javax.swing.border.EmptyBorder;
 
 import org.tailfeather.client.SoundUtils;
 import org.tailfeather.client.matchgame.MatchGame.Symbol;
@@ -31,11 +34,13 @@ import org.tailfeather.client.matchgame.MatchGame.Symbol;
 public class MatchGameFrame {
 	private final static Logger LOGGER = Logger.getLogger(MatchGameFrame.class.getName());
 
-	private final static Font SCORE_FONT = new Font(null, Font.BOLD, 30);
-	private final static Font CHOICE_FONT = new Font(null, Font.BOLD, 60);
+	private final static Color WIN_COLOR = new Color(0f, 1f, 0f, .25f);
+	private final static Color LOSE_COLOR = new Color(1f, 0f, 0f, 1f);
+
+	private final static Font SCORE_AND_INSTRUCTIONS_FONT = new Font("Monospaced", Font.BOLD, 30);
+	private final static Font CHOICE_FONT = new Font("Monospaced", Font.BOLD, 70);
 
 	private static final int GAME_DURATION_SECONDS = 30;
-	private static final int GAME_CORRECT_CHOICE_BONUS_SECONDS = 10;
 	private static final int GAME_INCORRECT_PENALTY_SECONDS = 10;
 
 	private final JFrame frame;
@@ -54,6 +59,7 @@ public class MatchGameFrame {
 	public MatchGameFrame() throws IOException {
 		frame = new JFrame("Tail Feather Authorization Challenge");
 		frame.setUndecorated(true);
+		frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
 
 		blankImage = ImageIO.read(new File("images/match/_blank.png"));
@@ -75,8 +81,9 @@ public class MatchGameFrame {
 
 		game = new MatchGame(GAME_DURATION_SECONDS, GAME_INCORRECT_PENALTY_SECONDS);
 
-		gamePanel = new GamePanel(game, Color.GREEN, Color.RED);
-		gamePanel.setOpaque(false);
+		gamePanel = new GamePanel(game, WIN_COLOR, LOSE_COLOR);
+		gamePanel.setBackground(Color.BLACK);
+		gamePanel.setOpaque(true);
 		frame.getContentPane().add(gamePanel);
 
 		final BoxLayout vBox = new BoxLayout(gamePanel, BoxLayout.Y_AXIS);
@@ -91,16 +98,18 @@ public class MatchGameFrame {
 		scorePanel.setLayout(scoreBox);
 
 		scoreLabel = new JLabel();
+		scoreLabel.setBorder(new EmptyBorder(20, 20, 0, 0));
 		scoreLabel.setAlignmentX(0);
-		scoreLabel.setForeground(Color.RED);
+		scoreLabel.setForeground(Color.YELLOW);
 		scoreLabel.setOpaque(false);
-		scoreLabel.setFont(SCORE_FONT);
+		scoreLabel.setFont(SCORE_AND_INSTRUCTIONS_FONT);
 
-		JLabel instructionsLabel = new JLabel("Instructions here");
+		JLabel instructionsLabel = new JLabel("Choose the matching symbol (quickly)");
+		instructionsLabel.setBorder(new EmptyBorder(20, 0, 0, 20));
 		instructionsLabel.setAlignmentX(1);
-		instructionsLabel.setForeground(Color.WHITE);
+		instructionsLabel.setForeground(Color.RED);
 		instructionsLabel.setOpaque(false);
-		instructionsLabel.setFont(SCORE_FONT);
+		instructionsLabel.setFont(SCORE_AND_INSTRUCTIONS_FONT);
 
 		scorePanel.add(scoreLabel);
 		scorePanel.add(Box.createHorizontalGlue());
@@ -190,14 +199,18 @@ public class MatchGameFrame {
 		});
 	}
 
-	public void run() {
+	public boolean run() {
 		MediaPlayer mediaPlayer = null;
 		try {
+			new JFXPanel();
+
 			Media song = new Media(new File("sounds/petrol.mp3").toURI().toString());
 			mediaPlayer = new MediaPlayer(song);
 			mediaPlayer.setVolume(.8f);
 			mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
 			mediaPlayer.play();
+
+			updateScore();
 
 			frame.setVisible(true);
 
@@ -210,6 +223,7 @@ public class MatchGameFrame {
 					for (int i = 0; i < choiceSymbols.length; i++) {
 						choiceImageIcons[i].setImage(images.get(choiceSymbols[i]));
 					}
+					frame.getContentPane().repaint();
 				}
 			};
 			game.addStatusChangedListener(statusListener);
@@ -218,8 +232,7 @@ public class MatchGameFrame {
 
 				@Override
 				public void onChoice(boolean correct) {
-					scoreLabel.setText(String.format("Correct: %d / %d", game.getNumCorrect(),
-							game.getQuizSymbolCount()));
+					updateScore();
 
 					if (game.getStatus() == GameStatus.PLAYING) {
 						if (correct) {
@@ -261,5 +274,11 @@ public class MatchGameFrame {
 				mediaPlayer.stop();
 			}
 		}
+
+		return game.getStatus() == GameStatus.WIN;
+	}
+
+	protected void updateScore() {
+		scoreLabel.setText(String.format("Correct answers: %d / %d", game.getNumCorrect(), game.getQuizSymbolCount()));
 	}
 }

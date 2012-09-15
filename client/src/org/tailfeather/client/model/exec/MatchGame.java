@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.tailfeather.client.Console;
@@ -23,6 +24,9 @@ import org.tailfeather.entity.User;
 public class MatchGame extends Executable {
 	private final static Logger LOGGER = Logger.getLogger(MatchGame.class.getName());
 
+	@XmlAttribute(name = "locationId")
+	private String locationId;
+
 	@Override
 	public boolean enabled(Command command) {
 		return true;
@@ -36,7 +40,17 @@ public class MatchGame extends Executable {
 	@Override
 	public void execute(Command command) {
 		try {
-			new MatchGameFrame().run();
+			if (new MatchGameFrame().run()) {
+				Location location = new Location();
+				location.setId(locationId);
+
+				Checkin checkin = new Checkin();
+				checkin.setLocation(location);
+				checkin.setUser(command.getAcorn().getActiveUser());
+				checkin.setTime(new Date());
+
+				ServerUtils.postCheckin(command.getAcorn().getActiveUser().getCheckinUri().toString(), checkin);
+			}
 		} catch (Exception e) {
 			LOGGER.log(Level.SEVERE, "Game error", e);
 		}
